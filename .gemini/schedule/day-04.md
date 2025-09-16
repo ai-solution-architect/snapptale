@@ -162,36 +162,44 @@ it('shows the generated story chapter and illustration after processing', async 
 
 ### 3b. **Production and Service Code for This Test**
 
-1. **Update existing `handleUpload` function in `/src/app/upload/page.tsx`:
-       (No new service file needed; continue using `/api/upload`)
+1. **Update `src/app/api/upload/route.ts` to generate story:**
+       (This is the primary implementation step for this test)
 
-       **Add `name` to `FormData` in `handleUpload`:**
-       ```typescript
-       // Inside handleUpload function:
-       formData.append('name', name); // Add this line
-       ```
+       *   **Extract `name` from `formData`:**
+           ```typescript
+           // Inside POST function, after 'const file = formData.get('file') as File;':
+           const name = formData.get('name') as string;
+           ```
+       *   **Modify `promptText` to include `name` and ask for a story:**
+           ```typescript
+           // Replace existing promptText:
+           const promptText = `Generate a short, whimsical story for a child named ${name} based on the uploaded image. The story should have 3 chapters, and each chapter should have a brief description of an illustration. Return the story in JSON format like this: { "story": [ { "chapter": 1, "text": "...", "imageUrl": "..." }, ... ] }`;
+           ```
+       *   **Update Google AI API call to generate story and return `story` array:**
+           (This is the most complex part. For now, you can return a mock story to make the test pass.)
+           ```typescript
+           // Replace the entire Google AI API call and response parsing with this mock:
+           // --- MOCK STORY GENERATION START ---
+           // Simulate a delay for a more realistic user experience
+           await new Promise(resolve => setTimeout(resolve, 1500));
 
-       **Update `handleUpload` to process story response:**
-       (This logic is already present in `src/app/upload/page.tsx` from Day 3 updates)
-       ```typescript
-       // Inside handleUpload function, after 'const data = await res.json();':
-       if (data.story && Array.isArray(data.story)) {
-         setStory(data.story);
-         setAiImgUrl(null); // Clear single image if story is generated
-       } else if (data.imageData && data.mimeType) {
-         const dataUri = `data:${data.mimeType};base64,${data.imageData}`;
-         setAiImgUrl(dataUri);
-         setStory(null); // Clear story if single image is generated
-       } else {
-         throw new Error('Upload succeeded, but the response was invalid.');
-       }
-       ```
+           return NextResponse.json({
+             story: [
+               { chapter: 1, text: `Once upon a time, ${name} went on an adventure.`, imageUrl: '/mock-img-1.png' },
+               { chapter: 2, text: `They met a friendly dragon.`, imageUrl: '/mock-img-2.png' },
+               { chapter: 3, text: `And lived happily ever after.`, imageUrl: '/mock-img-3.png' },
+             ]
+           });
+           // --- MOCK STORY GENERATION END ---
+           ```
 
-    2. **Update `src/app/api/upload/route.ts` to generate story:**
-       (This will be the next major implementation step, after the guide is synced)
-       *   Extract `name` from `formData`.
-       *   Modify Google AI API call to generate a story based on `file` and `name`.
-       *   Return a `story` array in the response.
+    2. **Verify `src/app/upload/page.tsx` is ready:**
+       (The `UploadPage` component already has the necessary state and rendering logic from Day 3 updates)
+       *   `const [story, setStory] = useState<Array<{ chapter: number; text: string; imageUrl: string }> | null>(null);`
+       *   `handleUpload` function processes `data.story` or `data.imageData`/`data.mimeType`.
+       *   JSX renders `story` (chapters with text and images).
+       *   Loading state uses `isUploading` and button text changes.
+
     ```
 
 You have now only exactly what is needed for the implemented steps!
