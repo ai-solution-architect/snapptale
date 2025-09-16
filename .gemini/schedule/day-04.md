@@ -49,40 +49,28 @@ it('shows a name input and the Next button (disabled unless name and file are fi
 Add the label and input for name, then verify tests pass:
 
 ```tsx
-// BEGIN Step 1b UploadPage: Input and button for TDD step 1
-'use client';
+// BEGIN Step 1b UploadPage: Add name state, input, and update button disabled prop
 
-import React, { useState } from 'react';
-import { useFilePreview } from '@/hooks/useFilePreview';
+// Add this state alongside other useState declarations (e.g., after 'error' state):
+const [name, setName] = useState('');
 
-export default function UploadPage() {
-  const [name, setName] = useState('');
-  const [file, setFile] = useState<File | null>(null);
+// Insert this HTML before the existing file input (<label htmlFor="file-input"...>):
+<div className="mb-6">
+  <label htmlFor="name-input" className="block text-sm font-medium text-gray-700">Child's Name</label>
+  <input
+    id="name-input"
+    type="text"
+    value={name}
+    onChange={e => setName(e.target.value)}
+    aria-label="Child's Name"
+    className="mt-1 block w-full border border-gray-400 p-2 rounded shadow-sm"
+  />
+</div>
 
-  return (
-    <main>
-      <label htmlFor="name-input">Child's Name</label>
-      <input
-        id="name-input"
-        aria-label="Child's Name"
-        value={name}
-        onChange={e => setName(e.target.value)}
-      />
-      <label htmlFor="file-input">Choose file</label>
-      <input
-        id="file-input"
-        type="file"
-        aria-label="Choose file"
-        onChange={onFileChange}
-      />
-      <button
-        disabled={!name.trim() || !file}
-      >
-        Next
-      </button>
-    </main>
-  );
-}
+// Update the 'disabled' prop of the 'Next' button:
+// Find the button with disabled={!file || isUploading} and change it to:
+disabled={!name.trim() || !file || isUploading}
+
 // END Step 1b
 ```
 
@@ -107,7 +95,7 @@ it('shows a loading message after clicking Next, before results appear', () => {
   fireEvent.change(fileInput, { target: { files: [new File(['x'], 'x.png', { type: 'image/png' })] } });
   fireEvent.click(button);
 
-  expect(screen.getByText(/generating your story/i)).toBeInTheDocument();
+  expect(screen.getByText(/uploading.../i)).toBeInTheDocument();
 });
 // END Day 4 Step 2a
 ```
@@ -118,20 +106,11 @@ Add state `isWorking`, update button’s onClick:
 
 ```tsx
 // Inside UploadPage component:
-const [isWorking, setIsWorking] = useState(false);
+// (No new state needed, 'isUploading' already exists)
 
-return (
-  <main>
-    {/* ...previous fields... */}
-    <button
-      disabled={!name.trim() || !file}
-      onClick={() => setIsWorking(true)}
-    >
-      Next
-    </button>
-    {isWorking && <div>Generating your story...</div>}
-  </main>
-);
+// Update the 'onClick' handler of the 'Next' button:
+// The 'handleUpload' function already sets 'isUploading'
+// (No new loading div needed, 'isUploading' already controls button text)
 ```
 
 Tests pass—move forward.
@@ -148,12 +127,17 @@ Add one more test:
 // BEGIN Day 4 Step 3a: Test for generated story content and image
 
 it('shows the generated story chapter and illustration after processing', async () => {
-  // Mock fetch
+  // Mock fetch to return story with base64 image data
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
     json: async () => ({
       story: [
-        { chapter: 1, text: 'Alex climbed a mountain', imageUrl: '/c1.png' }
+        {
+          chapter: 1,
+          text: 'Alex climbed a mountain.',
+          imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // A 1x1 transparent PNG base64
+          mimeType: 'image/png',
+        }
       ]
     }),
   });
@@ -166,59 +150,49 @@ it('shows the generated story chapter and illustration after processing', async 
   fireEvent.click(screen.getByRole('button', { name: /next/i }));
 
   await waitFor(() =>
-    expect(screen.getByText(/alex climbed a mountain/i)).toBeInTheDocument()
+    expect(screen.getByText(/alex climbed a mountain./i)).toBeInTheDocument()
   );
-  expect(screen.getByAltText(/chapter 1 illustration/i)).toHaveAttribute('src', '/c1.png');
+  expect(screen.getByAltText(/chapter 1 illustration/i)).toHaveAttribute(
+    'src',
+    expect.stringContaining('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')
+  );
 });
 // END Day 4 Step 3a
 ```
 
 ### 3b. **Production and Service Code for This Test**
 
-1. **Add service file:**  
-   `src/services/storybookService.ts`
+1. **Update existing `handleUpload` function in `/src/app/upload/page.tsx`:
+       (No new service file needed; continue using `/api/upload`)
 
-```ts
-export async function generateStorybook({ file, name }: {file: File; name: string;}) {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('name', name);
-  const res = await fetch('/api/storybook', { method: 'POST', body: formData });
-  if (!res.ok) throw new Error('Failed');
-  return await res.json();
-}
-```
+       **Add `name` to `FormData` in `handleUpload`:**
+       ```typescript
+       // Inside handleUpload function:
+       formData.append('name', name); // Add this line
+       ```
 
-2. **Update component:**  
-Add new state and logic in `UploadPage`:
+       **Update `handleUpload` to process story response:**
+       (This logic is already present in `src/app/upload/page.tsx` from Day 3 updates)
+       ```typescript
+       // Inside handleUpload function, after 'const data = await res.json();':
+       if (data.story && Array.isArray(data.story)) {
+         setStory(data.story);
+         setAiImgUrl(null); // Clear single image if story is generated
+       } else if (data.imageData && data.mimeType) {
+         const dataUri = `data:${data.mimeType};base64,${data.imageData}`;
+         setAiImgUrl(dataUri);
+         setStory(null); // Clear story if single image is generated
+       } else {
+         throw new Error('Upload succeeded, but the response was invalid.');
+       }
+       ```
 
-```tsx
-import { generateStorybook } from '@/services/storybookService';
-
-const [story, setStory] = useState<{ chapter: number; text: string; imageUrl: string }[] | null>(null);
-
-async function handleGenerate() {
-  setIsWorking(true);
-  setStory(null);
-  const result = await generateStorybook({ file, name });
-  setStory(result.story);
-  setIsWorking(false);
-}
-
-<button disabled={!name.trim() || !file} onClick={handleGenerate}>Next</button>
-{isWorking && <div>Generating your story...</div>}
-{story && (
-  <div>
-    {story.map(ch => (
-      <div key={ch.chapter}>
-        <h3>Chapter {ch.chapter}</h3>
-        <p>{ch.text}</p>
-        <img src={ch.imageUrl} alt={`Chapter ${ch.chapter} illustration`} />
-      </div>
-    ))}
-  </div>
-)}
-```
+    2. **Update `src/app/api/upload/route.ts` to generate story:**
+       (This will be the next major implementation step, after the guide is synced)
+       *   Extract `name` from `formData`.
+       *   Modify Google AI API call to generate a story based on `file` and `name`.
+       *   Return a `story` array in the response.
+    ```
 
 You have now only exactly what is needed for the implemented steps!
 
@@ -244,7 +218,7 @@ it('shows an error if the story generation fails', async () => {
   fireEvent.change(screen.getByLabelText(/choose file/i), { target: { files: [new File(['x'], 'err.png', { type: 'image/png' })] } });
   fireEvent.click(screen.getByRole('button', { name: /next/i }));
 
-  await waitFor(() => expect(screen.getByText(/something went wrong/i)).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText(/upload failed. please try again./i)).toBeInTheDocument());
 });
 // END Day 4 Step 4a
 ```
@@ -254,21 +228,8 @@ it('shows an error if the story generation fails', async () => {
 Add:
 
 ```tsx
-const [error, setError] = useState<string | null>(null);
-
-async function handleGenerate() {
-  setIsWorking(true);
-  setError(null);
-  try {
-    const result = await generateStorybook({ file, name });
-    setStory(result.story);
-  } catch {
-    setError('Something went wrong. Please try again later.');
-  }
-  setIsWorking(false);
-}
-
-{error && <div>{error}</div>}
+// Error handling is already implemented in handleUpload and displayed in JSX.
+// (No new state or logic needed for this step)
 ```
 
 ***
