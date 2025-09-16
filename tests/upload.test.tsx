@@ -8,30 +8,31 @@ describe('Upload Page', () => {
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
   });
 
-  // BEGIN Day 4 Step 1a: Minimum test for showing a name input and a Next button
+// BEGIN Day 4 Step 1a: Minimum test for showing a name input and a Next button
 
-  it('shows a name input and the Next button (disabled unless name and file are filled)', () => {
-    render(<UploadPage />);
-    const nameInput = screen.getByLabelText(/child.*name/i);
-    expect(nameInput).toBeInTheDocument();
+it('shows a name input and the Next button (disabled unless name and file are filled)', () => {
+  render(<UploadPage />);
+  const nameInput = screen.getByLabelText(/child.*name/i);
+  expect(nameInput).toBeInTheDocument();
 
-    const fileInput = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
-    const button = screen.getByRole('button', { name: /next/i });
+  const fileInput = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
+  const button = screen.getByRole('button', { name: /next/i });
 
-    expect(fileInput).toBeInTheDocument();
-    expect(button).toBeDisabled();
+  expect(fileInput).toBeInTheDocument();
+  expect(button).toBeDisabled();
 
-    // Simulate entry
-    fireEvent.change(nameInput, { target: { value: 'Alex' } });
-    expect(button).toBeDisabled(); // still needs file selection
-  });
-  // END Day 4 Step 1a
-
+  // Simulate entry
+  fireEvent.change(nameInput, { target: { value: 'John Doe' } });
+  expect(button).toBeDisabled(); // still needs file selection
+});
+// END Day 4 Step 1a
   it('enables Next button and shows preview on valid image selection', async () => {
     render(<UploadPage />);
+    const nameInput = screen.getByLabelText(/child.*name/i);
     const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
     const button = screen.getByRole('button', { name: /next/i, });
     
+    fireEvent.change(nameInput, { target: { value: 'John Doe' } });
     // Create a mock file (PNG image)
     const file = new File(['hello'], 'hello.png', { type: 'image/png' });
 
@@ -49,8 +50,12 @@ describe('Upload Page', () => {
   // BEGIN Day 3: Integration test for file upload and AI generated illustration
 it('uploads an image and displays the AI generated illustration', async () => {
   render(<UploadPage />);
+  const nameInput = screen.getByLabelText(/child.*name/i);
   const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
   const button = screen.getByRole('button', { name: /next/i });
+
+  // Simulate name input
+  fireEvent.change(nameInput, { target: { value: 'John Doe' } });
 
   // Mock file selection
   const file = new File(['(image-content)'], 'child.png', { type: 'image/png' });
@@ -81,9 +86,11 @@ it('uploads an image and displays the AI generated illustration', async () => {
   it('calls the /api/upload endpoint with the correct data when Next button is clicked', async () => {
     // Arrange
     render(<UploadPage />);
+    const nameInput = screen.getByLabelText(/child.*name/i);
     const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
     const button = screen.getByRole('button', { name: /next/i });
 
+    fireEvent.change(nameInput, { target: { value: 'John Doe' } });
     const file = new File(['(image-content)'], 'child.png', { type: 'image/png' });
 
     // Act
@@ -119,8 +126,11 @@ it('uploads an image and displays the AI generated illustration', async () => {
     ) as jest.Mock;
 
     render(<UploadPage />);
+    const nameInput = screen.getByLabelText(/child.*name/i);
     const input = screen.getByTestId('file-input');
     const button = screen.getByRole('button', { name: /next/i });
+    
+    fireEvent.change(nameInput, { target: { value: 'John Doe' } });
     const file = new File(['content'], 'image.png', { type: 'image/png' });
 
     // Act
