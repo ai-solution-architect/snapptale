@@ -73,9 +73,7 @@ export default function UploadPage() {
         id="file-input"
         type="file"
         aria-label="Choose file"
-        onChange={e => {
-          if (e.target.files && e.target.files.length) setFile(e.target.files[0]);
-        }}
+        onChange={onFileChange}
       />
       <button
         disabled={!name.trim() || !file}
