@@ -140,14 +140,14 @@ export default createJestConfig(customJestConfig);
 ```tsx
 import Link from 'next/link';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
-      <h1 className="text-5xl font-extrabold text-blue-600 mb-6">Snapptale</h1>
-      <p className="mb-8 text-lg">
+    <main className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8'>
+      <h1 className='text-5xl font-extrabold text-blue-600 mb-6'>Snapptale</h1>
+      <p className='mb-8 text-lg'>
         Upload a photo to start your personalized storybook journey.
       </p>
-      <Link href="/upload" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded focus:ring-2 focus:ring-blue-500">
+      <Link href='/upload' className='bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded focus:ring-2 focus:ring-blue-500'>
         Go to Upload
       </Link>
     </main>
@@ -163,12 +163,12 @@ export default function Home() {
 - Create folder `/src/app/upload` if missing.  
 - Create file `/src/app/upload/page.tsx` with:  
 ```tsx
-export default function Upload() {
+export default function UploadPage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold mb-6">Upload Photo</h1>
-      <input type="file" accept="image/*" className="border border-gray-400 p-2 rounded mb-6" disabled />
-      <button disabled className="bg-gray-400 cursor-not-allowed text-white px-6 py-3 rounded">Next (coming soon)</button>
+    <main className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8'>
+      <h1 className='text-4xl font-bold mb-6'>Upload Photo</h1>
+      <input type='file' accept='image/*' className='border border-gray-400 p-2 rounded mb-6' disabled />
+      <button disabled className='bg-gray-400 cursor-not-allowed text-white px-6 py-3 rounded'>Next (coming soon)</button>
     </main>
   );
 }
@@ -181,12 +181,12 @@ export default function Upload() {
 - Create a top-level folder `/tests` in your project root `/snapptale`.  
 - Create `tests/home.test.tsx` with:  
 ```tsx
-import { render, screen } from ' @testing-library/react';
-import Home from '../src/app/page';
+import { render, screen } from '@testing-library/react';
+import HomePage from '@/app/page';
 
 describe('Home Page', () => {
   it('renders Snapptale title and navigation link', () => {
-    render(<Home />);
+    render(<HomePage />);
     expect(screen.getByRole('heading', { name: /snapptale/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /go to upload/i })).toBeInTheDocument();
   });
@@ -194,12 +194,12 @@ describe('Home Page', () => {
 ```
 - Create `tests/upload.test.tsx` with:  
 ```tsx
-import { render, screen } from ' @testing-library/react';
-import Upload from '../src/app/upload/page';
+import { render, screen } from '@testing-library/react';
+import UploadPage from '@/app/upload/page';
 
 describe('Upload Page', () => {
   it('renders upload heading and disabled controls', () => {
-    render(<Upload />);
+    render(<UploadPage />);
     expect(screen.getByRole('heading', { name: /upload photo/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
   });
