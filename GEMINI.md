@@ -54,7 +54,8 @@ This file provides context for the Gemini AI assistant to ensure it aligns with 
 - **Continuous Testing:** After any code update, I will remind you to run the test suite to ensure nothing has broken.
 - **Source of Truth:** Our documentation (`GEMINI.md` and `.gemini/` files) and our tests are the primary source of truth. All code changes must be reflected in and validated by them.
 - **Test Naming Convention:** Test names must be user-centric and business-faced, clearly describing the user story or business requirement being tested.
-- **Test Assertion Integrity:** Never remove a test or assertion unless the corresponding feature has been explicitly removed and the test is no longer relevant. Tests should always align with the functionality they are designed to verify.
+    *   **Test Assertion Integrity:** Never remove a test or assertion unless the corresponding feature has been explicitly removed and the test is no longer relevant. Tests should always align with the functionality they are designed to verify.
+- **Testing for Expected Failures:** Treat predictable errors (e.g., API server unavailable, invalid user input, failed authentication) as distinct test cases, not as generic exceptions. Each expected failure mode should have its own test scenario that mocks the specific condition and asserts that the UI provides clear, user-friendly feedback appropriate to that error. Avoid broad `try...catch` blocks in tests that could mask the specific nature of a failure. The implementation should inspect response status codes and bodies to handle errors gracefully.
 
 ## 6. Documentation Notes
 
