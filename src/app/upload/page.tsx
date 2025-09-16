@@ -3,10 +3,18 @@
 import React, { useState } from 'react';
 import { useFilePreview } from '@/hooks/useFilePreview';
 
+interface StoryChapter {
+  chapter: number;
+  text: string;
+  imageData: string;
+  mimeType: string;
+}
+
 export default function UploadPage() {
   const [name, setName] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [aiImgUrl, setAiImgUrl] = useState<string | null>(null);
+  const [story, setStory] = useState<StoryChapter[] | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null); // Add error state
 
@@ -46,11 +54,19 @@ export default function UploadPage() {
 
       const data = await res.json();
 
-      if (data.imageData && data.mimeType) {
-        const dataUri = `data:${data.mimeType};base64,${data.imageData}`;
-        setAiImgUrl(dataUri);
+      if (data.story && Array.isArray(data.story) && data.story.length > 0) {
+        setStory(data.story); // Set the entire story
+        // For now, let's display the first chapter's image as the main AI image
+        const firstChapter = data.story[0];
+        if (firstChapter.imageData && firstChapter.mimeType) {
+          const dataUri = `data:${firstChapter.mimeType};base64,${firstChapter.imageData}`;
+          setAiImgUrl(dataUri);
+        } else {
+          // Handle case where first chapter doesn't have image data
+          setAiImgUrl(null);
+        }
       } else {
-        throw new Error('Upload succeeded, but the response was invalid.');
+        throw new Error('Upload succeeded, but the response was invalid: No story data.');
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unknown error occurred.';
@@ -109,13 +125,21 @@ export default function UploadPage() {
         </div>
       )}
 
-      {aiImgUrl && (
-        <div className="mt-4">
-          <img
-            src={aiImgUrl}
-            alt="AI-generated illustration"
-            className="max-w-full rounded"
-          />
+      {story && story.length > 0 && (
+        <div className="mt-8 w-full max-w-2xl">
+          {story.map((chapter, index) => (
+            <div key={index} className="mb-8 p-6 bg-white rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4">Chapter {chapter.chapter}</h2>
+              <p className="text-gray-700 mb-4">{chapter.text}</p>
+              {chapter.imageData && chapter.mimeType && (
+                <img
+                  src={`data:${chapter.mimeType};base64,${chapter.imageData}`}
+                  alt={`Chapter ${chapter.chapter} illustration`}
+                  className="w-full h-auto rounded-lg shadow-sm"
+                />
+              )}
+            </div>
+          ))}
         </div>
       )}
     </main>

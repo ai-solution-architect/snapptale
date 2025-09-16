@@ -85,7 +85,7 @@ Run tests—they should now pass.
 ```tsx
 // BEGIN Day 4 Step 2a: Test that clicking Next shows loading feedback
 
-it('shows a loading message after clicking Next, before results appear', () => {
+it('shows a loading message after clicking Next, before results appear', async () => {
   render(<UploadPage />);
   const nameInput = screen.getByLabelText(/child.*name/i);
   const fileInput = screen.getByLabelText(/choose file/i);
@@ -93,7 +93,13 @@ it('shows a loading message after clicking Next, before results appear', () => {
 
   fireEvent.change(nameInput, { target: { value: 'Bobby' } });
   fireEvent.change(fileInput, { target: { files: [new File(['x'], 'x.png', { type: 'image/png' })] } });
-  fireEvent.click(button);
+
+  // Mock fetch to prevent actual network request and allow control over async flow
+  global.fetch = jest.fn().mockResolvedValue(new Promise(() => { })); // Never resolves
+
+  await act(async () => {
+    fireEvent.click(button);
+  });
 
   expect(screen.getByText(/uploading.../i)).toBeInTheDocument();
 });
@@ -134,7 +140,7 @@ it('shows the generated story chapter and illustration after processing', async 
       story: [
         {
           chapter: 1,
-          text: 'Alex climbed a mountain.',
+          text: 'John Doe climbed a mountain.',
           imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // A 1x1 transparent PNG base64
           mimeType: 'image/png',
         }
@@ -143,14 +149,21 @@ it('shows the generated story chapter and illustration after processing', async 
   });
 
   render(<UploadPage />);
-  fireEvent.change(screen.getByLabelText(/child.*name/i), { target: { value: 'Alex' } });
-  fireEvent.change(screen.getByLabelText(/choose file/i), {
-    target: { files: [new File(['x'], 'pic.png', { type: 'image/png' })] }
+  const nameInput = screen.getByLabelText(/child.*name/i);
+  const fileInput = screen.getByLabelText(/choose file/i);
+  const nextButton = screen.getByRole('button', { name: /next/i });
+
+  fireEvent.change(nameInput, { target: { value: 'John Doe' } });
+  fireEvent.change(fileInput, {
+    target: { files: [new File(['x'], 'child.png', { type: 'image/png' })] }
   });
-  fireEvent.click(screen.getByRole('button', { name: /next/i }));
+
+  await act(async () => {
+    fireEvent.click(nextButton);
+  });
 
   await waitFor(() =>
-    expect(screen.getByText(/alex climbed a mountain./i)).toBeInTheDocument()
+    expect(screen.getByText(/john doe climbed a mountain./i)).toBeInTheDocument()
   );
   expect(screen.getByAltText(/chapter 1 illustration/i)).toHaveAttribute(
     'src',
@@ -185,9 +198,12 @@ it('shows the generated story chapter and illustration after processing', async 
 
            return NextResponse.json({
              story: [
-               { chapter: 1, text: `Once upon a time, ${name} went on an adventure.`, imageUrl: '/mock-img-1.png' },
-               { chapter: 2, text: `They met a friendly dragon.`, imageUrl: '/mock-img-2.png' },
-               { chapter: 3, text: `And lived happily ever after.`, imageUrl: '/mock-img-3.png' },
+               {
+                 chapter: 1,
+                 text: `John Doe climbed a mountain.`,
+                 imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // Matches test expectation
+                 mimeType: 'image/png',
+               }
              ]
            });
            // --- MOCK STORY GENERATION END ---
@@ -195,8 +211,9 @@ it('shows the generated story chapter and illustration after processing', async 
 
     2. **Verify `src/app/upload/page.tsx` is ready:**
        (The `UploadPage` component already has the necessary state and rendering logic from Day 3 updates)
-       *   `const [story, setStory] = useState<Array<{ chapter: number; text: string; imageUrl: string }> | null>(null);`
-       *   `handleUpload` function processes `data.story` or `data.imageData`/`data.mimeType`.
+       *   `interface StoryChapter { chapter: number; text: string; imageData: string; mimeType: string; }`
+       *   `const [story, setStory] = useState<StoryChapter[] | null>(null);`
+       *   `handleUpload` function processes `data.story` and sets `story` state.
        *   JSX renders `story` (chapters with text and images).
        *   Loading state uses `isUploading` and button text changes.
 
@@ -229,6 +246,8 @@ it('shows an error if the story generation fails', async () => {
   await waitFor(() => expect(screen.getByText(/upload failed. please try again./i)).toBeInTheDocument());
 });
 // END Day 4 Step 4a
+
+}); // Closing describe block
 ```
 
 ### 4b. **Only Add This to Component**
