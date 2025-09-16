@@ -35,6 +35,7 @@ This file provides context for the Gemini AI assistant to ensure it aligns with 
 - Tests are located in the `/tests` directory.
 - We use Jest with `@testing-library/react`.
 - Configuration is in `jest.config.mjs` and `tsconfig.json`.
+- **Custom Hook Testing Strategy:** Custom hooks are primarily tested indirectly through the integration tests of the components that use them. Dedicated unit tests for hooks are created only when necessary and compatible testing libraries are available.
 
 ## 4. Future Goals
 

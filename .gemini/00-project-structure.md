@@ -15,13 +15,16 @@
   │    ├─── vercel.svg         # The Vercel logo image.
   │    └─── window.svg         # An SVG image.
   ├─── src/                    # The main source code directory for your application.
-  │    └─── app/               # The core of your app, using the Next.js App Router.
-  │        ├─── favicon.ico    # The icon displayed in the browser tab.
-  │        ├─── globals.css    # CSS styles that apply to the entire application.
-  │        ├─── layout.tsx     # The main layout that wraps all your pages.
-  │        ├─── page.tsx       # The component for the homepage (the "/" route).
-  │        └─── upload/        # A folder representing the "/upload" route.
-  │             └─── page.tsx   # The component for the "/upload" page.
+  │    ├─── app/               # The core of your app, using the Next.js App Router.
+  │    │    ├─── favicon.ico    # The icon displayed in the browser tab.
+  │    │    ├─── globals.css    # CSS styles that apply to the entire application.
+  │    │    ├─── layout.tsx     # The main layout that wraps all your pages.
+  │    │    ├─── page.tsx       # The component for the homepage (the "/" route).
+  │    │    └─── upload/        # A folder representing the "/upload" route.
+  │    │         └─── page.tsx   # The component for the "/upload" page.
+  │    └─── hooks/               # Custom React Hooks for reusable logic.
+  │         └─── useFilePreview.ts # Hook for managing file previews.
   └─── tests/                  # Contains all the tests for your application.
        ├─── home.test.tsx      # Tests for the homepage.
+       ├─── setupTests.ts      # Jest setup file for mocks and global configurations.
        └─── upload.test.tsx    # Tests for the upload page.

@@ -66,27 +66,13 @@ Open or create `/src/app/upload/page.tsx` and replace its content with:
 ```tsx
 'use client'; // Needed to enable client-side interactivity in Next.js App Router
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useFilePreview } from '@/hooks/useFilePreview'; // Import the custom hook
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const previewSrc = useFilePreview(file); // Use the custom hook
 
-  // Update preview URL when file changes
-  useEffect(() => {
-    if (!file) {
-      setPreviewSrc(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewSrc(objectUrl);
-
-    // Clean up URL object when component unmounts or file changes
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
-
-  // Handler for file input changes
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
@@ -98,7 +84,9 @@ export default function UploadPage() {
       <h1 className='text-4xl font-bold mb-6'>Upload Photo</h1>
 
       {/* File Input */}
+      <label htmlFor='file-input' className='sr-only'>Choose file</label>
       <input
+        id='file-input'
         type='file'
         accept='image/*'
         onChange={onFileChange}
@@ -174,14 +162,16 @@ git commit -m "Implement file upload and live image preview with tests"
 
 ### Summary & Coach Tips
 
-- Using React `useState` and `useEffect` enables storing file state and cleaning up preview resources  
-- Writing tests first ensures you know exactly what behaviors to implement  
-- React Testing Library queries by ARIA roles and labels for robust testing  
-- `data-testid` is used only when accessibility queries don’t perfectly fit file inputs  
-- Always revoke object URLs to avoid memory leaks  
-- Use `aria-label` for accessibility and testability purposes  
-- The Next.js App Router requires `'use client'` directive in client components  
-- Run tests often, fix issues immediately for smooth progress  
+- The file preview logic is now encapsulated in the `useFilePreview` custom hook, improving component readability and reusability.
+- Using React `useState` enables storing file state.
+- Writing tests first ensures you know exactly what behaviors to implement.
+- React Testing Library queries by ARIA roles and labels for robust testing.
+- `data-testid` is used only when accessibility queries don’t perfectly fit file inputs.
+- Always revoke object URLs to avoid memory leaks.
+- Use `aria-label` for accessibility and testability purposes.
+- The Next.js App Router requires `'use client'` directive in client components.
+- Run tests often, fix issues immediately for smooth progress.
+- **Custom Hook Testing Strategy:** The `useFilePreview` hook is implicitly tested through the `UploadPage` component's integration tests, which verify the button enabling and preview display.  
 
 ***
 

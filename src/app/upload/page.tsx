@@ -1,24 +1,11 @@
 'use client'; // Needed to enable client-side interactivity in Next.js App Router
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useFilePreview } from '@/hooks/useFilePreview';
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
-
-  // Update preview URL when file changes
-  useEffect(() => {
-    if (!file) {
-      setPreviewSrc(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewSrc(objectUrl);
-
-    // Clean up URL object when component unmounts or file changes
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
+  const previewSrc = useFilePreview(file);
 
   // Handler for file input changes
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

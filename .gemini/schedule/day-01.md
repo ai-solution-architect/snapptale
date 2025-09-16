@@ -105,18 +105,23 @@ npm install --save-dev jest @testing-library/react @testing-library/jest-dom @te
 
 - Create ES Module Jest config file named `jest.config.mjs` at your project root (`/snapptale`):  
 ```js
-import nextJest from 'next/jest.js';
+import nextJest from 'next/jest.js'
 
-const createJestConfig = nextJest({ dir: './' });
+const createJestConfig = nextJest({
+  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  dir: './',
+})
 
+// Add any custom config to be passed to Jest
 const customJestConfig = {
-  setupFilesAfterEnv: [' @testing-library/jest-dom'],
+  setupFilesAfterEnv: ['@testing-library/jest-dom', '<rootDir>/tests/setupTests.ts'],
   testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
-};
+}
 
-export default createJestConfig(customJestConfig);
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+export default createJestConfig(customJestConfig)
 ```
 - This uses Next.js’s official Jest preset adapter so you can test with JSX and Next.js’s build system.
 
@@ -163,12 +168,47 @@ export default function HomePage() {
 - Create folder `/src/app/upload` if missing.  
 - Create file `/src/app/upload/page.tsx` with:  
 ```tsx
+'use client'; // Needed to enable client-side interactivity in Next.js App Router
+
+import React, { useState } from 'react';
+
 export default function UploadPage() {
+  const [file, setFile] = useState<File | null>(null);
+
+  // Handler for file input changes
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setFile(event.target.files[0]);
+    }
+  };
+
   return (
     <main className='flex flex-col items-center justify-center min-h-screen bg-gray-100 p-8'>
       <h1 className='text-4xl font-bold mb-6'>Upload Photo</h1>
-      <input type='file' accept='image/*' className='border border-gray-400 p-2 rounded mb-6' disabled />
-      <button disabled className='bg-gray-400 cursor-not-allowed text-white px-6 py-3 rounded'>Next (coming soon)</button>
+
+      {/* File Input */}
+      <label htmlFor='file-input' className='sr-only'>Choose file</label>
+      <input
+        id='file-input'
+        type='file'
+        accept='image/*'
+        onChange={onFileChange}
+        aria-label='Choose file'
+        data-testid='file-input'
+        className='border border-gray-400 p-2 rounded mb-6'
+      />
+
+      {/* Next Button */}
+      <button
+        disabled={!file}
+        className={`px-6 py-3 rounded text-white transition ${
+          file
+            ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+            : 'bg-gray-400 cursor-not-allowed'
+        }`}
+      >
+        Next
+      </button>
     </main>
   );
 }
@@ -194,7 +234,7 @@ describe('Home Page', () => {
 ```
 - Create `tests/upload.test.tsx` with:  
 ```tsx
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import UploadPage from '@/app/upload/page';
 
 describe('Upload Page', () => {
@@ -202,6 +242,25 @@ describe('Upload Page', () => {
     render(<UploadPage />);
     expect(screen.getByRole('heading', { name: /upload photo/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
+  });
+
+  it('enables Next button and shows preview on valid image selection', async () => {
+    render(<UploadPage />);
+    const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
+    const button = screen.getByRole('button', { name: /next/i, });
+    
+    // Create a mock file (PNG image)
+    const file = new File(['hello'], 'hello.png', { type: 'image/png' });
+
+    // Mock the input's files property and trigger change
+    Object.defineProperty(input, 'files', {
+      value: [file],
+      writable: false,
+    });
+    fireEvent.change(input);
+
+    await waitFor(() => expect(button).toBeEnabled());
+    expect(screen.getByAltText(/preview/i)).toBeInTheDocument();
   });
 });
 ```
