@@ -27,32 +27,37 @@ describe('Upload Page', () => {
     expect(screen.getByAltText(/preview/i)).toBeInTheDocument();
   });
 
-  it('uploads an image and displays the NanoBanana AI generated illustration', async () => {
-    // Arrange
-    render(<UploadPage />);
-    const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
-    const button = screen.getByRole('button', { name: /next/i });
+  // BEGIN Day 3: Integration test for file upload and AI generated illustration
+it('uploads an image and displays the AI generated illustration', async () => {
+  render(<UploadPage />);
+  const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
+  const button = screen.getByRole('button', { name: /next/i });
 
-    // Mock the file and server responses
-    const file = new File(['(image-content)'], 'child.png', { type: 'image/png' });
+  // Mock file selection
+  const file = new File(['(image-content)'], 'child.png', { type: 'image/png' });
+  fireEvent.change(input, { target: { files: [file] } });
 
-    // Act
-    await act(async () => { // Wrap in act
-      Object.defineProperty(input, 'files', {
-        value: [file],
-        writable: false,
-      });
-      fireEvent.change(input);
-      await waitFor(() => expect(button).toBeEnabled()); // Wait for button to be enabled
-      fireEvent.click(button);
-    });
+  // Mock fetch for /api/upload to return base64 image data
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({
+      imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // A 1x1 transparent PNG base64
+      mimeType: 'image/png',
+    }),
+  } as Response);
 
-    // Assert: Wait for the mocked AI illustration or result
-    await waitFor(() =>
-      expect(screen.getByAltText(/ai-generated illustration/i)).toBeInTheDocument()
-    );
-    expect(screen.getByAltText(/ai-generated illustration/i).src).toContain('data:image/png;base64,');
-  });
+  fireEvent.click(button);
+
+  // Wait for image to be displayed
+  await waitFor(() =>
+    expect(screen.getByAltText(/ai-generated illustration/i)).toBeInTheDocument()
+  );
+  expect(screen.getByAltText(/ai-generated illustration/i)).toHaveAttribute(
+    'src',
+    expect.stringContaining('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=')
+  );
+});
+// END Day 3: Integration test for file upload and AI generated illustration
 
   it('calls the /api/upload endpoint with the correct data when Next button is clicked', async () => {
     // Arrange
