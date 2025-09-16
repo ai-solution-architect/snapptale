@@ -8,6 +8,25 @@ describe('Upload Page', () => {
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
   });
 
+  // BEGIN Day 4 Step 1a: Minimum test for showing a name input and a Next button
+
+  it('shows a name input and the Next button (disabled unless name and file are filled)', () => {
+    render(<UploadPage />);
+    const nameInput = screen.getByLabelText(/child.*name/i);
+    expect(nameInput).toBeInTheDocument();
+
+    const fileInput = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
+    const button = screen.getByRole('button', { name: /next/i });
+
+    expect(fileInput).toBeInTheDocument();
+    expect(button).toBeDisabled();
+
+    // Simulate entry
+    fireEvent.change(nameInput, { target: { value: 'Alex' } });
+    expect(button).toBeDisabled(); // still needs file selection
+  });
+  // END Day 4 Step 1a
+
   it('enables Next button and shows preview on valid image selection', async () => {
     render(<UploadPage />);
     const input = screen.getByLabelText(/choose file/i) || screen.getByTestId('file-input');
