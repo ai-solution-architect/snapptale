@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         const buffer = Buffer.from(arrayBuffer);
         const base64Image = buffer.toString("base64");
 
-        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent";
         const promptText = "Create a new image based on the uploaded one, in the style of a whimsical children's storybook illustration. The new image should be vibrant and friendly.";
 
         const requestBody = {
