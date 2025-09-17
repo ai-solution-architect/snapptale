@@ -22,8 +22,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.1: Create `StorybookPreview` Component File
 
-- [ ] **Red:** Create a test that attempts to import `StorybookPreview` and fails because the file doesn't exist.
-- [ ] **Green:** Create the empty `src/components/StorybookPreview.tsx` file.
+- [x] **Red:** Create a test that attempts to import `StorybookPreview` and fails because the file doesn't exist.
+- [x] **Green:** Create the empty `src/components/StorybookPreview.tsx` file.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(storybook): create StorybookPreview component file`
 
