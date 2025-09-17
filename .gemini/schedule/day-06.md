@@ -50,8 +50,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.5: Integrate `StorybookPreview` into `UploadPage`
 
-- [ ] **Red:** Modify `src/app/upload/page.tsx` to import `StorybookPreview` and replace the existing story rendering JSX with the new component. This will likely cause existing `upload.test.tsx` tests to fail if they directly assert on the story content within `UploadPage`.
-- [ ] **Green:** Adjust `src/app/upload/page.tsx` to correctly pass the `story` prop to `StorybookPreview`. Update `upload.test.tsx` if necessary to assert on the presence of `StorybookPreview` or its content indirectly.
+- [x] **Red:** Modify `src/app/upload/page.tsx` to import `StorybookPreview` and replace the existing story rendering JSX with the new component. This will likely cause existing `upload.test.tsx` tests to fail if they directly assert on the story content within `UploadPage`.
+- [x] **Green:** Adjust `src/app/upload/page.tsx` to correctly pass the `story` prop to `StorybookPreview`. Update `upload.test.tsx` if necessary to assert on the presence of `StorybookPreview` or its content indirectly.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `refactor(upload): integrate StorybookPreview into UploadPage`
 
