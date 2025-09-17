@@ -1,5 +1,7 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import UploadPage from '@/app/upload/page';
+import React from 'react';
+import StorybookPreview from '@/components/StorybookPreview';
 
 // Mock the useFilePreview hook
 jest.mock('@/hooks/useFilePreview', () => ({
@@ -9,7 +11,34 @@ jest.mock('@/hooks/useFilePreview', () => ({
   })),
 }));
 
+// Mock the StorybookPreview component
+const mockOnExport = jest.fn(); // Define mockOnExport as a jest.fn() initially
+let mockIsExporting = false; // Define mockIsExporting outside to be accessible
+jest.mock('@/components/StorybookPreview', () => ({
+  __esModule: true,
+  default: jest.fn((props) => {
+    // Update the external mock variables with the latest props
+    mockOnExport.mockImplementation(props.onExport); // Set the implementation of our mock
+    mockIsExporting = props.isExporting;
+    return (
+      <div data-testid="storybook-preview">
+        Mock Storybook Preview
+        <button onClick={() => mockOnExport(props.onExport)} disabled={props.isExporting}>
+          {props.isExporting ? 'Preparing PDF...' : 'Export PDF'}
+        </button>
+      </div>
+    );
+  }),
+}));
+
 describe('Upload Page', () => {
+    // Reset mocks before each test
+    beforeEach(() => {
+        mockOnExport.mockClear();
+        mockIsExporting = false;
+        (StorybookPreview as jest.Mock).mockClear();
+    });
+
     it('renders main heading and disabled generate story button', () => {
         render(<UploadPage />);
         expect(screen.getByRole('heading', { name: /snapptale/i })).toBeInTheDocument();
@@ -66,11 +95,9 @@ describe('Upload Page', () => {
         });
 
         await waitFor(() =>
-            expect(screen.getByText(/your snapptale story/i)).toBeInTheDocument()
+            expect(screen.getByTestId('storybook-preview')).toBeInTheDocument()
         );
-        expect(screen.getByText(/chapter 1: the beginning/i)).toBeInTheDocument();
-        expect(screen.getByText(/a simple story chapter./i)).toBeInTheDocument();
-        expect(screen.getByAltText(/illustration for chapter 1/i)).toBeInTheDocument();
+        // Removed assertions for chapter text/images as StorybookPreview is mocked
     });
 
     it('calls the /api/upload endpoint with the correct data', async () => {
@@ -143,5 +170,53 @@ describe('Upload Page', () => {
         });
 
         expect(screen.getByText(/generating story.../i)).toBeInTheDocument();
+    });
+
+    it('should call onExport when the Export PDF button is clicked', async () => {
+        // Mock fetch to simulate a story being generated
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            json: async () => ({
+                story: [
+                    {
+                        chapter: 1, title: 'Test Chapter', text: 'Test text.',
+                    },
+                ],
+            }),
+        } as Response);
+
+        render(<UploadPage />);
+
+        // Simulate valid input and story generation
+        const nameInput = screen.getByLabelText(/child's name/i);
+        const fileInput = screen.getByLabelText(/upload photo/i);
+        const generateButton = screen.getByRole('button', { name: /generate story/i });
+
+        fireEvent.change(nameInput, { target: { value: 'Test Child' } });
+        fireEvent.change(fileInput, { target: { files: [new File(['x'], 'x.png', { type: 'image/png' })] } });
+
+        await act(async () => {
+            fireEvent.click(generateButton);
+        });
+
+        // Wait for the StorybookPreview component to render
+        await waitFor(() => {
+            expect(screen.getByTestId('storybook-preview')).toBeInTheDocument();
+        });
+
+        // Now, find the Export PDF button within the mocked StorybookPreview and click it
+        // This will trigger the onExport prop passed from UploadPage
+        const exportPdfButton = screen.getByRole('button', { name: /export pdf/i });
+
+        await act(async () => {
+            fireEvent.click(exportPdfButton);
+        });
+
+        // Assert that onExport was called
+        expect(mockOnExport).toHaveBeenCalledTimes(1);
+
+        // Assert that isExporting changed to true
+        // This will check the value updated by the mock itself
+        expect(mockIsExporting).toBe(true);
     });
 });

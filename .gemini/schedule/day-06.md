@@ -75,8 +75,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 2.2: Implement `handleExportPdf` Function (Initial Structure)
 
-- [ ] **Red:** Create a new test file (e.g., `tests/pdf-export.test.ts`) and write a test that attempts to call `handleExportPdf` (mocking `jspdf` and `html2canvas`) and asserts that `setIsExportingPdf` is called. This test should fail because `handleExportPdf` doesn't exist yet.
-- [ ] **Green:** Add the basic structure of `handleExportPdf` to `src/app/upload/page.tsx`, including `setIsExportingPdf(true)` and `setIsExportingPdf(false)` in the `finally` block.
+- [x] **Red:** Create a new test file (e.g., `tests/pdf-export.test.ts`) and write a test that attempts to call `handleExportPdf` (mocking `jspdf` and `html2canvas`) and asserts that `setIsExportingPdf` is called. This test should fail because `handleExportPdf` doesn't exist yet.
+- [x] **Green:** Add the basic structure of `handleExportPdf` to `src/app/upload/page.tsx`, including `setIsExportingPdf(true)` and `setIsExportingPdf(false)` in the `finally` block.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(pdf): add initial handleExportPdf function structure`
 

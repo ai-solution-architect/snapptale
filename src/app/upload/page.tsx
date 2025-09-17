@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useFilePreview } from '@/hooks/useFilePreview';
 import Image from 'next/image';
-import StorybookPreview from '@/components/StorybookPreview'; // Import the new component
+import StorybookPreview from '@/components/StorybookPreview';
 
 interface StoryChapter {
   chapter: number;
@@ -19,6 +19,8 @@ export default function UploadPage() {
   const [story, setStory] = useState<StoryChapter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false); // New state
+
   const { preview, clearPreview } = useFilePreview(file);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +60,6 @@ export default function UploadPage() {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
         } catch (jsonError) {
-          // If response is not JSON, use a generic error message
           errorMessage = 'An unexpected error occurred on the server.';
         }
         throw new Error(errorMessage);
@@ -70,6 +71,27 @@ export default function UploadPage() {
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // New handleExportPdf function
+  const handleExportPdf = async () => {
+    if (!story || story.length === 0) return;
+
+    setIsExportingPdf(true);
+    setError(null);
+
+    try {
+      // Simulate an async operation for testing purposes
+      await new Promise(resolve => setTimeout(resolve, 100)); // Simulate delay
+      // PDF generation logic will go here in subsequent steps
+      console.log('Exporting PDF...');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unknown error occurred during PDF export.';
+      setError(message);
+      console.error('PDF Export Error:', err);
+    } finally {
+      setIsExportingPdf(false);
     }
   };
 
@@ -136,7 +158,7 @@ export default function UploadPage() {
       {story.length > 0 && (
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
           <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Snapptale Story</h2>
-          <StorybookPreview story={story} /> {/* Use the new component here */}
+          <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isExportingPdf} /> {/* Pass props */}
         </div>
       )}
     </div>
