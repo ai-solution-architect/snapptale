@@ -10,6 +10,10 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  moduleNameMapper: {
+    // Handle module aliases (this is the important part)
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 }
 
 // Export an async function so we can modify the config dynamically
@@ -22,7 +26,7 @@ export default async () => {
   jestConfig.transformIgnorePatterns = [
     '/node_modules/(?!@google/genai)/',
     // This is the default pattern from next/jest, which we need to preserve.
-    '^.+\.module\.(css|sass|scss)$'
+    '^.+\\.module\\.(css|sass|scss)$'
   ];
 
   return jestConfig;

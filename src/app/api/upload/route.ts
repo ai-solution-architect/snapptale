@@ -1,21 +1,25 @@
-// BEGIN Day 3: New Next.js API route for file upload and Google AI (Gemini) integration
+// src/app/api/upload/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
+// We import our new, decoupled AI service.
+import { generateStory } from '@/lib/ai';
 
-// Ensure the Google API Key is set
-if (!process.env.GOOGLE_API_KEY && process.env.MOCK_API_UPLOAD !== 'true') {
-    throw new Error('GOOGLE_API_KEY environment variable not set. Set MOCK_API_UPLOAD=true to use mock data.');
+// This check is for the production environment. For local development,
+// we will rely on the AI_PROVIDER environment variable in our AI service.
+if (!process.env.GOOGLE_API_KEY && process.env.NODE_ENV === 'production') {
+    throw new Error('GOOGLE_API_KEY environment variable not set for production.');
 }
 
 export async function POST(req: NextRequest) {
     try {
         // --- MOCK API UPLOAD START ---
+        // We are keeping this simple mock for basic connectivity testing if needed.
+        // Ensure this is false during actual AI service testing.
         if (process.env.MOCK_API_UPLOAD === 'true') {
             console.log('MOCK_API_UPLOAD is true. Returning mock data.');
-            // Simulate a delay for a more realistic user experience
             await new Promise(resolve => setTimeout(resolve, 1000));
             return NextResponse.json({
-                imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // A 1x1 transparent PNG base64
+                imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
                 mimeType: 'image/png',
             });
         }
@@ -24,51 +28,28 @@ export async function POST(req: NextRequest) {
         const formData = await req.formData();
         const file = formData.get('file') as File;
         const name = formData.get('name') as string;
-        if (!file) {
-            return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
+
+        console.log('API Route: Received name:', name);
+        console.log('API Route: Received file type:', file?.type);
+        console.log('API Route: Received file size:', file?.size);
+          
+        if (!file || !name) {
+            return NextResponse.json({ error: 'Missing file or name.' }, { status: 400 });
         }
 
-        // Step 1: Convert the file to a Base64-encoded data for the API request
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const base64Image = buffer.toString("base64");
+        // All the complex logic for AI interaction is now handled by our AI service.
+        // This API route's only job is to handle the request and response.
+        // This makes the code much cleaner and easier to understand.
+        const storyResponse = await generateStory(name, file);
 
-        // Google AI API endpoint for Gemini-2.5-flash-image-preview
-        const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent";
-        const promptText = `Generate a short, whimsical story for a child named ${name} based on the uploaded image. The story should have 3 chapters, and each chapter should have a brief description of an illustration. Return the story in JSON format like this: { "story": [ { "chapter": 1, "text": "...", "imageUrl": "..." }, ... ] }`;
-        const requestBody = {
-            contents: [
-                {
-                    parts: [
-                        {
-                            text: promptText
-                        },
-                        {
-                            inlineData: {
-                                mimeType: file.type,
-                                data: base64Image,
-                            },
-                        },
-                    ],
-                },
-            ],
-        };
-
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        return NextResponse.json({
-            story: [
-                {
-                    chapter: 1,
-                    text: `John Doe climbed a mountain.`,
-                    imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', // Matches test expectation
-                    mimeType: 'image/png',
-                }
-            ]
-        });
+        return NextResponse.json(storyResponse);
 
     } catch (error) {
+        // We log the specific error to the console for debugging.
         console.error('Upload API Error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+
+        // We return a generic error message to the user for security reasons.
+        const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+        return NextResponse.json({ error: 'Internal Server Error', details: errorMessage }, { status: 500 });
     }
 }

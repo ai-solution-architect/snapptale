@@ -36,12 +36,12 @@ This document outlines the plan to integrate Ollama as a local AI provider for s
   - [x] Red: Wrote a failing test that mocks `fetch` and expects it to be called by the 'ollama' provider. -> **FAIL**
   - [x] Green: Implemented the `fetch` call logic in a `generateStoryWithOllama` function. Fixed test environment issues with `File` and `TextEncoder`. -> **PASS**
   - [x] Doc: Updated the plan with the results of the cycle.
-  - [ ] Commit: Propose a commit message.
+  - [x] Commit: `feat(ai): implement Ollama API client`
 
-## Phase 4: Refactor API Route and Finalize
+## Phase 4: Refactor API Route and Finalize (Completed)
 
-- [ ] **TDD Cycle 5: Refactor the API route to use the new AI service**
-  - [ ] Red: Write a failing integration test for the API route `/api/upload`.
-  - [ ] Green: Modify the route handler to call `generateStory` and remove mocks.
-  - [ ] Doc: Update this plan with the results of the cycle.
+- [x] **TDD Cycle 5: Refactor the API route to use the new AI service**
+  - [x] Red: Wrote a failing integration test for the API route `/api/upload`. -> **FAIL**
+  - [x] Green: Modified the route handler to call `generateStory` and removed mocks. Fixed test environment issues (`jest-environment node`, `Request is not defined`, `JSON serializable`). -> **PASS**
+  - [x] Doc: Updated the plan with the results of the cycle.
   - [ ] Commit: Propose a commit message.

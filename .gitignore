@@ -41,3 +41,6 @@ next-env.d.ts
 
 # temporary files
 /tmp
+
+# Ollama data
+/ollama_data
