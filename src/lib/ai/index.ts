@@ -5,8 +5,6 @@
  */
 
 // Defines the structure for a single chapter of the story.
-// By creating a type, we ensure that all parts of the application
-// expect the same data shape.
 export interface StoryChapter {
   chapter: number;
   text: string;
@@ -14,19 +12,74 @@ export interface StoryChapter {
   mimeType: string;
 }
 
-// We now define the function signature according to our business domain
-// and make it async. It throws an error because the implementation is not
-// yet complete. This satisfies our second TDD cycle.
+/**
+ * Converts a File object to a Base64 encoded string.
+ * This is a common requirement for sending image data in API requests.
+ * @param file The file to convert.
+ * @returns A promise that resolves with the base64 string.
+ */
+async function fileToBase64(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return buffer.toString('base64');
+}
+
+/**
+ * Generates a story using the local Ollama service.
+ * This function contains the core logic for interacting with the Ollama API.
+ * @param childName The name of the child for the story.
+ * @param childPhoto The image to base the story on.
+ * @returns A promise that resolves with the generated story.
+ */
+async function generateStoryWithOllama(
+  childName: string,
+  childPhoto: File
+): Promise<{ story: StoryChapter[] }> {
+  const imageBase64 = await fileToBase64(childPhoto);
+
+  const prompt = `You are a creative storyteller for children. Based on the provided image, generate a short, whimsical, 3-chapter story for a child named ${childName}. For each chapter, provide a text and a simple description for an illustration. Return ONLY a valid JSON object in the following format: { "story": [ { "chapter": 1, "text": "...", "illustration_description": "..." }, ... ] }`;
+
+  const response = await fetch('http://localhost:11434/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'llava',
+      prompt: prompt,
+      images: [imageBase64],
+      stream: false,
+      format: 'json',
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Ollama API request failed: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  const storyData = JSON.parse(data.response);
+
+  // TODO: Image generation from the description is a future TDD cycle.
+  const placeholderImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+  const storyWithImages = storyData.story.map((chapter: any) => ({
+    ...chapter,
+    imageData: placeholderImage,
+    mimeType: 'image/png',
+  }));
+
+  return { story: storyWithImages };
+}
+
+// Main function that acts as a router to the correct AI provider.
 export async function generateStory(
   childName: string,
   childPhoto: File
 ): Promise<{ story: StoryChapter[] }> {
-  // We use an environment variable to determine which AI provider to use.
-  const provider = process.env.AI_PROVIDER || 'ollama'; // Default to ollama
+  const provider = process.env.AI_PROVIDER || 'ollama';
 
   switch (provider) {
     case 'ollama':
-      throw new Error('Ollama provider not implemented yet.');
+      return generateStoryWithOllama(childName, childPhoto);
     case 'google':
       throw new Error('Google AI provider not implemented yet.');
     default:

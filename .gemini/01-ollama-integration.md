@@ -30,12 +30,12 @@ This document outlines the plan to integrate Ollama as a local AI provider for s
   - [x] Red: Wrote a failing test for the provider switch logic using an unknown provider.
   - [x] Green: Implemented the `switch` statement in `generateStory` to handle different providers.
   - [x] Doc: Updated the plan with a more granular, full-process structure.
-  - [ ] Commit: Propose a commit message.
+  - [x] Commit: `feat(ai): implement provider switch for AI service`
 
-- [ ] **TDD Cycle 4: Implement the Ollama API call**
-  - [ ] Red: Write a failing test that mocks `fetch` and expects it to be called by the 'ollama' provider.
-  - [ ] Green: Implement the `fetch` call within the 'ollama' provider case.
-  - [ ] Doc: Update this plan with the results of the cycle.
+- [x] **TDD Cycle 4: Implement the Ollama API call**
+  - [x] Red: Wrote a failing test that mocks `fetch` and expects it to be called by the 'ollama' provider. -> **FAIL**
+  - [x] Green: Implemented the `fetch` call logic in a `generateStoryWithOllama` function. Fixed test environment issues with `File` and `TextEncoder`. -> **PASS**
+  - [x] Doc: Updated the plan with the results of the cycle.
   - [ ] Commit: Propose a commit message.
 
 ## Phase 4: Refactor API Route and Finalize
