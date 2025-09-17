@@ -61,7 +61,28 @@ This file provides context for the Gemini AI assistant to ensure it aligns with 
 
 - The files in the `.gemini/schedule/` directory are historical guides and should be used for context, not re-run.
 
-## 7. AI Interaction Guidelines
+## 7. Development Guide (TDD Workflow)
+
+To ensure a controlled and predictable development process, we will adhere to a strict Test-Driven Development (TDD) cycle for all new features and modifications.
+
+The cycle is as follows:
+
+1.  **Red Phase (Write a Failing Test):**
+    *   Before writing any implementation code, I will first propose a test that targets a small, specific piece of functionality.
+    *   The test will be focused and clearly define the expected behavior.
+    *   We will run this test and expect it to fail.
+
+2.  **Green Phase (Write Minimal Code):**
+    *   I will then propose the absolute minimum amount of implementation code required to make the failing test pass.
+
+3.  **Review and Refactor:**
+    *   With the test passing, we can review the changes and refactor if necessary, ensuring the test remains green.
+
+4.  **Document and Commit:**
+    *   After each successful TDD cycle, I will remind you to consider if any updates are needed for our AI instructions (`GEMINI.md` or other `.gemini/` files).
+    *   Following that, I will propose a clear and concise commit message to save the changes.
+
+## 8. AI Interaction Guidelines
 
 - **File Content Verification:** If there are persistent issues reading a file's content, or if the provided content seems incorrect, I will explicitly ask the user to verify the file's content or provide it directly.
 - **Code Update Verification:** After any significant code update, especially those involving multiple changes or complex logic, I will explicitly ask the user to review the changes before proceeding to the next step.

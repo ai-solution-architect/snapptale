@@ -1,0 +1,18 @@
+# Defines the services (containers) that make up your application.
+services:
+  # Defines a service named 'ollama'.
+  ollama:
+    # Specifies the Docker image to use. 'ollama/ollama' is the official image for Ollama.
+    image: ollama/ollama
+    # Assigns a specific, predictable name to the container for easier management.
+    container_name: snapptale-ollama
+    # Maps port 11434 on your host machine to port 11434 in the container.
+    # This allows your Next.js application (running on the host) to communicate with the Ollama API.
+    ports:
+      - "11434:11434"
+    # Mounts a local directory ('./ollama_data') into the container at '/root/.ollama'.
+    # This is crucial for persisting the downloaded AI models, so you don't have to re-download them every time you restart the container.
+    volumes:
+      - ./ollama_data:/root/.ollama
+    # Keeps the container running and allows for interactive sessions (like using 'docker exec').
+    tty: true
