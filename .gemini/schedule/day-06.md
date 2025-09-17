@@ -68,8 +68,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 2.1: Install PDF Libraries
 
-- [ ] **Red:** Attempt to import `jspdf` and `html2canvas` in a test file (e.g., a new `tests/pdf-export.test.ts`) and observe import errors because the packages are not installed.
-- [ ] **Green:** Run `npm install jspdf html2canvas` and `npm install --save-dev @types/jspdf @types/html2canvas`.
+- [x] **Red:** Attempt to import `jspdf` and `html2canvas` in a test file (e.g., a new `tests/pdf-export.test.ts`) and observe import errors because the packages are not installed.
+- [x] **Green:** Run `npm install jspdf html2canvas` and `npm install --save-dev @types/jspdf @types/html2canvas`.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `chore(deps): install jspdf and html2canvas for PDF export`
 
