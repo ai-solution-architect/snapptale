@@ -19,6 +19,13 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story }) => {
         <div key={chapter.chapter}>
           <h2>Chapter {chapter.chapter}: {chapter.title}</h2>
           <p>{chapter.text}</p>
+          {chapter.imageData && chapter.mimeType && (
+            <img
+              src={chapter.imageData}
+              alt={`Illustration for Chapter ${chapter.chapter}`}
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          )}
         </div>
       ))}
     </div>

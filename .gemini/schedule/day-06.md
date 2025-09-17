@@ -36,8 +36,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.3: Render Chapter Images
 
-- [ ] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of chapter images with correct `src` and `alt` attributes. This test should fail.
-- [ ] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the chapter images from the `story` prop.
+- [x] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of chapter images with correct `src` and `alt` attributes. This test should fail.
+- [x] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the chapter images from the `story` prop.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(storybook): render chapter images in StorybookPreview`
 
