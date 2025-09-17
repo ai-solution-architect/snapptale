@@ -57,8 +57,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.6: Pass `onExport` and `isExporting` Props
 
-- [ ] **Red:** Modify `tests/storybook-preview.test.tsx` to assert that `onExport` is called when the button is clicked and that the button is disabled when `isExporting` is true. This test should fail.
-- [ ] **Green:** Update `src/components/StorybookPreview.tsx` to accept and use `onExport` and `isExporting` props for the button.
+- [x] **Red:** Modify `tests/storybook-preview.test.tsx` to assert that `onExport` is called when the button is clicked and that the button is disabled when `isExporting` is true. This test should fail.
+- [x] **Green:** Update `src/components/StorybookPreview.tsx` to accept and use `onExport` and `isExporting` props for the button.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(storybook): pass onExport and isExporting props to StorybookPreview`
 

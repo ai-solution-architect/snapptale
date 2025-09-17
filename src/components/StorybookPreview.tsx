@@ -10,9 +10,11 @@ interface StoryChapter {
 
 interface StorybookPreviewProps {
   story: StoryChapter[];
+  onExport: () => void;
+  isExporting: boolean;
 }
 
-const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story }) => {
+const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story, onExport, isExporting }) => {
   return (
     <div>
       {story.map((chapter) => (
@@ -28,7 +30,9 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story }) => {
           )}
         </div>
       ))}
-      <button>Export PDF</button>
+      <button onClick={onExport} disabled={isExporting}>
+        {isExporting ? 'Preparing PDF...' : 'Export PDF'}
+      </button>
     </div>
   );
 };

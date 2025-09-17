@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import StorybookPreview from '@/components/StorybookPreview';
 
 const mockStory = [
@@ -44,5 +44,20 @@ describe('StorybookPreview', () => {
   it('should render an "Export PDF" button', () => {
     render(<StorybookPreview story={mockStory} />);
     expect(screen.getByRole('button', { name: /export pdf/i })).toBeInTheDocument();
+  });
+
+  it('calls onExport when the Export PDF button is clicked', () => {
+    const handleExportMock = jest.fn();
+    render(<StorybookPreview story={mockStory} onExport={handleExportMock} isExporting={false} />);
+    const exportButton = screen.getByRole('button', { name: /export pdf/i });
+    fireEvent.click(exportButton);
+    expect(handleExportMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('disables the Export PDF button and shows "Preparing PDF..." when isExporting is true', () => {
+    const handleExportMock = jest.fn();
+    render(<StorybookPreview story={mockStory} onExport={handleExportMock} isExporting={true} />);
+    const exportButton = screen.getByRole('button', { name: /preparing pdf.../i });
+    expect(exportButton).toBeDisabled();
   });
 });
