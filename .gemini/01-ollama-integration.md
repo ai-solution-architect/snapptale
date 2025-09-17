@@ -44,4 +44,4 @@ This document outlines the plan to integrate Ollama as a local AI provider for s
   - [x] Red: Wrote a failing integration test for the API route `/api/upload`. -> **FAIL**
   - [x] Green: Modified the route handler to call `generateStory` and removed mocks. Fixed test environment issues (`jest-environment node`, `Request is not defined`, `JSON serializable`). -> **PASS**
   - [x] Doc: Updated the plan with the results of the cycle.
-  - [ ] Commit: Propose a commit message.
+  - [x] Commit: `feat: Integrate Ollama AI and refine upload process`
