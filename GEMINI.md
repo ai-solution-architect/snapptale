@@ -78,7 +78,11 @@ The cycle is as follows:
 3.  **Review and Refactor:**
     *   With the test passing, we can review the changes and refactor if necessary, ensuring the test remains green.
 
-4.  **Document and Commit:**
+4.  **Business-Oriented Naming:**
+    *   All tests and implementation code should use variable names that reflect the business domain (e.g., `childName`, `photoForStory` instead of `name`, `dummyFile`).
+    *   Tests should be readable as a description of the feature's behavior from a user's perspective.
+
+5.  **Document and Commit:**
     *   After each successful TDD cycle, I will remind you to consider if any updates are needed for our AI instructions (`GEMINI.md` or other `.gemini/` files).
     *   Following that, I will propose a clear and concise commit message to save the changes.
 

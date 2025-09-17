@@ -10,18 +10,20 @@ This document outlines the plan to integrate Ollama as a local AI provider for s
 -   [x] Start the Ollama container.
 -   [x] Pull a multimodal AI model (e.g., `llava`) into the Ollama service.
 
-## Phase 2: Create AI Service Abstraction Layer
+## Phase 2: Create AI Service Abstraction Layer (Completed)
 
 **TDD Cycle 1: Establish the AI service module**
+*   **Red:** Added `tests/ai.test.ts` to import a non-existent `generateStory` function. -> **FAIL**
+*   **Green:** Created `src/lib/ai/index.ts` with a basic `generateStory` export. -> **PASS**
+*   **Doc:** Updated this plan.
 
-*   **Red Phase:** Created a new test file `tests/ai.test.ts`. The test `it('should be defined', ...)` was written to fail by attempting to import `generateStory` from the non-existent module `@/lib/ai`.
-    *   *Status: Test failed as expected (`Cannot find module`).*
-*   **Green Phase:** Created the file `src/lib/ai/index.ts` and exported a basic, empty `generateStory` function to make the test pass.
-    *   *Status: Test passed.*
-*   **Refactor/Doc:** The plan file was updated to reflect this cycle.
-    *   *Status: Completed.*
+**TDD Cycle 2: Define the service function signature**
+*   **Red:** Tested `generateStory` to be `async` and throw a "not implemented" error. -> **FAIL**
+*   **Green:** Made `generateStory` `async`, defined its signature (`childName`, `childPhoto`), and made it throw the expected error. Added `StoryChapter` interface. -> **PASS**
+*   **Doc:** Updated this plan.
 
--   [ ] Define a common interface or function signature for story generation that can be used by different providers.
+-   [x] Create a new file at `src/lib/ai/index.ts` to house the AI service logic.
+-   [x] Define a common interface or function signature for story generation that can be used by different providers.
 
 ## Phase 3: Implement Ollama Client
 

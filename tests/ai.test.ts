@@ -10,10 +10,19 @@
 import { generateStory } from '@/lib/ai';
 
 describe('AI Service', () => {
-  // This is our first test. It's designed to fail initially.
-  // The test will fail on the import statement above because the module '@/lib/ai'
-  // does not exist yet. This is the first step in our TDD cycle (Red).
   it('should be defined', () => {
     expect(generateStory).toBeDefined();
+  });
+
+  it('should be an async function that throws a not-implemented error', async () => {
+    // Use variable names that reflect the business domain, as per our guide.
+    const childName = 'Alex';
+    const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
+
+    // We expect the function to return a Promise that rejects with an error.
+    // This proves the function is async and acknowledges it's not implemented.
+    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+      'AI provider not implemented yet.'
+    );
   });
 });
