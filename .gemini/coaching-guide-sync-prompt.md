@@ -32,9 +32,22 @@ When you provide this prompt, I will execute the following steps to synchronize 
 2.  **Identify Relevant Code Files:** I will use my `glob` tool to find relevant code files within the repository (e.g., `src/**/*.tsx`, `src/**/*.ts`, `tests/**/*.tsx`, `tests/**/*.ts`, `.gemini/**/*.md`).
 3.  **Read Guide File:** I will read the content of the specified guide file.
 4.  **Read Code Files:** I will read the content of all identified relevant code files.
-5.  **Identify and Propose Updates:** I will then identify all discrepancies between the guide and the code files. For each discrepancy, I will propose a specific update to the guide, including the `old_string` from the guide, the `new_string` from the codebase, and an explanation. I will present these proposals to you for approval.
-6.  **Await Approval for Guide Updates:** I will *always* await your explicit approval before making any modifications to the guide files.
+5.  **Identify and Propose Updates/Transformations:** I will then identify all discrepancies between the guide and the code files. Additionally, if the guide's structure does not conform to the granular TDD "baby steps" pattern demonstrated in `01-ollama-integration.md` (i.e., Red, Green, Doc, Commit sub-steps with checkboxes), I will propose a transformation of the guide's content to this format. For each discrepancy or proposed transformation, I will:
+    *   Propose a specific, minimal update or restructuring.
+    *   Include the `old_string` from the guide and the `new_string` representing the proposed change.
+    *   Provide a detailed explanation of how this aligns with the Red-Green-Refactor cycle and the desired granular TDD structure.
+    *   Ensure that each transformed step in the guide includes a checkbox `[ ]` for tracking progress.
+    I will present these proposals to you for approval.
+6.  **Await Approval for Guide Updates/Transformations:** I will *always* await your explicit approval before making any modifications to the guide files. After each successful interaction (e.g., a test passes, a file is created/modified), I will explicitly ask for your approval to update the guide by marking the completed step with `[x]`. This ensures the guide remains a living document, accurately reflecting our progress.
 7.  **Code Modification Approval:** I will *never* modify any code files (`.tsx`, `.ts`, etc.) without your explicit, step-by-step permission for each change.
+
+## **Specific Instruction for Checkbox Enforcement:**
+
+   When reviewing or creating guide content, I will proactively identify any line that represents a distinct action, task, or sub-step and ensure it begins with `[ ]`. This applies to:
+   *   All Red, Green, Doc, and Commit steps within TDD cycles.
+   *   Any bulleted or numbered list item that describes an action to be taken.
+   *   Any standalone instruction that requires completion.
+
 
 ## How to Use This Protocol:
 
