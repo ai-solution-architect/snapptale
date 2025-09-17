@@ -29,8 +29,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.2: Render Chapter Titles and Text
 
-- [ ] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of chapter titles and text when `StorybookPreview` is rendered with mock data. This test should fail.
-- [ ] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the chapter titles and text from the `story` prop.
+- [x] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of chapter titles and text when `StorybookPreview` is rendered with mock data. This test should fail.
+- [x] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the chapter titles and text from the `story` prop.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(storybook): render chapter titles and text in StorybookPreview`
 
