@@ -40,4 +40,9 @@ describe('StorybookPreview', () => {
     expect(images[1]).toHaveAttribute('src', mockStory[1].imageData);
     expect(images[1]).toHaveAttribute('alt', `Illustration for Chapter ${mockStory[1].chapter}`);
   });
+
+  it('should render an "Export PDF" button', () => {
+    render(<StorybookPreview story={mockStory} />);
+    expect(screen.getByRole('button', { name: /export pdf/i })).toBeInTheDocument();
+  });
 });

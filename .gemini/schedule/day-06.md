@@ -43,8 +43,8 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ### TDD Cycle 1.4: Add Export PDF Button
 
-- [ ] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of an "Export PDF" button. This test should fail.
-- [ ] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the "Export PDF" button.
+- [x] **Red:** Add a test to `tests/storybook-preview.test.tsx` that asserts the presence of an "Export PDF" button. This test should fail.
+- [x] **Green:** Implement the minimal JSX in `src/components/StorybookPreview.tsx` to render the "Export PDF" button.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(storybook): add Export PDF button to StorybookPreview`
 

@@ -28,6 +28,7 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story }) => {
           )}
         </div>
       ))}
+      <button>Export PDF</button>
     </div>
   );
 };
