@@ -2,37 +2,46 @@
 
 This document outlines the plan to integrate Ollama as a local AI provider for story generation, creating a decoupled and testable development environment.
 
-**Note:** We will be following the strict TDD workflow defined in `GEMINI.md`.
+**Note:** We will be following the strict TDD workflow defined in `GEMINI.md`. Each cycle must be fully completed and checked off before the next begins.
 
 ## Phase 1: Set Up Ollama with Docker (Completed)
 
--   [x] Create a `docker-compose.yml` file to define the Ollama service.
--   [x] Start the Ollama container.
--   [x] Pull a multimodal AI model (e.g., `llava`) into the Ollama service.
+- [x] Create a `docker-compose.yml` file to define the Ollama service.
+- [x] Start the Ollama container.
+- [x] Pull a multimodal AI model (`llava`) into the Ollama service.
 
 ## Phase 2: Create AI Service Abstraction Layer (Completed)
 
-**TDD Cycle 1: Establish the AI service module**
-*   **Red:** Added `tests/ai.test.ts` to import a non-existent `generateStory` function. -> **FAIL**
-*   **Green:** Created `src/lib/ai/index.ts` with a basic `generateStory` export. -> **PASS**
-*   **Doc:** Updated this plan.
+- [x] **TDD Cycle 1: Establish the AI service module**
+  - [x] Red: Wrote a failing test in `tests/ai.test.ts` to import a non-existent module.
+  - [x] Green: Created `src/lib/ai/index.ts` with a basic export to pass the test.
+  - [x] Doc: Updated this plan with the results of the cycle.
+  - [x] Commit: `feat(ai): set up AI service module and initial test`
 
-**TDD Cycle 2: Define the service function signature**
-*   **Red:** Tested `generateStory` to be `async` and throw a "not implemented" error. -> **FAIL**
-*   **Green:** Made `generateStory` `async`, defined its signature (`childName`, `childPhoto`), and made it throw the expected error. Added `StoryChapter` interface. -> **PASS**
-*   **Doc:** Updated this plan.
-
--   [x] Create a new file at `src/lib/ai/index.ts` to house the AI service logic.
--   [x] Define a common interface or function signature for story generation that can be used by different providers.
+- [x] **TDD Cycle 2: Define the service function signature**
+  - [x] Red: Wrote a failing test for an `async` function that throws a "not implemented" error.
+  - [x] Green: Updated `generateStory` to be `async`, define its signature, and throw the expected error.
+  - [x] Doc: Updated this plan with the results of the cycle.
+  - [x] Commit: `feat(ai): define async signature for generateStory service`
 
 ## Phase 3: Implement Ollama Client
 
--   [ ] Implement the logic within `src/lib/ai/index.ts` to connect to the local Ollama service.
--   [ ] This implementation will handle the `fetch` request to the Ollama API endpoint.
+- [x] **TDD Cycle 3: Implement AI provider switch**
+  - [x] Red: Wrote a failing test for the provider switch logic using an unknown provider.
+  - [x] Green: Implemented the `switch` statement in `generateStory` to handle different providers.
+  - [x] Doc: Updated the plan with a more granular, full-process structure.
+  - [ ] Commit: Propose a commit message.
+
+- [ ] **TDD Cycle 4: Implement the Ollama API call**
+  - [ ] Red: Write a failing test that mocks `fetch` and expects it to be called by the 'ollama' provider.
+  - [ ] Green: Implement the `fetch` call within the 'ollama' provider case.
+  - [ ] Doc: Update this plan with the results of the cycle.
+  - [ ] Commit: Propose a commit message.
 
 ## Phase 4: Refactor API Route and Finalize
 
--   [ ] Modify `src/app/api/upload/route.ts` to remove mock data.
--   [ ] Import and use the new AI abstraction service.
--   [ ] Use environment variables to control which AI provider is used (local Ollama vs. production Google AI).
--   [ ] Test the end-to-end functionality.
+- [ ] **TDD Cycle 5: Refactor the API route to use the new AI service**
+  - [ ] Red: Write a failing integration test for the API route `/api/upload`.
+  - [ ] Green: Modify the route handler to call `generateStory` and remove mocks.
+  - [ ] Doc: Update this plan with the results of the cycle.
+  - [ ] Commit: Propose a commit message.

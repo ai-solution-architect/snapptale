@@ -14,15 +14,24 @@ describe('AI Service', () => {
     expect(generateStory).toBeDefined();
   });
 
-  it('should be an async function that throws a not-implemented error', async () => {
-    // Use variable names that reflect the business domain, as per our guide.
+  // TDD Cycle 3: Test the AI provider switch logic
+  it('should throw an error for an unknown provider', async () => {
+    process.env.AI_PROVIDER = 'unknown_provider';
     const childName = 'Alex';
     const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
-
-    // We expect the function to return a Promise that rejects with an error.
-    // This proves the function is async and acknowledges it's not implemented.
     await expect(generateStory(childName, childPhoto)).rejects.toThrow(
-      'AI provider not implemented yet.'
+      'Unknown AI provider: unknown_provider'
     );
+    delete process.env.AI_PROVIDER;
+  });
+
+  it('should throw a not-implemented error for the ollama provider', async () => {
+    process.env.AI_PROVIDER = 'ollama';
+    const childName = 'Alex';
+    const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
+    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+      'Ollama provider not implemented yet.'
+    );
+    delete process.env.AI_PROVIDER;
   });
 });

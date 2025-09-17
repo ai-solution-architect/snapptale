@@ -21,5 +21,15 @@ export async function generateStory(
   childName: string,
   childPhoto: File
 ): Promise<{ story: StoryChapter[] }> {
-  throw new Error('AI provider not implemented yet.');
+  // We use an environment variable to determine which AI provider to use.
+  const provider = process.env.AI_PROVIDER || 'ollama'; // Default to ollama
+
+  switch (provider) {
+    case 'ollama':
+      throw new Error('Ollama provider not implemented yet.');
+    case 'google':
+      throw new Error('Google AI provider not implemented yet.');
+    default:
+      throw new Error(`Unknown AI provider: ${provider}`);
+  }
 }
