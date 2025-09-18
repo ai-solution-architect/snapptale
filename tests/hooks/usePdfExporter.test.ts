@@ -1,7 +1,6 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { usePdfExporter } from '@/hooks/usePdfExporter';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 // Mock the libraries (must be at the top)
 jest.mock('jspdf', () => {
@@ -21,13 +20,11 @@ jest.mock('jspdf', () => {
   };
   return jest.fn(() => mockPdf);
 });
-jest.mock('html2canvas');
 
 describe('usePdfExporter', () => {
   beforeEach(() => {
     // Clear all instances and calls to constructor and all methods:
     (jsPDF as jest.Mock).mockClear();
-    (html2canvas as jest.Mock).mockClear();
   });
 
   it('should return the initial state', () => {
@@ -90,12 +87,10 @@ describe('usePdfExporter', () => {
   });
 
   it('should handle images and save the PDF', async () => {
-    (html2canvas as jest.Mock).mockResolvedValue({ toDataURL: () => 'data:image/png;base64,mock_image_data' });
-
     const { result } = renderHook(() => usePdfExporter());
     const mockStory = [
-      { chapter: 1, title: 'C1', text: 'T1', imageData: 'base64_string_1' },
-      { chapter: 2, title: 'C2', text: 'T2', imageData: 'base64_string_2' },
+      { chapter: 1, title: 'C1', text: 'T1', imageData: 'data:image/png;base64,mock_image_data_1', mimeType: 'image/png' },
+      { chapter: 2, title: 'C2', text: 'T2', imageData: 'data:image/jpeg;base64,mock_image_data_2', mimeType: 'image/jpeg' },
     ];
     const mockChildName = 'Alex';
 
@@ -103,8 +98,13 @@ describe('usePdfExporter', () => {
       await result.current.exportPdf(mockStory, mockChildName);
     });
 
-    expect(html2canvas).toHaveBeenCalledTimes(2);
     expect(jsPDF().addImage).toHaveBeenCalledTimes(2);
+    expect(jsPDF().addImage).toHaveBeenCalledWith(
+      'mock_image_data_1', 'PNG', expect.any(Number), expect.any(Number), expect.any(Number), expect.any(Number)
+    );
+    expect(jsPDF().addImage).toHaveBeenCalledWith(
+      'mock_image_data_2', 'JPEG', expect.any(Number), expect.any(Number), expect.any(Number), expect.any(Number)
+    );
     expect(jsPDF().save).toHaveBeenCalledWith('snapptale-Alex.pdf');
   });
 

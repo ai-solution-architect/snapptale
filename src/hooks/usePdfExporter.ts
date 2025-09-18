@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 // Define a type for the story chapter to be used in the hook
 interface StoryChapter {
@@ -31,14 +30,21 @@ export const usePdfExporter = () => {
         pdf.setFontSize(16);
         pdf.text(chapter.title, margin, 20);
 
-        if (chapter.imageData) {
-          const imgElement = document.createElement('img');
-          imgElement.src = chapter.imageData;
-          const canvas = await html2canvas(imgElement);
-          const imgData = canvas.toDataURL('image/png');
-          const imgWidth = 100; // fixed width for now
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          pdf.addImage(imgData, 'PNG', margin, 30, imgWidth, imgHeight);
+        if (chapter.imageData && chapter.mimeType) {
+          const parts = chapter.imageData.split(',');
+          if (parts.length === 2) {
+            const base64Image = parts[1]; // Get base64 part
+            const imageFormat = chapter.mimeType.split('/')[1].toUpperCase(); // Get format (PNG, JPEG)
+
+            // Calculate image dimensions to fit contentWidth
+            // For simplicity, let's assume a fixed height for now or calculate aspect ratio if original dimensions are available
+            const imgWidth = contentWidth; // Use full content width
+            const imgHeight = (pdf.internal.pageSize.getHeight() / 3); // Example: 1/3rd of page height
+
+            pdf.addImage(base64Image, imageFormat, margin, 30, imgWidth, imgHeight);
+          } else {
+            console.warn('Invalid imageData format for chapter:', chapter.chapter);
+          }
         }
 
         pdf.setFontSize(12);

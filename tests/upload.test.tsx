@@ -49,7 +49,7 @@ describe('Upload Page', () => {
 
     it('renders main heading and disabled generate story button', () => {
         render(<UploadPage />);
-        expect(screen.getByRole('heading', { name: /snapptale/i })).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: /snapptale logo/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /generate story/i })).toBeDisabled();
     });
 
