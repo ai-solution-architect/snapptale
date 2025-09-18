@@ -77,8 +77,8 @@ We will encapsulate all logic and state related to PDF exporting into a reusable
 
 ### TDD Cycle 2.2: Test Initial State
 
-- [ ] **Red:** Write a test that calls the hook and asserts that it returns the correct initial state: `isExporting` is `false`, `error` is `null`, and `exportPdf` is a function.
-- [ ] **Green:** Implement the minimal state logic in the hook using `useState` to return the correct initial values.
+- [x] **Red:** Write a test that calls the hook and asserts that it returns the correct initial state: `isExporting` is `false`, `error` is `null`, and `exportPdf` is a function.
+- [x] **Green:** Implement the minimal state logic in the hook using `useState` to return the correct initial values.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(pdf): implement initial state for usePdfExporter`
 
