@@ -18,9 +18,9 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story, onExport, is
   return (
     <div>
       {story.map((chapter) => (
-        <div key={chapter.chapter}>
-          <h2>Chapter {chapter.chapter}: {chapter.title}</h2>
-          <p>{chapter.text}</p>
+        <div key={chapter.chapter} className="mb-8">
+          <h2 className="text-xl font-bold text-snaptale-highlight mb-2">Chapter {chapter.chapter}: {chapter.title}</h2>
+          <p className="text-snaptale-shadow mb-4">{chapter.text}</p>
           {chapter.imageData && chapter.mimeType && (
             <img
               src={`data:${chapter.mimeType};base64,${chapter.imageData}`}
