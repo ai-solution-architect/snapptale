@@ -84,8 +84,8 @@ We will encapsulate all logic and state related to PDF exporting into a reusable
 
 ### TDD Cycle 2.3: Test `isExporting` State Change
 
-- [ ] **Red:** Write a test that calls the `exportPdf` function and asserts that `isExporting` becomes `true` immediately, and then `false` after the operation completes.
-- [ ] **Green:** Wrap the logic inside `exportPdf` with `setIsExporting(true)` and a `finally` block containing `setIsExporting(false)`.
+- [x] **Red:** Write a test that calls the `exportPdf` function and asserts that `isExporting` becomes `true` immediately, and then `false` after the operation completes.
+- [x] **Green:** Wrap the logic inside `exportPdf` with `setIsExporting(true)` and a `finally` block containing `setIsExporting(false)`.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(pdf): manage isExporting state in usePdfExporter`
 

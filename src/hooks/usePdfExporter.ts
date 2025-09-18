@@ -5,7 +5,16 @@ export const usePdfExporter = () => {
   const [error, setError] = useState<string | null>(null);
 
   const exportPdf = async () => {
-    // Logic will go here in the next cycle
+    setIsExporting(true);
+    try {
+      // Mock async work for the test
+      await new Promise(resolve => setTimeout(resolve, 50));
+    } catch (e) {
+      // Error handling will be tested in a later cycle
+      setError(e instanceof Error ? e.message : 'An unknown error occurred.');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return { isExporting, error, exportPdf };
