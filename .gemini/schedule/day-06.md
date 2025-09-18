@@ -111,6 +111,19 @@ Start the dev server (`npm run dev`), generate a story, and verify that the "Exp
 
 ***
 
+## Step 2.6: Implement Image Generation from Story Description
+
+We will implement the actual image generation based on the `illustration_description` provided by the LLM, ensuring it incorporates the main character identified from the uploaded photo.
+
+### TDD Cycle 2.6.1: Test Image Generation API Call
+
+- [ ] **Red:** Write a test in `tests/ai.test.ts` that asserts `generateStory` calls an image generation API (e.g., mocks `fetch` to a specific image generation endpoint) and returns actual image data, not a placeholder. This test should also verify that the prompt sent to the image generation API incorporates the main character's context.
+- [ ] **Green:** Implement the image generation logic in `src/lib/ai/index.ts` (e.g., call a real image generation API based on `illustration_description` and character context).
+- [ ] **Doc:** Update `day-06.md` to mark this step as complete.
+- [ ] **Commit:** `feat(ai): implement image generation from story description`
+
+***
+
 ## Step 3: Enhance Error Handling and Loading States
 
 ### TDD Cycle 3.1: Test Error Display
