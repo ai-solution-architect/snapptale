@@ -1,59 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Snapptale Development Setup Guide
 
-## Getting Started
+This guide provides instructions to set up the Snapptale development environment.
 
-First, run the development server:
+## Prerequisites
+
+*   Node.js (v18+)
+*   Git
+*   Docker (for Ollama)
+
+## 1. Initial Setup
+
+### 1.1 Install Node.js and Git
+
+Ensure Node.js (v18+) and Git are installed on your system. You can verify their installation by running:
+
+```bash
+node -v
+git --version
+```
+
+### 1.2 Clone the Repository
+
+Clone the Snapptale repository to your local machine:
+
+```bash
+git clone [YOUR_REPOSITORY_URL]
+cd snapptale
+```
+*(Replace `[YOUR_REPOSITORY_URL]` with the actual repository URL)*
+
+### 1.3 Install Dependencies
+
+Navigate to the project root and install the necessary Node.js dependencies:
+
+```bash
+npm install
+```
+
+## 2. Ollama Setup (Local AI Model)
+
+Snapptale uses Ollama for local AI model inference.
+
+### 2.1 Install Ollama
+
+Follow the instructions on the [Ollama website](https://ollama.ai/download) to install Ollama for your operating system.
+
+### 2.2 Pull the `llava` Model
+
+Once Ollama is installed and running, pull the `llava` model:
+
+```bash
+ollama pull llava
+```
+
+## 3. Running the Application
+
+### 3.1 Start the Development Server
+
+To start the Next.js development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+The application will be accessible at `http://localhost:3000`.
+
+### 3.2 Run Tests
+
+To run the test suite:
+
+```bash
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3.3 Linting
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run the linter:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
----
-
-# Snapptale Development Roadmap (TDD + Modern Jest)
-
-## Day 1 (Completed)
-- Next.js App Router scaffold with Tailwind, TypeScript & ESLint
-- Jest with official Next.js preset, ES Module config
-- Created Home & Upload pages with tests passing
-
-## Day 2
-- Implement file upload & image preview with tests
-- Setup backend API to accept files
-
-## Day 3
-- Integrate NanoBanana API for AI image generation
-- Add story text AI integration
-
-## Days 4-7
-- Build story preview, export features, polish, deploy
-
----
-
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+```
