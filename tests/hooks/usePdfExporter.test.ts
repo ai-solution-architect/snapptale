@@ -1,33 +1,32 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { usePdfExporter } from '@/hooks/usePdfExporter';
-import jsPDF from 'jspdf'; // Changed import back
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 // Mock the libraries (must be at the top)
-jest.mock('jspdf'); // Added back
+jest.mock('jspdf', () => {
+  const mockPdf = {
+    text: jest.fn(),
+    addPage: jest.fn(),
+    addImage: jest.fn(),
+    save: jest.fn(),
+    setFontSize: jest.fn(),
+    splitTextToSize: jest.fn((text) => [text]),
+    internal: {
+      pageSize: {
+        getWidth: jest.fn(() => 210),
+        getHeight: jest.fn(() => 297),
+      },
+    },
+  };
+  return jest.fn(() => mockPdf);
+});
 jest.mock('html2canvas');
 
 describe('usePdfExporter', () => {
-  let mockPdf: any;
-
   beforeEach(() => {
-    mockPdf = {
-      text: jest.fn(),
-      addPage: jest.fn(),
-      addImage: jest.fn(),
-      save: jest.fn(),
-      setFontSize: jest.fn(),
-      splitTextToSize: jest.fn((text) => [text]),
-      internal: {
-        pageSize: {
-          getWidth: jest.fn(() => 210),
-          getHeight: jest.fn(() => 297),
-        },
-      },
-    };
-    // Clear and set implementation for jsPDF
-    (jsPDF as jest.Mock).mockClear(); // This should now work
-    (jsPDF as jest.Mock).mockImplementation(() => mockPdf); // This should now work
+    // Clear all instances and calls to constructor and all methods:
+    (jsPDF as jest.Mock).mockClear();
     (html2canvas as jest.Mock).mockClear();
   });
 
@@ -67,23 +66,23 @@ describe('usePdfExporter', () => {
     });
 
     expect(jsPDF).toHaveBeenCalledTimes(1);
-    expect(mockPdf.text).toHaveBeenCalledWith(
+    expect(jsPDF().text).toHaveBeenCalledWith(
       'Chapter 1',
       expect.any(Number),
       expect.any(Number)
     );
-    expect(mockPdf.text).toHaveBeenCalledWith(
+    expect(jsPDF().text).toHaveBeenCalledWith(
       ['Once upon a time...'], // Expect an array here
       expect.any(Number),
       expect.any(Number)
     );
-    expect(mockPdf.addPage).toHaveBeenCalledTimes(1);
-    expect(mockPdf.text).toHaveBeenCalledWith(
+    expect(jsPDF().addPage).toHaveBeenCalledTimes(1);
+    expect(jsPDF().text).toHaveBeenCalledWith(
       'Chapter 2',
       expect.any(Number),
       expect.any(Number)
     );
-    expect(mockPdf.text).toHaveBeenCalledWith(
+    expect(jsPDF().text).toHaveBeenCalledWith(
       ['The adventure begins.'], // Expect an array here
       expect.any(Number),
       expect.any(Number)
@@ -105,8 +104,8 @@ describe('usePdfExporter', () => {
     });
 
     expect(html2canvas).toHaveBeenCalledTimes(2);
-    expect(mockPdf.addImage).toHaveBeenCalledTimes(2);
-    expect(mockPdf.save).toHaveBeenCalledWith('snapptale-Alex.pdf');
+    expect(jsPDF().addImage).toHaveBeenCalledTimes(2);
+    expect(jsPDF().save).toHaveBeenCalledWith('snapptale-Alex.pdf');
   });
 
   it('should call the save function with the correct filename', async () => {
@@ -116,6 +115,6 @@ describe('usePdfExporter', () => {
       await result.current.exportPdf([{ title: 't' }], 'TestName');
     });
 
-    expect(mockPdf.save).toHaveBeenCalledWith('snapptale-TestName.pdf');
+    expect(jsPDF().save).toHaveBeenCalledWith('snapptale-TestName.pdf');
   });
 });

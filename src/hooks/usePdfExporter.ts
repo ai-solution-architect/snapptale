@@ -54,7 +54,6 @@ export const usePdfExporter = () => {
       pdf.save(fileName);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');
-      console.error('--- Error in exportPdf try block ---', e);
     } finally {
       setIsExporting(false);
     }

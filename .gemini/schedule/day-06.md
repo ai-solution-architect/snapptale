@@ -98,8 +98,8 @@ We will encapsulate all logic and state related to PDF exporting into a reusable
 
 ### TDD Cycle 2.5: Implement PDF Generation (Images & Saving)
 
-- [ ] **Red:** Mock `html2canvas` and enhance the test to assert that `html2canvas` and `addImage` are called for each chapter, and that `save` is called at the end.
-- [ ] **Green:** Implement the `html2canvas` logic to handle images and add the `pdf.save()` call.
+- [x] **Red:** Mock `html2canvas` and enhance the test to assert that `html2canvas` and `addImage` are called for each chapter, and that `save` is called at the end.
+- [x] **Green:** Implement the `html2canvas` logic to handle images and add the `pdf.save()` call.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(pdf): add images and save functionality to pdf export`
 
