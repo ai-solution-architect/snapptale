@@ -90,11 +90,11 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen bg-snaptale-app-background flex flex-col items-center justify-center p-4">
-      <Image src="/Snaptale-Logo.png" alt="Snapptale Logo" width={200} height={50} className="mb-8" />
+      <Image src="/Snaptale-Logo.png" alt="Snapptale Logo" width={200} height={50} className="w-32 md:w-48 h-auto mb-8" />
 
-      <form onSubmit={handleSubmit} className="bg-snaptale-background p-8 rounded-lg shadow-md w-full max-w-md mb-8">
+      <form onSubmit={handleSubmit} className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-md mb-8">
         <div className="mb-4">
-          <label htmlFor="photo-upload" className="block text-snaptale-shadow text-sm font-bold mb-2 font-nunito">
+          <label htmlFor="photo-upload" className="block text-snaptale-shadow text-sm md:text-base font-bold mb-2 font-nunito">
             Upload Photo:
           </label>
           <input
@@ -102,7 +102,7 @@ export default function UploadPage() {
             id="photo-upload"
             accept="image/*"
             onChange={handleFileChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-sm md:text-base text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
           />
           {preview && (
             <div className="mt-4 relative w-32 h-32">
@@ -119,7 +119,7 @@ export default function UploadPage() {
         </div>
 
         <div className="mb-6">
-          <label htmlFor="child-name" className="block text-snaptale-shadow text-sm font-bold mb-2 font-nunito">
+          <label htmlFor="child-name" className="block text-snaptale-shadow text-sm md:text-base font-bold mb-2 font-nunito">
             Child's Name:
           </label>
           <input
@@ -128,13 +128,13 @@ export default function UploadPage() {
             value={name}
             onChange={handleNameChange}
             placeholder="Enter child's name"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-sm md:text-base text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
           />
         </div>
 
         <button
           type="submit"
-          className="bg-snaptale-highlight hover:bg-snaptale-shadow text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full font-poppins"
+          className="bg-snaptale-highlight hover:bg-snaptale-shadow text-snaptale-shadow font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full font-poppins"
           disabled={isLoading || !file || !name}
         >
           {isLoading ? 'Generating Story...' : 'Generate Story'}
@@ -149,8 +149,8 @@ export default function UploadPage() {
       )}
 
       {story.length > 0 && (
-        <div className="bg-snaptale-background p-8 rounded-lg shadow-md w-full max-w-2xl">
-          <h2 className="text-2xl font-bold text-snaptale-highlight mb-4 font-poppins">Your Snapptale Story</h2>
+        <div className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-snaptale-highlight mb-4 font-poppins">Your Snapptale Story</h2>
           <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
         </div>
       )
