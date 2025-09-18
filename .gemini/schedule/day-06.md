@@ -91,8 +91,8 @@ We will encapsulate all logic and state related to PDF exporting into a reusable
 
 ### TDD Cycle 2.4: Implement PDF Generation (Text)
 
-- [ ] **Red:** Mock `jspdf` and write a test to assert that when `exportPdf` is called, the `jspdf` constructor and the `text` method are invoked with the correct story content.
-- [ ] **Green:** Add the core `jspdf` logic to the `exportPdf` function to handle text content.
+- [x] **Red:** Mock `jspdf` and write a test to assert that when `exportPdf` is called, the `jspdf` constructor and the `text` method are invoked with the correct story content.
+- [x] **Green:** Add the core `jspdf` logic to the `exportPdf` function to handle text content.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
 - [ ] **Commit:** `feat(pdf): generate pdf with text content`
 
