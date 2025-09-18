@@ -14,8 +14,8 @@ This document outlines the proposed design updates to align the Snaptale applica
 *   **Proposed Update:**
     *   **Define Custom Tailwind Colors:** Map the brand hex codes to Tailwind's `theme.extend.colors` in `tailwind.config.js`. This allows using classes like `text-snaptale-primary`, `bg-snaptale-background`, etc.
     *   **Update `globals.css`:**
-        *   Light mode: Set `--background` to `#F9FAFB` (Brand Background) and `--foreground` to `#1D3557` (Brand Shadow/Text).
-        *   Dark mode: Keep `--background` as `#0a0a0a` (or a very dark version of the brand's dark blue) and `--foreground` as `#A8DADC` (Brand Primary, or a very light version of it for contrast). We need to ensure the dark mode foreground contrasts well with `#0a0a0a` and aligns with the brand.
+        *   Set `--background` to `#F9FAFB` (Brand Background) and `--foreground` to `#1D3557` (Brand Shadow/Text). The application will maintain a light, soft theme suitable for children.
+        
     *   **Apply to Components:** Update `bg-gray-100`, `bg-white`, `text-blue-600` classes in `UploadPage` and other components to use the new custom brand colors.
 
 ## 2. Typography Integration
@@ -33,8 +33,8 @@ This document outlines the proposed design updates to align the Snaptale applica
 *   **Current:** No official logo used.
 *   **Brand:** `snaptale-draft-logo.png`, `Snaptale-Logo.png`, `Snaptale-Hero.png`, etc.
 *   **Proposed Update:**
-    *   **Replace Text Logo:** Replace the `Snaptale` heading in `UploadPage` with the `Snaptale-Logo.png` image.
-    *   **Landing Page:** Use `Snaptale-Hero.png` on the landing page (`page.tsx`) to create a strong visual identity.
+    *   **Upload Page Logo:** Use `Snaptale-Logo.png` on the `UploadPage` to replace the text logo, leveraging its blue background for a soft, branded feel.
+    *   **Landing Page:** Remove `Snaptale-Hero.png` from the landing page (`page.tsx`) to maintain a simpler, cleaner aesthetic.
     *   **Favicon:** Ensure the favicon is updated to use the brand's icon.
 
 ## 4. Overall Look and Feel

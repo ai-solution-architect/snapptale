@@ -11,6 +11,8 @@
     "check-google-ai": "node scripts/check-google-ai.mjs"
   },
   "dependencies": {
+    "@fontsource/nunito": "^5.2.7",
+    "@fontsource/poppins": "^5.2.7",
     "@google/genai": "^1.19.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.2",
