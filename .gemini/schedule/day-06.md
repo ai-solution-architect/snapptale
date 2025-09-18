@@ -64,42 +64,44 @@ The multi-chapter story display is currently embedded in `src/app/upload/page.ts
 
 ***
 
-## Step 2: Implement PDF Export Logic
+## Step 2: Implement PDF Export Logic via `usePdfExporter` Hook
 
-### TDD Cycle 2.1: Install PDF Libraries
+We will encapsulate all logic and state related to PDF exporting into a reusable custom hook. This improves testability and separation of concerns.
 
-- [x] **Red:** Attempt to import `jspdf` and `html2canvas` in a test file (e.g., a new `tests/pdf-export.test.ts`) and observe import errors because the packages are not installed.
-- [x] **Green:** Run `npm install jspdf html2canvas` and `npm install --save-dev @types/jspdf @types/html2canvas`.
+### TDD Cycle 2.1: Create Hook and Test Files
+
+- [x] **Red:** Create a new test file `tests/hooks/usePdfExporter.test.ts` that attempts to import `usePdfExporter` from `@/hooks/usePdfExporter` and fails because the file doesn't exist.
+- [x] **Green:** Create the empty `src/hooks/usePdfExporter.ts` file and export a basic `usePdfExporter` function.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
-- [ ] **Commit:** `chore(deps): install jspdf and html2canvas for PDF export`
+- [ ] **Commit:** `feat(pdf): create usePdfExporter hook and test files`
 
-### TDD Cycle 2.2: Implement `handleExportPdf` Function (Initial Structure)
+### TDD Cycle 2.2: Test Initial State
 
-- [x] **Red:** Create a new test file (e.g., `tests/pdf-export.test.ts`) and write a test that attempts to call `handleExportPdf` (mocking `jspdf` and `html2canvas`) and asserts that `setIsExportingPdf` is called. This test should fail because `handleExportPdf` doesn't exist yet.
-- [x] **Green:** Add the basic structure of `handleExportPdf` to `src/app/upload/page.tsx`, including `setIsExportingPdf(true)` and `setIsExportingPdf(false)` in the `finally` block.
+- [ ] **Red:** Write a test that calls the hook and asserts that it returns the correct initial state: `isExporting` is `false`, `error` is `null`, and `exportPdf` is a function.
+- [ ] **Green:** Implement the minimal state logic in the hook using `useState` to return the correct initial values.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
-- [ ] **Commit:** `feat(pdf): add initial handleExportPdf function structure`
+- [ ] **Commit:** `feat(pdf): implement initial state for usePdfExporter`
 
-### TDD Cycle 2.3: Implement PDF Generation (Text and Basic Structure)
+### TDD Cycle 2.3: Test `isExporting` State Change
 
-- [ ] **Red:** Enhance the `tests/pdf-export.test.ts` to mock `jspdf` and assert that `addPage`, `setFontSize`, and `text` methods are called with expected arguments for chapter titles and text.
-- [ ] **Green:** Implement the `jspdf` logic in `handleExportPdf` to add pages, chapter titles, and text content from the story.
+- [ ] **Red:** Write a test that calls the `exportPdf` function and asserts that `isExporting` becomes `true` immediately, and then `false` after the operation completes.
+- [ ] **Green:** Wrap the logic inside `exportPdf` with `setIsExporting(true)` and a `finally` block containing `setIsExporting(false)`.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
-- [ ] **Commit:** `feat(pdf): generate basic pdf with chapter titles and text`
+- [ ] **Commit:** `feat(pdf): manage isExporting state in usePdfExporter`
 
-### TDD Cycle 2.4: Implement PDF Generation (Images)
+### TDD Cycle 2.4: Implement PDF Generation (Text)
 
-- [ ] **Red:** Further enhance `tests/pdf-export.test.ts` to mock `html2canvas` and `addImage` from `jspdf`, asserting that images are correctly processed and added to the PDF.
-- [ ] **Green:** Implement the `html2canvas` and `addImage` logic in `handleExportPdf` to include chapter images, handling aspect ratios and page breaks.
+- [ ] **Red:** Mock `jspdf` and write a test to assert that when `exportPdf` is called, the `jspdf` constructor and the `text` method are invoked with the correct story content.
+- [ ] **Green:** Add the core `jspdf` logic to the `exportPdf` function to handle text content.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
-- [ ] **Commit:** `feat(pdf): add chapter images to pdf export`
+- [ ] **Commit:** `feat(pdf): generate pdf with text content`
 
-### TDD Cycle 2.5: Implement PDF Saving
+### TDD Cycle 2.5: Implement PDF Generation (Images & Saving)
 
-- [ ] **Red:** Add a test to `tests/pdf-export.test.ts` that asserts `pdf.save` is called with the correct filename.
-- [ ] **Green:** Add `pdf.save` call to `handleExportPdf`.
+- [ ] **Red:** Mock `html2canvas` and enhance the test to assert that `html2canvas` and `addImage` are called for each chapter, and that `save` is called at the end.
+- [ ] **Green:** Implement the `html2canvas` logic to handle images and add the `pdf.save()` call.
 - [ ] **Doc:** Update `day-06.md` to mark this step as complete.
-- [ ] **Commit:** `feat(pdf): save generated pdf file`
+- [ ] **Commit:** `feat(pdf): add images and save functionality to pdf export`
 
 ### Verification: Run Tests and Verify Manually
 

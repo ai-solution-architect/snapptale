@@ -50,6 +50,7 @@ This file provides context for the Gemini AI assistant to ensure it aligns with 
 - **Component Naming:** Page components should be named with a `Page` suffix (e.g., `HomePage`, `UploadPage`).
 - **Quote Style:** Use single quotes (`'`) for all JavaScript and TypeScript code.
 - **Test Element Selection:** Prioritize user-facing attributes (e.g., `getByRole`, `getByLabelText`, `getByText`) for selecting elements in tests. Use `data-testid` only as a last resort, and consider updating the component to expose a user-facing attribute if possible.
+- **Favor Custom Hooks for Business Logic:** When implementing complex business logic that involves state management (e.g., loading, error states) and side effects (e.g., API calls, file generation), encapsulate this logic within a custom hook (e.g., `useDataFetcher`, `usePdfExporter`). This separates concerns from the UI components, improves reusability, and simplifies testing by allowing the component and the hook logic to be tested in isolation.
 - **Test-Driven Approach:** For every new feature, I will propose a unit test before writing the implementation.
 - **Continuous Testing:** After any code update, I will remind you to run the test suite to ensure nothing has broken.
 - **Source of Truth:** Our documentation (`GEMINI.md` and `.gemini/` files) and our tests are the primary source of truth. All code changes must be reflected in and validated by them.
