@@ -1,16 +1,33 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { usePdfExporter } from '@/hooks/usePdfExporter';
-import jsPDF from 'jspdf';
+import jsPDF from 'jspdf'; // Changed import back
 import html2canvas from 'html2canvas';
 
-// Mock the libraries
-jest.mock('jspdf');
+// Mock the libraries (must be at the top)
+jest.mock('jspdf'); // Added back
 jest.mock('html2canvas');
 
 describe('usePdfExporter', () => {
+  let mockPdf: any;
+
   beforeEach(() => {
-    // Clear all instances and calls to constructor and all methods:
-    (jsPDF as jest.Mock).mockClear();
+    mockPdf = {
+      text: jest.fn(),
+      addPage: jest.fn(),
+      addImage: jest.fn(),
+      save: jest.fn(),
+      setFontSize: jest.fn(),
+      splitTextToSize: jest.fn((text) => [text]),
+      internal: {
+        pageSize: {
+          getWidth: jest.fn(() => 210),
+          getHeight: jest.fn(() => 297),
+        },
+      },
+    };
+    // Clear and set implementation for jsPDF
+    (jsPDF as jest.Mock).mockClear(); // This should now work
+    (jsPDF as jest.Mock).mockImplementation(() => mockPdf); // This should now work
     (html2canvas as jest.Mock).mockClear();
   });
 
@@ -39,13 +56,6 @@ describe('usePdfExporter', () => {
   });
 
   it('should call jspdf with the correct text content', async () => {
-    const mockPdf = {
-      text: jest.fn(),
-      addPage: jest.fn(),
-      save: jest.fn(),
-    };
-    (jsPDF as jest.Mock).mockImplementation(() => mockPdf);
-
     const { result } = renderHook(() => usePdfExporter());
     const mockStory = [
       { chapter: 1, title: 'Chapter 1', text: 'Once upon a time...' },
@@ -62,18 +72,26 @@ describe('usePdfExporter', () => {
       expect.any(Number),
       expect.any(Number)
     );
+    expect(mockPdf.text).toHaveBeenCalledWith(
+      ['Once upon a time...'], // Expect an array here
+      expect.any(Number),
+      expect.any(Number)
+    );
+    expect(mockPdf.addPage).toHaveBeenCalledTimes(1);
+    expect(mockPdf.text).toHaveBeenCalledWith(
+      'Chapter 2',
+      expect.any(Number),
+      expect.any(Number)
+    );
+    expect(mockPdf.text).toHaveBeenCalledWith(
+      ['The adventure begins.'], // Expect an array here
+      expect.any(Number),
+      expect.any(Number)
+    );
   });
 
-  // Skipping this test while we debug
-  it.skip('should handle images and save the PDF', async () => {
-    const mockPdf = {
-      text: jest.fn(),
-      addPage: jest.fn(),
-      addImage: jest.fn(),
-      save: jest.fn(),
-    };
-    (jsPDF as jest.Mock).mockImplementation(() => mockPdf);
-    (html2canvas as jest.Mock).mockResolvedValue(document.createElement('canvas'));
+  it('should handle images and save the PDF', async () => {
+    (html2canvas as jest.Mock).mockResolvedValue({ toDataURL: () => 'data:image/png;base64,mock_image_data' });
 
     const { result } = renderHook(() => usePdfExporter());
     const mockStory = [
@@ -92,13 +110,6 @@ describe('usePdfExporter', () => {
   });
 
   it('should call the save function with the correct filename', async () => {
-    const mockPdf = {
-      text: jest.fn(),
-      addPage: jest.fn(),
-      save: jest.fn(),
-    };
-    (jsPDF as jest.Mock).mockImplementation(() => mockPdf);
-
     const { result } = renderHook(() => usePdfExporter());
 
     await act(async () => {

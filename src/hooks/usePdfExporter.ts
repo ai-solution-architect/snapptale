@@ -22,20 +22,39 @@ export const usePdfExporter = () => {
     await new Promise(resolve => setTimeout(resolve, 0));
 
     try {
-      const pdf = new jsPDF();
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      console.log('PDF object:', pdf);
+      const margin = 10;
+      const contentWidth = pdf.internal.pageSize.getWidth() - margin * 2;
 
-      story.forEach((chapter, index) => {
-        if (index > 0) {
+      for (const chapter of story) {
+        pdf.setFontSize(16);
+        pdf.text(chapter.title, margin, 20);
+
+        if (chapter.imageData) {
+          const imgElement = document.createElement('img');
+          imgElement.src = chapter.imageData;
+          const canvas = await html2canvas(imgElement);
+          const imgData = canvas.toDataURL('image/png');
+          const imgWidth = 100; // fixed width for now
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          pdf.addImage(imgData, 'PNG', margin, 30, imgWidth, imgHeight);
+        }
+
+        pdf.setFontSize(12);
+        const splitText = pdf.splitTextToSize(chapter.text, contentWidth);
+        pdf.text(splitText, margin, 150); // Position text below image
+
+        if (story.indexOf(chapter) < story.length - 1) {
           pdf.addPage();
         }
-        pdf.text(chapter.title, 10, 20);
-        pdf.text(chapter.text, 10, 30);
-      });
+      }
 
       const fileName = `snapptale-${childName || 'story'}.pdf`;
       pdf.save(fileName);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');
+      console.error('--- Error in exportPdf try block ---', e);
     } finally {
       setIsExporting(false);
     }
