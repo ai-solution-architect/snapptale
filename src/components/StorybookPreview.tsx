@@ -30,8 +30,9 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story, onExport, is
           )}
         </div>
       ))}
-      <button onClick={onExport} disabled={isExporting}>
-        {isExporting ? 'Preparing PDF...' : 'Export PDF'}
+      <hr className="my-4 border-gray-300" /> {/* Added line */}
+      <button onClick={onExport} disabled={isExporting} className="font-bold">
+        {isExporting ? 'Preparing PDF...' : 'Download your Tale'}
       </button>
     </div>
   );

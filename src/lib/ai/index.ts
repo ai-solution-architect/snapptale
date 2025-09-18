@@ -37,7 +37,7 @@ async function generateStoryWithOllama(
 ): Promise<{ story: StoryChapter[] }> {
   const imageBase64 = await fileToBase64(childPhoto);
 
-  const prompt = `You are a creative storyteller for children. Based on the provided image, generate a short, whimsical, 3-chapter story for a child named ${childName}. For each chapter, provide a text and a simple description for an illustration. Return ONLY a valid JSON object in the following format: { "story": [ { "chapter": 1, "text": "...", "illustration_description": "..." }, ... ] }`;
+  const prompt = `You are a a creative storyteller for children. Based on the provided image, generate a short, whimsical, 3-chapter story for a child named ${childName}. For each chapter, provide a title, a text, and a simple description for an illustration. Return ONLY a valid JSON object in the following format: { "story": [ { "chapter": 1, "title": "...", "text": "...", "illustration_description": "..." }, ... ] }`;
 
   const response = await fetch('http://localhost:11434/api/generate', {
     method: 'POST',

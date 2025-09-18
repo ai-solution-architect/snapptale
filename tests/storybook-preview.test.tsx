@@ -43,13 +43,13 @@ describe('StorybookPreview', () => {
 
   it('should render an "Export PDF" button', () => {
     render(<StorybookPreview story={mockStory} />);
-    expect(screen.getByRole('button', { name: /export pdf/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /download your tale/i })).toBeInTheDocument();
   });
 
   it('calls onExport when the Export PDF button is clicked', () => {
     const handleExportMock = jest.fn();
     render(<StorybookPreview story={mockStory} onExport={handleExportMock} isExporting={false} />);
-    const exportButton = screen.getByRole('button', { name: /export pdf/i });
+    const exportButton = screen.getByRole('button', { name: /download your tale/i });
     fireEvent.click(exportButton);
     expect(handleExportMock).toHaveBeenCalledTimes(1);
   });

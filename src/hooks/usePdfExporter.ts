@@ -51,7 +51,9 @@ export const usePdfExporter = () => {
       }
 
       const fileName = `snapptale-${childName || 'story'}.pdf`;
+      console.log('Attempting to save PDF:', fileName);
       pdf.save(fileName);
+      console.log('PDF save function called.');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');
     } finally {
