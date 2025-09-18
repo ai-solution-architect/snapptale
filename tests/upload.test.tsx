@@ -2,13 +2,11 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import UploadPage from '@/app/upload/page';
 import React from 'react';
 import StorybookPreview from '@/components/StorybookPreview';
+import { useFilePreview } from '@/hooks/useFilePreview';
 
 // Mock the useFilePreview hook
 jest.mock('@/hooks/useFilePreview', () => ({
-  useFilePreview: jest.fn(() => ({
-    preview: null,
-    clearPreview: jest.fn(),
-  })),
+  useFilePreview: jest.fn(() => null), // Mock to return null directly by default
 }));
 
 // Mock the StorybookPreview component
@@ -37,6 +35,16 @@ describe('Upload Page', () => {
         mockOnExport.mockClear();
         mockIsExporting = false;
         (StorybookPreview as jest.Mock).mockClear();
+    });
+
+    it('should render without crashing when useFilePreview returns a non-object', () => {
+        // Temporarily override the mock for this specific test
+        // The hook now returns a string or null, not an object.
+        // We want to ensure the component handles this gracefully.
+        (useFilePreview as jest.Mock).mockReturnValueOnce(null);
+
+        // Expect the component to render without throwing an error
+        expect(() => render(<UploadPage />)).not.toThrow();
     });
 
     it('renders main heading and disabled generate story button', () => {

@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         // --- MOCK API UPLOAD END ---
 
         const formData = await req.formData();
-        const file = formData.get('file') as File;
+        const file = formData.get('photo') as File;
         const name = formData.get('name') as string;
 
         console.log('API Route: Received name:', name);

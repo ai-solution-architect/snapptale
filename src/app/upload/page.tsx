@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useFilePreview } from '@/hooks/useFilePreview';
 import Image from 'next/image';
 import StorybookPreview from '@/components/StorybookPreview';
+import { usePdfExporter } from '@/hooks/usePdfExporter';
 
 interface StoryChapter {
   chapter: number;
@@ -19,9 +20,14 @@ export default function UploadPage() {
   const [story, setStory] = useState<StoryChapter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false); // New state
 
-  const { preview, clearPreview } = useFilePreview(file);
+  const { isExporting: isPdfExporting, error: pdfExportError, exportPdf: exportPdfHook } = usePdfExporter();
+
+  const preview = useFilePreview(file);
+
+  const handleClearPreview = () => {
+    setFile(null);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -59,7 +65,8 @@ export default function UploadPage() {
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
-        } catch (jsonError) {
+        }
+        catch (jsonError) {
           errorMessage = 'An unexpected error occurred on the server.';
         }
         throw new Error(errorMessage);
@@ -67,32 +74,18 @@ export default function UploadPage() {
 
       const data = await response.json();
       setStory(data.story);
-    } catch (err) {
+    }
+    catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   };
 
-  // New handleExportPdf function
   const handleExportPdf = async () => {
     if (!story || story.length === 0) return;
-
-    setIsExportingPdf(true);
-    setError(null);
-
-    try {
-      // Simulate an async operation for testing purposes
-      await new Promise(resolve => setTimeout(resolve, 100)); // Simulate delay
-      // PDF generation logic will go here in subsequent steps
-      console.log('Exporting PDF...');
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unknown error occurred during PDF export.';
-      setError(message);
-      console.error('PDF Export Error:', err);
-    } finally {
-      setIsExportingPdf(false);
-    }
+    await exportPdfHook(story, name);
   };
 
   return (
@@ -113,10 +106,10 @@ export default function UploadPage() {
           />
           {preview && (
             <div className="mt-4 relative w-32 h-32">
-              <Image src={preview} alt="Preview" layout="fill" objectFit="cover" className="rounded" />
+              {preview && <Image src={preview} alt="Preview" fill className="rounded object-cover" />} 
               <button
                 type="button"
-                onClick={clearPreview}
+                onClick={handleClearPreview} 
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
               >
                 X
@@ -148,17 +141,17 @@ export default function UploadPage() {
         </button>
       </form>
 
-      {error && (
+      {(error || pdfExportError) && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full max-w-md mb-4" role="alert">
           <strong className="font-bold">Error:</strong>
-          <span className="block sm:inline"> {error}</span>
+          <span className="block sm:inline"> {error || pdfExportError}</span>
         </div>
       )}
 
       {story.length > 0 && (
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
           <h2 className="text-2xl font-bold text-blue-600 mb-4">Your Snapptale Story</h2>
-          <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isExportingPdf} /> {/* Pass props */}
+          <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
         </div>
       )}
     </div>

@@ -32,7 +32,7 @@ describe('/api/upload', () => {
     // Arrange: Create a mock FormData object, just like a browser would send.
     const formData = new FormData();
     formData.append('name', 'Test Child');
-    formData.append('file', new Blob(['test file content']), 'test.png');
+    formData.append('photo', new Blob(['test file content']), 'test.png'); // Changed 'file' to 'photo'
 
     // Arrange: Create a mock NextRequest object to simulate a real request.
     const request = new NextRequest('http://localhost/api/upload', {
@@ -50,4 +50,6 @@ describe('/api/upload', () => {
       expect.any(File) // The route handler reconstructs the File object from the FormData.
     );
   });
+
+  
 });

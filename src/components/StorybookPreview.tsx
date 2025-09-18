@@ -23,7 +23,7 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story, onExport, is
           <p>{chapter.text}</p>
           {chapter.imageData && chapter.mimeType && (
             <img
-              src={chapter.imageData}
+              src={`data:${chapter.mimeType};base64,${chapter.imageData}`}
               alt={`Illustration for Chapter ${chapter.chapter}`}
               style={{ maxWidth: '100%', height: 'auto' }}
             />
