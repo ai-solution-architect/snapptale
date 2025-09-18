@@ -4,6 +4,8 @@
  * @file This file serves as the abstraction layer for our AI services.
  */
 
+import { STORY_GENERATION_PROMPT } from './prompts';
+
 // Defines the structure for a single chapter of the story.
 export interface StoryChapter {
   chapter: number;
@@ -37,14 +39,14 @@ async function generateStoryWithOllama(
 ): Promise<{ story: StoryChapter[] }> {
   const imageBase64 = await fileToBase64(childPhoto);
 
-  const prompt = `You are a a creative storyteller for children. Based on the provided image, generate a short, whimsical, 3-chapter story for a child named ${childName}. For each chapter, provide a title, a text, and a simple description for an illustration. Return ONLY a valid JSON object in the following format: { "story": [ { "chapter": 1, "title": "...", "text": "...", "illustration_description": "..." }, ... ] }`;
+  const prompt = `${STORY_GENERATION_PROMPT}`;
 
   const response = await fetch('http://localhost:11434/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'llava',
-      prompt: prompt,
+      prompt: prompt.replace('${childName}', childName),
       images: [imageBase64],
       stream: false,
       format: 'json',
@@ -52,7 +54,7 @@ async function generateStoryWithOllama(
   });
 
   if (!response.ok) {
-    throw new Error(`Ollama API request failed: ${response.statusText}`);
+    throw new Error("Ollama API request failed: " + response.statusText);
   }
 
   const data = await response.json();
@@ -83,6 +85,6 @@ export async function generateStory(
     case 'google':
       throw new Error('Google AI provider not implemented yet.');
     default:
-      throw new Error(`Unknown AI provider: ${provider}`);
+      throw new Error("Unknown AI provider: " + provider);
   }
 }

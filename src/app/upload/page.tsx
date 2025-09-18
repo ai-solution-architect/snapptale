@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useFilePreview } from '@/hooks/useFilePreview';
 import Image from 'next/image';
 import StorybookPreview from '@/components/StorybookPreview';
@@ -20,6 +20,8 @@ export default function UploadPage() {
   const [story, setStory] = useState<StoryChapter[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const storyRef = useRef<HTMLDivElement>(null); // Ref for the story section
 
   const { isExporting: isPdfExporting, error: pdfExportError, exportPdf: exportPdfHook } = usePdfExporter();
 
@@ -88,6 +90,13 @@ export default function UploadPage() {
     await exportPdfHook(story, name);
   };
 
+  // Auto-scroll to story section when story is generated
+  useEffect(() => {
+    if (story.length > 0 && storyRef.current) {
+      storyRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [story]);
+
   return (
     <div className="min-h-screen bg-snaptale-app-background flex flex-col items-center justify-center p-4">
       <Image src="/Snaptale-Logo.png" alt="Snapptale Logo" width={200} height={50} className="w-32 md:w-48 h-auto mb-8" />
@@ -105,7 +114,7 @@ export default function UploadPage() {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-sm md:text-base text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
           />
           {preview && (
-            <div className="mt-4 relative w-32 h-32">
+            <div className="mt-4 relative w-32 h-32 flex justify-center">
               {preview && <Image src={preview} alt="Preview" fill className="rounded object-cover" />} 
               <button
                 type="button"
@@ -149,7 +158,7 @@ export default function UploadPage() {
       )}
 
       {story.length > 0 && (
-        <div className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
+        <div ref={storyRef} className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
           <h2 className="text-2xl md:text-3xl font-bold text-snaptale-highlight mb-4 font-poppins">Your Snapptale Story</h2>
           <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
         </div>
