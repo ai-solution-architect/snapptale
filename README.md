@@ -1,3 +1,23 @@
+# Snaptale
+
+The app "Snaptale" is an AI-powered personalized storybook generator designed for children. Users upload a photo, ideally featuring a child, and provide a name. The app then uses AI to analyze the photo to identify the main character or a captivating element, and generates a multi-chapter, child-friendly story centered around that character or element. Each chapter includes a unique AI-generated illustration that integrates the main character with the narrative content. The final personalized storybook is assembled into a downloadable PDF, offering an engaging and interactive storytelling experience for young kids.
+
+## Presentation
+
+[![Snaptale YouTube Presentation](public/thumb-snaptale-youtube.png)](https://www.youtube.com/watch?v=X7HEQr_na9w)
+
+## Current Phase: First Iteration
+
+This is the first phase of the Snaptale application, focusing on core functionality.
+
+- [x] Upload image
+- [x] Generate story by uploaded image
+- [ ] Category selection
+- [ ] Images per chapter
+- [ ] New AI Models
+- [ ] Lesson Driven Tales
+
+
 # Snapptale Development Setup Guide
 
 This guide provides instructions to set up the Snapptale development environment.
@@ -21,7 +41,7 @@ git --version
 
 ### 1.2 Clone the Repository
 
-Clone the Snapptale repository to your local machine:
+Clone the Snaptale repository to your local machine:
 
 ```bash
 git clone [YOUR_REPOSITORY_URL]
