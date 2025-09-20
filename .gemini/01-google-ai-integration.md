@@ -21,8 +21,8 @@ Our first step is to prepare the application to recognize the Google AI provider
 
 - [x] **Red:** In `tests/ai.test.ts`, write a test where `AI_PROVIDER` is `'google'` but the `GOOGLE_API_KEY` environment variable is unset. Assert that calling `generateStory` throws a "Missing GOOGLE_API_KEY" error. This test will fail.
 - [x] **Green:** In `src/lib/ai/index.ts`, in the `case 'google':` block, add a check for `process.env.GOOGLE_API_KEY` and throw the expected error if it's missing.
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `feat(ai): add guard for missing google api key`
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `feat(ai): add guard for missing google api key`
 
 ---
 
@@ -32,9 +32,9 @@ Now we will build the core logic to communicate with the Google AI API using the
 
 ### TDD Cycle 3: Install Google AI SDK
 
-- [ ] **Action:** Run `npm install @google/generative-ai`. This step doesn't follow a typical Red-Green cycle but is a necessary prerequisite.
-- [ ] **Doc:** Update this guide to mark this step as complete.
-- [ ] **Commit:** `chore(deps): add @google/generative-ai sdk`
+- [x] **Action:** Run `npm install @google/generative-ai`. This step doesn't follow a typical Red-Green cycle but is a necessary prerequisite.
+- [x] **Doc:** Update this guide to mark this step as complete.
+- [x] **Commit:** `chore(deps): add @google/generative-ai sdk`
 
 ### TDD Cycle 4: Implement the Google AI API Call
 
