@@ -83,4 +83,16 @@ describe('AI Service', () => {
     );
     delete process.env.AI_PROVIDER;
   });
+
+  // TDD Cycle 2: Test for Missing Google AI API Key
+  it('should throw an error when GOOGLE_API_KEY is missing for google provider', async () => {
+    process.env.AI_PROVIDER = 'google';
+    delete process.env.GOOGLE_API_KEY; // Ensure it's unset
+    const childName = 'Alex';
+    const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
+    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+      'Missing GOOGLE_API_KEY'
+    );
+    delete process.env.AI_PROVIDER;
+  });
 });

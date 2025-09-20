@@ -2,7 +2,7 @@
 
 This document outlines the plan to integrate Google AI as a cloud-based provider for story generation, running parallel to the existing Ollama setup. We will use environment variables to control which provider is active.
 
-**Coaching Note:** We will adhere strictly to the TDD workflow. Each step is a "baby step" designed to move us forward safely. We will write a failing test, make it pass with minimal code, and then refactor or document before committing.
+**Coaching Note:** We will adhere strictly to the TDD workflow. Each step is a "baby step" designed to move us forward safely. We will write a failing test, make it pass with minimal code, and then refactor or document before committing. Refer to <mcfile name="GEMINI.md" path="/Users/jonatassouza/Repositories/personal/snapptale/GEMINI.md"></mcfile> for full project conventions and TDD guidelines.
 
 ---
 
@@ -19,8 +19,8 @@ Our first step is to prepare the application to recognize the Google AI provider
 
 ### TDD Cycle 2: Test for Missing Google AI API Key
 
-- [ ] **Red:** In `tests/ai.test.ts`, write a test where `AI_PROVIDER` is `'google'` but the `GOOGLE_API_KEY` environment variable is unset. Assert that calling `generateStory` throws a "Missing GOOGLE_API_KEY" error. This test will fail.
-- [ ] **Green:** In `src/lib/ai/index.ts`, create a new (but currently empty) `generateStoryWithGoogle` function. In the `case 'google':` block, add a check for `process.env.GOOGLE_API_KEY` and throw the expected error if it's missing.
+- [x] **Red:** In `tests/ai.test.ts`, write a test where `AI_PROVIDER` is `'google'` but the `GOOGLE_API_KEY` environment variable is unset. Assert that calling `generateStory` throws a "Missing GOOGLE_API_KEY" error. This test will fail.
+- [x] **Green:** In `src/lib/ai/index.ts`, in the `case 'google':` block, add a check for `process.env.GOOGLE_API_KEY` and throw the expected error if it's missing.
 - [ ] **Doc:** Update this guide to mark this cycle as complete.
 - [ ] **Commit:** `feat(ai): add guard for missing google api key`
 

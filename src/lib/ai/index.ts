@@ -83,8 +83,19 @@ export async function generateStory(
     case 'ollama':
       return generateStoryWithOllama(childName, childPhoto);
     case 'google':
+      if (!process.env.GOOGLE_API_KEY) {
+        throw new Error('Missing GOOGLE_API_KEY');
+      }
       throw new Error('Google AI provider not implemented yet.');
     default:
       throw new Error("Unknown AI provider: " + provider);
   }
+}
+
+async function generateStoryWithGoogle(
+  childName: string,
+  childPhoto: File
+): Promise<{ story: StoryChapter[] }> {
+  // TODO: Implement Google AI logic here in a future cycle
+  throw new Error('Google AI provider not implemented yet.');
 }
