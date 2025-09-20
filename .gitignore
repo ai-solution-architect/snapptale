@@ -44,3 +44,6 @@ next-env.d.ts
 
 # Ollama data
 /ollama_data
+
+# Gemini drafts
+/.gemini/prompting-drafts/

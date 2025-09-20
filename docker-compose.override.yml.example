@@ -1,0 +1,18 @@
+# Example override file for Google AI configuration
+# Rename this file to docker-compose.override.yml to use Google AI
+
+version: '3.8'
+
+services:
+  nextjs:
+    # Use environment file for sensitive configuration (recommended)
+    env_file:
+      - .env.google
+    
+    # Alternative: Direct environment variables (less secure)
+    # environment:
+    #   - AI_PROVIDER=google
+    #   - GOOGLE_API_KEY=your-google-ai-api-key-here
+
+  # Note: No additional service is needed for Google AI as it's a cloud service
+  # The ollama service can remain for local development or be disabled if not needed
