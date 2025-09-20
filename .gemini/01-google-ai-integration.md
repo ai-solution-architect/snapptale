@@ -12,10 +12,10 @@ Our first step is to prepare the application to recognize the Google AI provider
 
 ### TDD Cycle 1: Test for Google AI Provider Selection
 
-- [ ] **Red:** In `tests/ai.test.ts`, write a new test that sets the `AI_PROVIDER` environment variable to `'google'`. The test should call `generateStory` and assert that it throws a specific "not implemented" error, confirming the `switch` statement directs to the correct, yet-to-be-built, logic.
-- [ ] **Green:** The test should pass without any code changes, as this logic already exists in `src/lib/ai/index.ts`. This confirms our starting point.
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `test(ai): confirm google provider throws not implemented error`
+- [x] **Red:** In `tests/ai.test.ts`, write a new test that sets the `AI_PROVIDER` environment variable to `'google'`. The test should call `generateStory` and assert that it throws a specific "not implemented" error, confirming the `switch` statement directs to the correct, yet-to-be-built, logic.
+- [x] **Green:** The test should pass without any code changes, as this logic already exists in `src/lib/ai/index.ts`. This confirms our starting point.
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `test(ai): confirm google provider throws not implemented error`
 
 ### TDD Cycle 2: Test for Missing Google AI API Key
 

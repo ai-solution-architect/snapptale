@@ -72,4 +72,15 @@ describe('AI Service', () => {
     fetchSpy.mockRestore();
     delete process.env.AI_PROVIDER;
   });
+
+  // TDD Cycle 1: Test for Google AI Provider Selection
+  it('should throw a not implemented error for google provider', async () => {
+    process.env.AI_PROVIDER = 'google';
+    const childName = 'Alex';
+    const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
+    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+      'Google AI provider not implemented yet.'
+    );
+    delete process.env.AI_PROVIDER;
+  });
 });
