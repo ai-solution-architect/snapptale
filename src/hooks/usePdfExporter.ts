@@ -22,7 +22,6 @@ export const usePdfExporter = () => {
 
     try {
       const pdf = new jsPDF('p', 'mm', 'a4');
-      console.log('PDF object:', pdf);
       const margin = 10;
       const contentWidth = pdf.internal.pageSize.getWidth() - margin * 2;
 

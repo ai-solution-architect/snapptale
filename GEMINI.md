@@ -68,6 +68,8 @@ To ensure a controlled and predictable development process, we will adhere to a 
 
 The cycle is as follows:
 
+(See also the "Enhanced TDD Baby Steps Rules for AI Assistant" in Section 8 for strict guidelines on adherence.)
+
 1.  **Red Phase (Write a Failing Test):**
     *   Before writing any implementation code, I will first propose a test that targets a small, specific piece of functionality.
     *   The test will be focused and clearly define the expected behavior.
@@ -89,6 +91,14 @@ The cycle is as follows:
 
 ## 8. AI Interaction Guidelines
 
+### Core Principles from Interaction Reminder
+To reinforce safe, efficient, and user-controlled assistance (as outlined in `.gemini/prepare-chat-prompt.md`):
+1. **Confirm Significant Actions:** Always seek explicit user permission before significant changes to the codebase, file system, or system state. Provide a clear plan and await approval.
+2. **Adhere to Project Conventions:** Strictly follow conventions in `GEMINI.md` and the codebase.
+3. **Explain Critical Commands:** Explain purpose and impact before any modifying shell commands.
+4. **Prioritize User Control:** Do not exceed the scope of user requests without confirmation.
+5. **Verify Before Acting:** Explicitly verify file contents and test results before proposals or actions.
+
 - **File Content Verification:** If there are persistent issues reading a file's content, or if the provided content seems incorrect, I will explicitly ask the user to verify the file's content or provide it directly.
 - **Code Update Verification:** After any significant code update, especially those involving multiple changes or complex logic, I will explicitly ask the user to review the changes before proceeding to the next step.
 - **Diff Output Clarification:** When discussing `diff` outputs, I will clearly specify whether the `diff` refers to an actual code file or a documentation file, and what the implications of the changes are.
@@ -96,7 +106,20 @@ The cycle is as follows:
 - **Direct File Content Verification:** Before discussing or acting on the content of a specific file, I will always use a tool (like `read_file` or `run_shell_command` with `cat`) to directly read its current content. I will not rely on memory or previous assumptions about file content.
 - **Mandatory Pre-Action Review:** Before performing any significant action, providing detailed reasoning, or answering a complex question, I will explicitly state that I am reviewing `GEMINI.md` and briefly summarize the relevant guidelines that apply to the current context. This is a mandatory self-check to ensure adherence to established conventions and guidelines.
 - **Documentation Synchronization:** After any significant code change that alters or enhances a feature described in a `.gemini/*.md` file, I will propose an update to that specific documentation file to ensure it remains synchronized with the codebase.
-- **Strict Codebase State Verification:** Before discussing, analyzing, or proposing any changes related to the codebase (including tests, components, or configurations), I will perform a mandatory, explicit verification of the relevant file contents and, if applicable, the latest test results. I will not proceed with any reasoning or action until this verification is complete and confirmed. This includes:
-    *   **Always reading relevant files** (using `read_file` or `run_shell_command` with `cat`) immediately before analysis.
+- **Strict Codebase State Verification:** Before discussing, analyzing, or proposing any changes to the codebase, I will perform a mandatory, explicit verification of the relevant file contents and test results. This verification, such as reading a file or checking test output, must be performed and its results shown immediately before I propose a code modification or provide a detailed analysis. I will not proceed until this verification is complete and confirmed. This includes:
+    *   **Always reading relevant files** (using tools like `view_files` or shell commands) immediately before analysis.
     *   **Always asking for the latest test output** and waiting for it before assuming test results.
     *   **Never relying on memory or previous assumptions** about the state of the code or test outcomes.
+
+### Enhanced TDD Baby Steps Rules for AI Assistant
+
+To ensure strict adherence to baby steps and prevent deviations:
+1. **Strict Baby Steps Only**: Every TDD cycle must be broken into individual steps (Red: one small failing test; Green: minimal code to pass; Refactor/Doc/Commit: cleanup and documentation). The AI assistant MUST NOT propose or bundle multiple steps (e.g., multiple tests or full implementations) in a single response unless explicitly requested by the user.
+2. **Transparency and Confirmation**: Before suggesting any change to the agreed process (e.g., for efficiency or edge cases), the AI assistant MUST:
+   - Explicitly state the proposed change.
+   - Provide clear reasons (e.g., "This could reduce redundancy because...").
+   - Pause and wait for user confirmation before proceeding.
+3. **Fail-Fast Efficiency**: Prioritize small, incremental changes to allow quick test runs and early error detection. Avoid comprehensive proposals that could lead to debugging loops—efficiency comes from iteration, not volume.
+4. **Mitigation Check**: At the start of each cycle, reference this section and confirm alignment with the user (e.g., "Confirming we're following baby steps as per GEMINI.md").
+
+If a deviation occurs, revisit and update this section collaboratively.

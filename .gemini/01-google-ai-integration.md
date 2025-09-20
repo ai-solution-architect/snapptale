@@ -38,13 +38,16 @@ Now we will build the core logic to communicate with the Google AI API using the
 
 ### TDD Cycle 4: Implement the Google AI API Call
 
-- [ ] **Red:** In `tests/ai.test.ts`, write a new test for the `'google'` provider. Mock the `@google-generative-ai` library. Assert that the `GenerativeModel.generateContent` method is called with the correct prompt and image data. This test will fail.
-- [ ] **Green:** In `src/lib/ai/index.ts`, implement the `generateStoryWithGoogle` function.
-    - Initialize the Google AI client using the `GOOGLE_API_KEY`.
-    - Prepare the prompt and image parts in the format required by the Google AI SDK.
-    - Call `generateContent` and process the response to match the `StoryChapter` interface.
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `feat(ai): implement story generation with google ai`
+- [x] **Red:** In `tests/ai.test.ts`, write a new test for the `'google'` provider. Mock the `@google-generative-ai` library to assert that the `GenerativeModel.generateContent` method is called with the correct prompt and image data.
+- [x] **Green:** In `src/lib/ai/index.ts`, implement the `generateStoryWithGoogle` function. Initialize the Google AI client, prepare the prompt and image parts, call `generateContent`, and process the response to match the `StoryChapter` interface.
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `feat(ai): implement story generation with google ai`
+
+> **Historical Notes from Previous Work on this Cycle:**
+> - Addressed Node.js/Jest limitations with mocked `File` objects (stubbed `arrayBuffer`) to avoid browser API dependencies.
+> - Used top-level `jest.mock` for reliable SDK mocking.
+> - Model: 'gemini-2.5-flash' for fast multimodal generation.
+> - All tests passing; no regressions.
 
 ---
 

@@ -5,6 +5,7 @@
  */
 
 import { STORY_GENERATION_PROMPT } from './prompts';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Defines the structure for a single chapter of the story.
 export interface StoryChapter {
@@ -86,7 +87,7 @@ export async function generateStory(
       if (!process.env.GOOGLE_API_KEY) {
         throw new Error('Missing GOOGLE_API_KEY');
       }
-      throw new Error('Google AI provider not implemented yet.');
+      return generateStoryWithGoogle(childName, childPhoto);
     default:
       throw new Error("Unknown AI provider: " + provider);
   }
@@ -96,6 +97,32 @@ async function generateStoryWithGoogle(
   childName: string,
   childPhoto: File
 ): Promise<{ story: StoryChapter[] }> {
-  // TODO: Implement Google AI logic here in a future cycle
-  throw new Error('Google AI provider not implemented yet.');
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+  const imageBase64 = await fileToBase64(childPhoto);
+  const prompt = STORY_GENERATION_PROMPT.replace('${childName}', childName);
+
+  const imagePart = {
+    inlineData: {
+      data: imageBase64,
+      mimeType: childPhoto.type,
+    },
+  };
+
+  const result = await model.generateContent([prompt, imagePart]);
+  const responseText = result.response.text();
+  const storyData = JSON.parse(responseText);
+
+  // TODO: Image generation from the description is a future TDD cycle.
+  const placeholderImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+
+  const storyWithImages = storyData.story.map((chapter: any) => ({
+    chapter: chapter.chapter,
+    text: chapter.text,
+    imageData: placeholderImage,
+    mimeType: 'image/png',
+  }));
+
+  return { story: storyWithImages };
 }
