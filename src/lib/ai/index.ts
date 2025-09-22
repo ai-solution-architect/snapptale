@@ -6,11 +6,14 @@
 
 import { STORY_GENERATION_PROMPT } from './prompts';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateImageForChapter } from './image';
 
 // Defines the structure for a single chapter of the story.
 export interface StoryChapter {
   chapter: number;
+  title: string; // The title of the chapter
   text: string;
+  illustration_description: string; // Added to hold the prompt for the image
   imageData: string;
   mimeType: string;
 }
@@ -61,14 +64,18 @@ async function generateStoryWithOllama(
   const data = await response.json();
   const storyData = JSON.parse(data.response);
 
-  // TODO: Image generation from the description is a future TDD cycle.
-  const placeholderImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-  const storyWithImages = storyData.story.map((chapter: any) => ({
-    ...chapter,
-    imageData: placeholderImage,
-    mimeType: 'image/png',
-  }));
+  const storyWithImages = await Promise.all(
+    storyData.story.map(async (chapter: any) => {
+      const imageData = await generateImageForChapter(
+        chapter.illustration_description
+      );
+      return {
+        ...chapter,
+        imageData,
+        mimeType: 'image/png',
+      };
+    })
+  );
 
   return { story: storyWithImages };
 }
@@ -114,15 +121,20 @@ async function generateStoryWithGoogle(
   const responseText = result.response.text();
   const storyData = JSON.parse(responseText);
 
-  // TODO: Image generation from the description is a future TDD cycle.
-  const placeholderImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-  const storyWithImages = storyData.story.map((chapter: any) => ({
-    chapter: chapter.chapter,
-    text: chapter.text,
-    imageData: placeholderImage,
-    mimeType: 'image/png',
-  }));
+  // Asynchronously generate an image for each chapter
+  const storyWithImages = await Promise.all(
+    storyData.story.map(async (chapter: any) => {
+      const imageData = await generateImageForChapter(
+        chapter.illustration_description
+      );
+      return {
+        ...chapter,
+        imageData,
+        mimeType: 'image/png', // Assuming PNG for now, can be improved later
+      };
+    })
+  );
 
   return { story: storyWithImages };
 }
+

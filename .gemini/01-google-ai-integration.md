@@ -57,12 +57,12 @@ The current Ollama implementation uses a placeholder for image generation. The G
 
 ### TDD Cycle 5: Abstract Image Generation Logic
 
-- [ ] **Red:** This is a refactoring step. We will first write an integration test. In `tests/ai.test.ts`, create a test that spies on a new, not-yet-created `generateImageForChapter` function and ensures it's called for each chapter by both `generateStoryWithOllama` and `generateStoryWithGoogle`.
-- [ ] **Green:**
+- [x] **Red:** This is a refactoring step. We will first write an integration test. In `tests/ai.test.ts`, create a test that spies on a new, not-yet-created `generateImageForChapter` function and ensures it's called for each chapter by both `generateStoryWithOllama` and `generateStoryWithGoogle`.
+- [x] **Green:**
     - Create a new function `generateImageForChapter(illustration_description: string): Promise<string>` that returns a placeholder image for now.
     - Refactor both `generateStoryWithOllama` and `generateStoryWithGoogle` to call this new function for each chapter instead of having their own placeholder logic.
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `refactor(ai): abstract image generation into a unified function`
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `refactor(ai): abstract image generation into a unified function`
 
 ---
 

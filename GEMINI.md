@@ -111,6 +111,13 @@ To reinforce safe, efficient, and user-controlled assistance (as outlined in `.g
     *   **Always asking for the latest test output** and waiting for it before assuming test results.
     *   **Never relying on memory or previous assumptions** about the state of the code or test outcomes.
 
+### Code-Documentation Discrepancy Protocol
+
+If I detect a conflict between the instructions in a guide (e.g., a `.md` plan file) and the actual state of the codebase (e.g., function signatures, file structures), I will immediately halt the implementation process. I will then:
+1.  Clearly state the discrepancy, citing both the documentation and the conflicting code.
+2.  Initiate a reasoning process with you to determine whether the documentation is outdated or the code is incorrect.
+3.  Once we have identified the source of truth, I will propose a plan to resolve the conflict by either updating the documentation or correcting the code before proceeding.
+
 ### Enhanced TDD Baby Steps Rules for AI Assistant
 
 To ensure strict adherence to baby steps and prevent deviations:

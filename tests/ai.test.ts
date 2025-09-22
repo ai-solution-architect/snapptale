@@ -5,28 +5,36 @@
  */
 
 import { TextEncoder } from 'util';
-import { generateStory } from '@/lib/ai';
+import * as ai from '@/lib/ai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateImageForChapter } from '@/lib/ai/image';
 
-// 1. Mock the entire module. Jest will replace the real GoogleGenerativeAI
-//    with a mock constructor.
+// Mock the new image generation module
+jest.mock('@/lib/ai/image');
+
+// Mock the Google AI SDK
 jest.mock('@google/generative-ai');
 
-// 2. Create a typed reference to the mocked constructor. This allows us to
-//    control its behavior in our tests.
+// Create typed references to the mocks
 const MockedGoogleGenerativeAI = GoogleGenerativeAI as jest.Mock;
+const mockedGenerateImageForChapter = generateImageForChapter as jest.Mock;
 
 describe('AI Service Abstraction Layer', () => {
-  // These tests do not involve the Google AI mock and can remain as they are.
+  beforeEach(() => {
+    // Clear mocks before each test
+    mockedGenerateImageForChapter.mockClear();
+    MockedGoogleGenerativeAI.mockClear();
+  });
+
   it('should be defined', () => {
-    expect(generateStory).toBeDefined();
+    expect(ai.generateStory).toBeDefined();
   });
 
   it('should throw an error for an unknown provider', async () => {
     process.env.AI_PROVIDER = 'unknown_provider';
     const childName = 'Alex';
     const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
-    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+    await expect(ai.generateStory(childName, childPhoto)).rejects.toThrow(
       'Unknown AI provider: unknown_provider'
     );
     delete process.env.AI_PROVIDER;
@@ -37,7 +45,7 @@ describe('AI Service Abstraction Layer', () => {
     delete process.env.GOOGLE_API_KEY; // Ensure it's unset
     const childName = 'Alex';
     const childPhoto = new File([''], 'alex-photo.png', { type: 'image/png' });
-    await expect(generateStory(childName, childPhoto)).rejects.toThrow(
+    await expect(ai.generateStory(childName, childPhoto)).rejects.toThrow(
       'Missing GOOGLE_API_KEY'
     );
     delete process.env.AI_PROVIDER;
@@ -45,15 +53,26 @@ describe('AI Service Abstraction Layer', () => {
 });
 
 describe('generateStory with Ollama', () => {
+  beforeEach(() => {
+    mockedGenerateImageForChapter.mockClear();
+  });
+
   it('should call the Ollama API with the correct payload', async () => {
     const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({
-          response: JSON.stringify({
-            story: [{ chapter: 1, text: 'A mock story.', illustration_description: 'A mock description.' }]
+        json: () =>
+          Promise.resolve({
+            response: JSON.stringify({
+              story: [
+                {
+                  chapter: 1,
+                  text: 'A mock story.',
+                  illustration_description: 'A mock description.',
+                },
+              ],
+            }),
           }),
-        }),
       } as Response)
     );
 
@@ -63,10 +82,11 @@ describe('generateStory with Ollama', () => {
     const childPhoto = {
       name: 'alex-photo.png',
       type: 'image/png',
-      arrayBuffer: () => Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
 
-    await generateStory(childName, childPhoto);
+    await ai.generateStory(childName, childPhoto);
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const [url, options] = fetchSpy.mock.calls[0];
@@ -89,17 +109,35 @@ describe('generateStory with Google AI', () => {
   let mockGenerateContent: jest.Mock;
 
   beforeEach(() => {
+    // Provide a default mock implementation for the image generator
+    mockedGenerateImageForChapter.mockResolvedValue(
+      'data:image/png;base64,mock-from-before-each'
+    );
+
     // 4. In `beforeEach`, we define the mock functions and their return values.
     //    This ensures a clean mock for every single test.
     mockGenerateContent = jest.fn().mockResolvedValue({
       response: {
-        text: () => JSON.stringify({
-          story: [
-            { chapter: 1, text: 'Chapter 1 text', illustration_description: 'Desc 1' },
-            { chapter: 2, text: 'Chapter 2 text', illustration_description: 'Desc 2' },
-            { chapter: 3, text: 'Chapter 3 text', illustration_description: 'Desc 3' },
-          ],
-        }),
+        text: () =>
+          JSON.stringify({
+            story: [
+              {
+                chapter: 1,
+                text: 'Chapter 1 text',
+                illustration_description: 'Desc 1',
+              },
+              {
+                chapter: 2,
+                text: 'Chapter 2 text',
+                illustration_description: 'Desc 2',
+              },
+              {
+                chapter: 3,
+                text: 'Chapter 3 text',
+                illustration_description: 'Desc 3',
+              },
+            ],
+          }),
       },
     });
 
@@ -121,10 +159,11 @@ describe('generateStory with Google AI', () => {
     const photoContent = 'fake-photo-content';
     const mockFile = {
       type: 'image/jpeg',
-      arrayBuffer: () => Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
 
-    const result = await generateStory('Test Child', mockFile);
+    const result = await ai.generateStory('Test Child', mockFile);
 
     // --- Assertions ---
 
@@ -148,5 +187,115 @@ describe('generateStory with Google AI', () => {
     expect(result.story).toHaveLength(3);
     expect(result.story[1].text).toBe('Chapter 2 text');
     expect(result.story[1].imageData).toEqual(expect.any(String));
+  });
+});
+
+describe('Image Generation Abstraction', () => {
+  beforeEach(() => {
+    mockedGenerateImageForChapter.mockClear();
+  });
+
+  it('should call generateImageForChapter for each chapter when using the google provider', async () => {
+    // Arrange
+    mockedGenerateImageForChapter.mockResolvedValue(
+      'data:image/png;base64,mock-image-data'
+    );
+
+    // Mock the Google AI SDK response (which includes illustration_description)
+    const mockGenerateContent = jest.fn().mockResolvedValue({
+      response: {
+        text: () =>
+          JSON.stringify({
+            story: [
+              {
+                chapter: 1,
+                text: 'Chapter 1 text',
+                illustration_description: 'Desc 1',
+              },
+              {
+                chapter: 2,
+                text: 'Chapter 2 text',
+                illustration_description: 'Desc 2',
+              },
+              {
+                chapter: 3,
+                text: 'Chapter 3 text',
+                illustration_description: 'Desc 3',
+              },
+            ],
+          }),
+      },
+    });
+    const mockGetGenerativeModel = jest.fn().mockReturnValue({
+      generateContent: mockGenerateContent,
+    });
+    (GoogleGenerativeAI as jest.Mock).mockImplementation(() => ({
+      getGenerativeModel: mockGetGenerativeModel,
+    }));
+
+    process.env.AI_PROVIDER = 'google';
+    process.env.GOOGLE_API_KEY = 'fake-key';
+    const mockFile = {
+      type: 'image/jpeg',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode('fake-photo-content').buffer),
+    } as File;
+
+    // Act
+    await ai.generateStory('Test Child', mockFile);
+
+    // Assert
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledTimes(3);
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Desc 1');
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Desc 2');
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Desc 3');
+  });
+
+  it('should call generateImageForChapter for each chapter when using the ollama provider', async () => {
+    // Arrange
+    mockedGenerateImageForChapter.mockResolvedValue(
+      'data:image/png;base64,mock-image-data'
+    );
+
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            response: JSON.stringify({
+              story: [
+                {
+                  chapter: 1,
+                  text: 'Ollama Chapter 1',
+                  illustration_description: 'Ollama Desc 1',
+                },
+                {
+                  chapter: 2,
+                  text: 'Ollama Chapter 2',
+                  illustration_description: 'Ollama Desc 2',
+                },
+              ],
+            }),
+          }),
+      } as Response)
+    );
+
+    process.env.AI_PROVIDER = 'ollama';
+    const mockFile = {
+      type: 'image/jpeg',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode('fake-photo-content').buffer),
+    } as File;
+
+    // Act
+    await ai.generateStory('Test Child', mockFile);
+
+    // Assert
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledTimes(2);
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Ollama Desc 1');
+    expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Ollama Desc 2');
+
+    fetchSpy.mockRestore();
+    delete process.env.AI_PROVIDER;
   });
 });
