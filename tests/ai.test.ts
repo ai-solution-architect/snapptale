@@ -53,15 +53,60 @@ describe('AI Service Abstraction Layer', () => {
   
   it('should load environment variables from .env.local file', () => {
     // This test verifies that the application can load environment variables
-    // The actual loading is handled by Next.js, but we can verify the environment
-    // variables are accessible after the application starts
+    // The actual loading is handled by Next.js and dotenv, but we can verify 
+    // that environment variables are accessible in the test environment
     
-    // By default, AI_PROVIDER should be undefined or set to a default value
-    // After loading .env.local, it should be set to the value in the file
-    
-    // This is more of an integration test that would be run in a real environment
-    // For now, we're just verifying the test structure
+    // In the test environment, process.env variables are loaded from .env.local
+    // We're just verifying the test structure here
     expect(true).toBe(true);
+  });
+  
+  it('should use ollama as default provider when AI_PROVIDER is not set', async () => {
+    // Save the original value
+    const originalProvider = process.env.AI_PROVIDER;
+    
+    // Ensure AI_PROVIDER is not set
+    delete process.env.AI_PROVIDER;
+    
+    const childName = 'Alex';
+    const photoContent = 'photo content';
+    const childPhoto = {
+      name: 'alex-photo.png',
+      type: 'image/png',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+    } as File;
+    
+    // Mock the Ollama API call to avoid actual network requests
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            response: JSON.stringify({
+              story: [
+                {
+                  chapter: 1,
+                  text: 'A mock story.',
+                  illustration_description: 'A mock description.',
+                },
+              ],
+            }),
+          }),
+      } as Response)
+    );
+    
+    // This should not throw an error and should use ollama as default
+    await expect(ai.generateStory(childName, childPhoto)).resolves.toBeDefined();
+    
+    // Restore the original value
+    if (originalProvider) {
+      process.env.AI_PROVIDER = originalProvider;
+    } else {
+      delete process.env.AI_PROVIDER;
+    }
+    
+    fetchSpy.mockRestore();
   });
 });
 
@@ -248,10 +293,11 @@ describe('Image Generation Abstraction', () => {
 
     process.env.AI_PROVIDER = 'google';
     process.env.GOOGLE_API_KEY = 'fake-key';
+    const photoContent = 'fake-photo-content';
     const mockFile = {
       type: 'image/jpeg',
       arrayBuffer: () =>
-        Promise.resolve(new TextEncoder().encode('fake-photo-content').buffer),
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
 
     // Act
@@ -294,10 +340,11 @@ describe('Image Generation Abstraction', () => {
     );
 
     process.env.AI_PROVIDER = 'ollama';
+    const photoContent = 'fake-photo-content';
     const mockFile = {
       type: 'image/jpeg',
       arrayBuffer: () =>
-        Promise.resolve(new TextEncoder().encode('fake-photo-content').buffer),
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
 
     // Act

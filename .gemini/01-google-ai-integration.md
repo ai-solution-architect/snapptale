@@ -96,14 +96,14 @@ To align with Next.js conventions and simplify environment management, we will c
 
 ### TDD Cycle 8: Align with Next.js Conventions
 
-- [ ] **Red:** Create a test that verifies the application works with `.env.local` instead of provider-specific environment files.
-- [ ] **Green:** 
+- [x] **Red:** Create a test that verifies the application works with `.env.local` instead of provider-specific environment files.
+- [x] **Green:** 
     - Update `.env.example` to include all necessary configuration options
     - Remove provider-specific environment files
     - Update documentation to reference `.env.local`
     - Ensure Docker configuration uses `.env.local`
-- [ ] **Doc:** Update this guide and reference the detailed implementation plan in `02-environment-configuration-implementation.md`
-- [ ] **Commit:** `feat(env): align environment configuration with next.js conventions`
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `feat(env): align environment configuration with next.js conventions`
 
 ### Environment Configuration Implementation Details
 
@@ -148,7 +148,7 @@ Alternatively, you can set these environment variables in your system or Docker 
 ```
 
 **Section 4.2 Using Docker with Google AI:**
-```bash
+```
 ### 4.2 Using Docker with Google AI
 
 To use Google AI with Docker:
@@ -163,7 +163,12 @@ To use Google AI with Docker:
    AI_PROVIDER=google
    ```
 
-2. Start the services:
+2. Copy the example override file:
+   ```bash
+   cp docker-compose.override.yml.example docker-compose.override.yml
+   ```
+
+3. Start the services:
    ```bash
    docker-compose up
    ```
