@@ -7,7 +7,7 @@ services:
   nextjs:
     # Use environment file for sensitive configuration (recommended)
     env_file:
-      - .env.google
+      - .env.local
     
     # Alternative: Direct environment variables (less secure)
     # environment:

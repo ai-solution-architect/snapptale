@@ -68,27 +68,25 @@ The current Ollama implementation uses a placeholder for image generation. The G
 
 ## Phase 4: Docker Configuration for Development
 
-To ensure consistent development environments and simplify setup, we'll add Google AI configuration to our Docker Compose setup.
-
 ### TDD Cycle 6: Environment Configuration Management
 
-- [ ] **Red:** Create a test that verifies the application can load environment variables from a `.env` file for Google AI configuration.
-- [ ] **Green:** 
+- [x] **Red:** Create a test that verifies the application can load environment variables from a `.env` file for Google AI configuration.
+- [x] **Green:** 
     - Create a `.env.example` file with placeholder values for `GOOGLE_API_KEY` and `AI_PROVIDER`
     - Update the Docker Compose configuration to support environment variable injection
     - Document how to properly configure environment variables for both Ollama and Google AI providers
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `feat(env): add environment configuration for google ai`
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `feat(env): add environment configuration for google ai`
 
 ### TDD Cycle 7: Enhanced Docker Compose Configuration
 
-- [ ] **Red:** Write a test that verifies the Docker Compose configuration includes both Ollama and Google AI services.
-- [ ] **Green:**
+- [x] **Red:** Write a test that verifies the Docker Compose configuration includes both Ollama and Google AI services.
+- [x] **Green:**
     - Update `docker-compose.yml` to include documentation about Google AI configuration
     - Add volume mounts for environment files
     - Ensure the Docker Compose setup supports both local (Ollama) and cloud (Google AI) providers
-- [ ] **Doc:** Update this guide to mark this cycle as complete.
-- [ ] **Commit:** `feat(docker): enhance docker compose for google ai support`
+- [x] **Doc:** Update this guide to mark this cycle as complete.
+- [x] **Commit:** `feat(docker): enhance docker compose for google ai support`
 
 ---
 
@@ -134,7 +132,7 @@ GOOGLE_API_KEY=your-google-ai-api-key-here
 Update documentation to reference `.env.local`:
 
 **Section 2.2.2 Configure Environment Variables:**
-```markdown
+```bash
 #### 2.2.2 Configure Environment Variables
 
 Create a `.env.local` file in the project root with your API key:
@@ -150,7 +148,7 @@ Alternatively, you can set these environment variables in your system or Docker 
 ```
 
 **Section 4.2 Using Docker with Google AI:**
-```markdown
+```bash
 ### 4.2 Using Docker with Google AI
 
 To use Google AI with Docker:

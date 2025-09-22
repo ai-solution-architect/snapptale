@@ -95,7 +95,7 @@ AI_PROVIDER=google
 
 Alternatively, you can set these environment variables in your system or Docker configuration.
 
-**Note:** Never commit `.env` files containing API keys to version control.
+**Note:** Never commit `.env.local` files containing API keys to version control.
 
 ## 3. Running the Application
 
@@ -140,37 +140,27 @@ This will start both the Ollama service and the Next.js application.
 
 To use Google AI with Docker:
 
-1. Copy the example override file:
+1. Copy the example file:
    ```bash
-   cp docker-compose.override.yml.example docker-compose.override.yml
+   cp .env.example .env.local
    ```
-
-2. Create a `.env.google` file with your API key (based on `.env.google.example`):
-   ```bash
-   cp .env.google.example .env.google
-   ```
-   Then edit `.env.google` to add your actual API key:
+   Then edit `.env.local` to add your actual API key:
    ```bash
    GOOGLE_API_KEY=your-google-ai-api-key-here
    AI_PROVIDER=google
    ```
 
-3. Edit `docker-compose.override.yml` to use the environment file:
-   ```yaml
-   version: '3.8'
-   
-   services:
-     nextjs:
-       env_file:
-         - .env.google
+2. Copy the example override file:
+   ```bash
+   cp docker-compose.override.yml.example docker-compose.override.yml
    ```
 
-4. Start the services:
+3. Start the services:
    ```bash
    docker-compose up
    ```
 
-**Security Note:** Using environment files is more secure than embedding secrets directly in docker-compose files. The `.env.google.example` file shows the expected format. Never commit `.env` files containing API keys to version control.
+**Security Note:** Using environment files is more secure than embedding secrets directly in docker-compose files. Never commit `.env.local` files containing API keys to version control.
 
 ## 5. Switching Between AI Providers
 

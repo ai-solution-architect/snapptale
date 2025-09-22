@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "jest",
     "lint": "eslint",
-    "check-google-ai": "node scripts/check-google-ai.mjs"
+    "check-google-ai": "node scripts/check-google-ai.mjs",
+    "validate-docker": "node scripts/validate-docker-compose.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",

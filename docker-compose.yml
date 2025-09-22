@@ -16,3 +16,11 @@ services:
       - ./ollama_data:/root/.ollama
     # Keeps the container running and allows for interactive sessions (like using 'docker exec').
     tty: true
+
+  # Note about Google AI:
+  # Google AI is a cloud service and does not require a separate container.
+  # To use Google AI, configure the environment variables in your .env.local file:
+  #   AI_PROVIDER=google
+  #   GOOGLE_API_KEY=your-google-ai-api-key-here
+  # Then start the services with:
+  #   docker-compose up
