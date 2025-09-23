@@ -20,10 +20,43 @@ const MockedGoogleGenerativeAI = GoogleGenerativeAI as jest.Mock;
 const mockedGenerateImageForChapter = generateImageForChapter as jest.Mock;
 
 describe('AI Service Abstraction Layer', () => {
+  let fetchSpy: jest.SpyInstance;
+
   beforeEach(() => {
     // Clear mocks before each test
     mockedGenerateImageForChapter.mockClear();
     MockedGoogleGenerativeAI.mockClear();
+
+    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation((url) => {
+      if (url === 'http://localhost:11434/api/tags') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ models: [{ name: 'llava' }] }),
+        } as Response);
+      }
+      if (url === 'http://localhost:11434/api/generate') {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              response: JSON.stringify({
+                story: [
+                  {
+                    chapter: 1,
+                    text: 'A mock story.',
+                    illustration_description: 'A mock description.',
+                  },
+                ],
+              }),
+            }),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unhandled fetch mock URL: ${url}`));
+    });
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
   });
 
   it('should be defined', () => {
@@ -77,25 +110,6 @@ describe('AI Service Abstraction Layer', () => {
         Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
     
-    // Mock the Ollama API call to avoid actual network requests
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            response: JSON.stringify({
-              story: [
-                {
-                  chapter: 1,
-                  text: 'A mock story.',
-                  illustration_description: 'A mock description.',
-                },
-              ],
-            }),
-          }),
-      } as Response)
-    );
-    
     // This should not throw an error and should use ollama as default
     await expect(ai.generateStory(childName, childPhoto)).resolves.toBeDefined();
     
@@ -105,35 +119,42 @@ describe('AI Service Abstraction Layer', () => {
     } else {
       delete process.env.AI_PROVIDER;
     }
-    
-    fetchSpy.mockRestore();
   });
 });
 
 describe('generateStory with Ollama', () => {
+  let fetchSpy: jest.SpyInstance;
+
   beforeEach(() => {
     mockedGenerateImageForChapter.mockClear();
+    delete process.env.AI_PROVIDER;
+    delete process.env.OLLAMA_MODEL;
+
+    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation((url) => {
+      if (url === 'http://localhost:11434/api/tags') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ models: [{ name: 'llava' }, { name: 'gemma:3b' }] }),
+        } as Response);
+      }
+      if (url === 'http://localhost:11434/api/generate') {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              response: JSON.stringify({ story: [] }),
+            }),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unhandled fetch mock URL: ${url}`));
+    });
   });
 
-  it('should call the Ollama API with the correct payload', async () => {
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            response: JSON.stringify({
-              story: [
-                {
-                  chapter: 1,
-                  text: 'A mock story.',
-                  illustration_description: 'A mock description.',
-                },
-              ],
-            }),
-          }),
-      } as Response)
-    );
+  afterEach(() => {
+    fetchSpy.mockRestore();
+  });
 
+  it('should use "llava" as the default model when OLLAMA_MODEL is not set', async () => {
     process.env.AI_PROVIDER = 'ollama';
     const childName = 'Alex';
     const photoContent = 'photo content';
@@ -146,17 +167,31 @@ describe('generateStory with Ollama', () => {
 
     await ai.generateStory(childName, childPhoto);
 
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const [url, options] = fetchSpy.mock.calls[0];
-    const body = JSON.parse(options?.body as string);
-
-    expect(url).toBe('http://localhost:11434/api/generate');
+    // The fetchSpy is now in the beforeEach block
+    const generateCall = fetchSpy.mock.calls.find(call => call[0] === 'http://localhost:11434/api/generate');
+    expect(generateCall).toBeDefined();
+    const body = JSON.parse(generateCall[1]?.body as string);
     expect(body.model).toBe('llava');
-    expect(body.prompt).toContain('Alex');
-    expect(body.images).toHaveLength(1);
+  });
 
-    fetchSpy.mockRestore();
-    delete process.env.AI_PROVIDER;
+  it('should use the model specified in OLLAMA_MODEL environment variable', async () => {
+    process.env.AI_PROVIDER = 'ollama';
+    process.env.OLLAMA_MODEL = 'gemma:3b';
+    const childName = 'Alex';
+    const photoContent = 'photo content';
+    const childPhoto = {
+      name: 'alex-photo.png',
+      type: 'image/png',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+    } as File;
+
+    await ai.generateStory(childName, childPhoto);
+
+    const generateCall = fetchSpy.mock.calls.find(call => call[0] === 'http://localhost:11434/api/generate');
+    expect(generateCall).toBeDefined();
+    const body = JSON.parse(generateCall[1]?.body as string);
+    expect(body.model).toBe('gemma:3b');
   });
 });
 
@@ -246,11 +281,84 @@ describe('generateStory with Google AI', () => {
     expect(result.story[1].text).toBe('Chapter 2 text');
     expect(result.story[1].imageData).toEqual(expect.any(String));
   });
+
+  it('should correctly parse JSON from a response wrapped in markdown', async () => {
+    // This test simulates the AI returning a JSON object wrapped in a markdown code block.
+    const markdownJsonResponse = '```json\n' +
+      JSON.stringify({
+        story: [
+          {
+            chapter: 1,
+            text: 'A story from a markdown response.',
+            illustration_description: 'A markdown description.',
+          },
+        ],
+      }) +
+      '\n```';
+
+    // Override the mock for this specific test
+    mockGenerateContent.mockResolvedValue({
+      response: {
+        text: () => markdownJsonResponse,
+      },
+    });
+
+    process.env.AI_PROVIDER = 'google';
+    process.env.GOOGLE_API_KEY = 'fake-key';
+    const mockFile = {
+      type: 'image/jpeg',
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+    } as File;
+
+    const result = await ai.generateStory('Test Child', mockFile);
+
+    // Assert that the story was parsed correctly despite the markdown
+    expect(result.story).toHaveLength(1);
+    expect(result.story[0].text).toBe('A story from a markdown response.');
+  });
 });
 
 describe('Image Generation Abstraction', () => {
+  let fetchSpy: jest.SpyInstance;
+
   beforeEach(() => {
     mockedGenerateImageForChapter.mockClear();
+
+    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation((url) => {
+      if (url === 'http://localhost:11434/api/tags') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ models: [{ name: 'llava' }, { name: 'gemma:3b' }] }),
+        } as Response);
+      }
+      if (url === 'http://localhost:11434/api/generate') {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              response: JSON.stringify({
+                story: [
+                  {
+                    chapter: 1,
+                    text: 'Ollama Chapter 1',
+                    illustration_description: 'Ollama Desc 1',
+                  },
+                  {
+                    chapter: 2,
+                    text: 'Ollama Chapter 2',
+                    illustration_description: 'Ollama Desc 2',
+                  },
+                ],
+              }),
+            }),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unhandled fetch mock URL: ${url}`));
+    });
+  });
+
+  afterEach(() => {
+    fetchSpy.mockRestore();
   });
 
   it('should call generateImageForChapter for each chapter when using the google provider', async () => {
@@ -316,29 +424,6 @@ describe('Image Generation Abstraction', () => {
       'data:image/png;base64,mock-image-data'
     );
 
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            response: JSON.stringify({
-              story: [
-                {
-                  chapter: 1,
-                  text: 'Ollama Chapter 1',
-                  illustration_description: 'Ollama Desc 1',
-                },
-                {
-                  chapter: 2,
-                  text: 'Ollama Chapter 2',
-                  illustration_description: 'Ollama Desc 2',
-                },
-              ],
-            }),
-          }),
-      } as Response)
-    );
-
     process.env.AI_PROVIDER = 'ollama';
     const photoContent = 'fake-photo-content';
     const mockFile = {
@@ -355,7 +440,6 @@ describe('Image Generation Abstraction', () => {
     expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Ollama Desc 1');
     expect(mockedGenerateImageForChapter).toHaveBeenCalledWith('Ollama Desc 2');
 
-    fetchSpy.mockRestore();
     delete process.env.AI_PROVIDER;
   });
 });

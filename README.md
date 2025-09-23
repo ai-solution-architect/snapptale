@@ -75,6 +75,18 @@ Once Ollama is installed and running, pull the `llava` model:
 ollama pull llava
 ```
 
+#### 2.1.3 Using a Different Ollama Model
+
+By default, the application uses the `llava` model. You can specify a different model by setting the `OLLAMA_MODEL` environment variable. For example, to use `gemma:3b`:
+
+Create a `.env.local` file in the project root:
+
+```
+OLLAMA_MODEL=gemma:3b
+```
+
+Make sure you have pulled the model you want to use with `ollama pull <model_name>`.
+
 ### 2.2 Google AI Setup (Cloud AI Model)
 
 #### 2.2.1 Obtain Google AI API Key
@@ -88,7 +100,7 @@ ollama pull llava
 
 Create a `.env.local` file in the project root with your API key:
 
-```bash
+```
 GOOGLE_API_KEY=your-google-ai-api-key-here
 AI_PROVIDER=google
 ```
@@ -124,6 +136,14 @@ To run the linter:
 npm run lint
 ```
 
+### 3.4 Test Ollama Connection
+
+To test if Ollama is properly configured and accessible:
+
+```bash
+npm run test-ollama
+```
+
 ## 4. Docker Configuration
 
 ### 4.1 Using Docker with Ollama
@@ -138,29 +158,22 @@ This will start both the Ollama service and the Next.js application.
 
 ### 4.2 Using Docker with Google AI
 
-To use Google AI with Docker:
+To use Google AI:
 
-1. Copy the example file:
+1. Create a `.env.local` file in the project root:
    ```bash
-   cp .env.example .env.local
-   ```
-   Then edit `.env.local` to add your actual API key:
-   ```bash
-   GOOGLE_API_KEY=your-google-ai-api-key-here
    AI_PROVIDER=google
+   GOOGLE_API_KEY=your-google-ai-api-key-here
    ```
 
-2. Copy the example override file:
-   ```bash
-   cp docker-compose.override.yml.example docker-compose.override.yml
-   ```
-
-3. Start the services:
+2. Start the services:
    ```bash
    docker-compose up
    ```
 
-**Security Note:** Using environment files is more secure than embedding secrets directly in docker-compose files. Never commit `.env.local` files containing API keys to version control.
+That's it! Google AI will work with just these steps. The Ollama service will continue to run but will be unused.
+
+**Security Note:** Never commit `.env.local` files containing API keys to version control.
 
 ## 5. Switching Between AI Providers
 
@@ -170,3 +183,7 @@ You can switch between AI providers by changing the `AI_PROVIDER` environment va
 - For Google AI: `AI_PROVIDER=google`
 
 The application will automatically use the configured provider for story generation.
+
+## 6. Troubleshooting
+
+If you encounter issues with the Ollama setup, please refer to our [troubleshooting guide](.gemini/troubleshooting-ollama.md) for common issues and solutions.

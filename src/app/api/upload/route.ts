@@ -37,6 +37,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing file or name.' }, { status: 400 });
         }
 
+        // Check if the file is too large (more than 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            return NextResponse.json({ 
+                error: 'File too large', 
+                details: 'Please upload an image smaller than 5MB.' 
+            }, { status: 400 });
+        }
+
         // All the complex logic for AI interaction is now handled by our AI service.
         // This API route's only job is to handle the request and response.
         // This makes the code much cleaner and easier to understand.

@@ -1,18 +1,30 @@
-# Example override file for Google AI configuration
-# Rename this file to docker-compose.override.yml to use Google AI
+# Example override file to disable Ollama when using Google AI
+# Rename this file to docker-compose.override.yml if you want to disable Ollama
 
 version: '3.8'
 
-services:
-  nextjs:
-    # Use environment file for sensitive configuration (recommended)
-    env_file:
-      - .env.local
-    
-    # Alternative: Direct environment variables (less secure)
-    # environment:
-    #   - AI_PROVIDER=google
-    #   - GOOGLE_API_KEY=your-google-ai-api-key-here
+# This is OPTIONAL - Google AI works fine even with Ollama running
+# This file is only needed if you want to disable the Ollama service
 
-  # Note: No additional service is needed for Google AI as it's a cloud service
-  # The ollama service can remain for local development or be disabled if not needed
+services:
+  ollama:
+    profiles:
+      - donotstart
+
+# Note: The Next.js application runs on the host machine, not in Docker.
+# This override file is only needed when using Google AI instead of Ollama.
+# When using Google AI, you don't need to run the Ollama service in Docker.
+
+# To disable the Ollama service when using Google AI, uncomment the following lines:
+# services:
+#   ollama:
+#     profiles:
+#       - donotstart
+
+# Note about Google AI:
+# Google AI is a cloud service and does not require a separate container.
+# To use Google AI, configure the environment variables in your .env.local file:
+#   AI_PROVIDER=google
+#   GOOGLE_API_KEY=your-google-ai-api-key-here
+# Then start the services with:
+#   docker-compose up

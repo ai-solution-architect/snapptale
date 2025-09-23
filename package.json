@@ -9,7 +9,10 @@
     "test": "jest",
     "lint": "eslint",
     "check-google-ai": "node scripts/check-google-ai.mjs",
-    "validate-docker": "node scripts/validate-docker-compose.mjs"
+    "validate-docker": "node scripts/validate-docker-compose.mjs",
+    "test-ollama": "node scripts/test-ollama-connection.mjs",
+    "check-docker": "node scripts/check-docker-status.mjs",
+    "verify-ollama": "node scripts/verify-ollama-setup.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",

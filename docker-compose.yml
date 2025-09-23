@@ -16,6 +16,18 @@ services:
       - ./ollama_data:/root/.ollama
     # Keeps the container running and allows for interactive sessions (like using 'docker exec').
     tty: true
+    # Add environment variables for better performance
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_KEEP_ALIVE=10m
+    # Add resource limits to prevent the container from consuming too much memory
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
 
   # Note about Google AI:
   # Google AI is a cloud service and does not require a separate container.
