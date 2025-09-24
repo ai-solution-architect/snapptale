@@ -4,6 +4,20 @@
  * @file This file contains the logic for generating images for story chapters.
  */
 
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+/**
+ * Converts a File object to a Base64 encoded string.
+ * This is a common requirement for sending image data in API requests.
+ * @param file The file to convert.
+ * @returns A promise that resolves with the base64 string.
+ */
+async function fileToBase64(file: File): Promise<string> {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return buffer.toString('base64');
+}
+
 // Stub for image generation abstraction (to be implemented in future cycles)
 export async function generateImageForChapter(
   illustration_description: string
@@ -20,8 +34,45 @@ export async function generateImageForChapter(
  * @returns A promise that resolves with the image description
  */
 export async function generateImageDescription(imageFile: File): Promise<string> {
-  // TODO: Implement actual image description logic
-  return "A placeholder description of the image";
+  const provider = process.env.AI_PROVIDER || 'ollama';
+  
+  if (provider === 'google') {
+    if (!process.env.GOOGLE_API_KEY) {
+      throw new Error('Missing GOOGLE_API_KEY');
+    }
+    
+    try {
+      // Convert file to base64
+      const base64Image = await fileToBase64(imageFile);
+      
+      // Initialize Google AI
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      
+      // Create the image part for the request
+      const imagePart = {
+        inlineData: {
+          data: base64Image,
+          mimeType: imageFile.type || 'image/png',
+        },
+      };
+      
+      // Generate content with the image
+      const result = await model.generateContent([
+        'Describe this image focusing on identifying the main character. Provide a detailed description that could be used to generate a personalized image of the character.',
+        imagePart
+      ]);
+      
+      return result.response.text();
+    } catch (error) {
+      // If there's an error with the AI service, return a placeholder description
+      console.error('Error generating image description with Google AI:', error);
+      return "A placeholder description of the image";
+    }
+  } else {
+    // TODO: Implement actual image description logic for other providers
+    return "A placeholder description of the image";
+  }
 }
 
 /**

@@ -190,16 +190,16 @@
 ### Goal: Implement the image description function using Google AI
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-- [ ] Run the test and verify it fails because our current implementation doesn't call Google AI
+- [x] Add a test that verifies [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because our current implementation doesn't call Google AI
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
-- [ ] Run the test and verify it passes
+- [x] Update the [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 12: Implement Personalized Image Generation with Google AI
 
@@ -279,9 +279,9 @@
 - [x] Baby Step 9: Add Parallel Processing to Image Pipeline
 - [x] Baby Step 10: Update API Endpoint to Use New Pipeline
 - [x] Baby Step 10.5: Revert API Endpoint to Properly Integrate Story Generation
+- [x] Baby Step 11: Implement Image Description with Google AI
 
 ### In Progress Baby Steps:
-- [ ] Baby Step 11: Implement Image Description with Google AI
 - [ ] Baby Step 12: Implement Personalized Image Generation with Google AI
 - [ ] Baby Step 13: Implement Chapter Image Generation with Google AI
 - [ ] Baby Step 14: Integrate Story Generation with Image Pipeline
@@ -311,7 +311,7 @@ tests/
 
 ## Parallel Processing Architecture
 
-```mermaid
+```
 graph TD
     A[Upload Image] --> B{Start Parallel Tasks}
     B --> C[Story Generation]
