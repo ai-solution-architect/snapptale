@@ -124,20 +124,44 @@ describe('Image Generation Functions', () => {
       
       const prompt = 'A magical forest with glowing mushrooms';
 
+      // Mock the Google AI response with image data
+      mockGenerateContent.mockResolvedValue({
+        response: {
+          candidates: [{
+            content: {
+              parts: [{
+                inlineData: {
+                  data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                  mimeType: 'image/png'
+                }
+              }]
+            }
+          }]
+        }
+      });
+
       // Act
-      await generatePersonalizedImage(prompt);
+      const result = await generatePersonalizedImage(prompt);
 
       // Assert
       // Verify that the GoogleGenerativeAI constructor was called with our API key
       expect(MockedGoogleGenerativeAI).toHaveBeenCalledWith('fake-key');
       
       // Verify that getGenerativeModel was called with the correct model
-      expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.5-flash' });
+      expect(mockGetGenerativeModel).toHaveBeenCalledWith({ 
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
+      });
       
       // Verify that generateContent was called with the correct prompt
       expect(mockGenerateContent).toHaveBeenCalledWith([
         'Generate a personalized image based on this description: A magical forest with glowing mushrooms. The image should be suitable for a children\'s storybook.',
       ]);
+      
+      // Verify that the result is a proper base64 data URL
+      expect(result).toMatch(/^data:image\/png;base64,/);
     });
   });
 
@@ -154,6 +178,53 @@ describe('Image Generation Functions', () => {
       expect(typeof result).toBe('string');
       // Expect a base64 data URL
       expect(result).toMatch(/^data:image\/(png|jpeg);base64,/);
+    });
+
+    it('should call Google AI when configured', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const illustrationDescription = 'A brave knight fighting a dragon in a castle';
+
+      // Mock the Google AI response with image data
+      mockGenerateContent.mockResolvedValue({
+        response: {
+          candidates: [{
+            content: {
+              parts: [{
+                inlineData: {
+                  data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                  mimeType: 'image/png'
+                }
+              }]
+            }
+          }]
+        }
+      });
+
+      // Act
+      const result = await generateImageForChapter(illustrationDescription);
+
+      // Assert
+      // Verify that the GoogleGenerativeAI constructor was called with our API key
+      expect(MockedGoogleGenerativeAI).toHaveBeenCalledWith('fake-key');
+      
+      // Verify that getGenerativeModel was called with the correct model
+      expect(mockGetGenerativeModel).toHaveBeenCalledWith({ 
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
+      });
+      
+      // Verify that generateContent was called with the correct prompt
+      expect(mockGenerateContent).toHaveBeenCalledWith([
+        'Generate an image for a children\'s storybook based on this description: A brave knight fighting a dragon in a castle'
+      ]);
+      
+      // Verify that the result is a proper base64 data URL
+      expect(result).toMatch(/^data:image\/png;base64,/);
     });
   });
 });

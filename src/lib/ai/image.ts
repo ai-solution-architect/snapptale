@@ -22,10 +22,56 @@ async function fileToBase64(file: File): Promise<string> {
 export async function generateImageForChapter(
   illustration_description: string
 ): Promise<string> {
-  // TODO: Implement actual image generation logic
-  const placeholderImage =
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-  return `data:image/png;base64,${placeholderImage}`;
+  const provider = process.env.AI_PROVIDER || 'ollama';
+  
+  if (provider === 'google') {
+    if (!process.env.GOOGLE_API_KEY) {
+      throw new Error('Missing GOOGLE_API_KEY');
+    }
+    
+    try {
+      // Initialize Google AI with the correct model for image generation
+      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
+      });
+      
+      // Generate content with the prompt
+      const result = await model.generateContent([
+        `Generate an image for a children's storybook based on this description: ${illustration_description}`
+      ]);
+      
+      // Extract image data from the response
+      if (result.response.candidates && result.response.candidates[0].content.parts) {
+        for (const part of result.response.candidates[0].content.parts) {
+          if (part.inlineData) {
+            const imageData = part.inlineData.data;
+            const mimeType = part.inlineData.mimeType || 'image/png';
+            return `data:${mimeType};base64,${imageData}`;
+          }
+        }
+      }
+      
+      // If no image data was found, return a placeholder
+      const placeholderImage =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+      return `data:image/png;base64,${placeholderImage}`;
+    } catch (error) {
+      // If there's an error with the AI service, return a placeholder image
+      console.error('Error generating chapter image with Google AI:', error);
+      const placeholderImage =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+      return `data:image/png;base64,${placeholderImage}`;
+    }
+  } else {
+    // TODO: Implement actual image generation logic for other providers
+    const placeholderImage =
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    return `data:image/png;base64,${placeholderImage}`;
+  }
 }
 
 /**
@@ -89,17 +135,32 @@ export async function generatePersonalizedImage(prompt: string): Promise<string>
     }
     
     try {
-      // Initialize Google AI
+      // Initialize Google AI with the correct model for image generation
       const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-2.5-flash-image-preview',
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
+      });
       
       // Generate content with the prompt
       const result = await model.generateContent([
         `Generate a personalized image based on this description: ${prompt}. The image should be suitable for a children's storybook.`
       ]);
       
-      // For now, we'll return a placeholder since the SDK might not support image generation directly
-      // In a future implementation, we would extract the image data from the result
+      // Extract image data from the response
+      if (result.response.candidates && result.response.candidates[0].content.parts) {
+        for (const part of result.response.candidates[0].content.parts) {
+          if (part.inlineData) {
+            const imageData = part.inlineData.data;
+            const mimeType = part.inlineData.mimeType || 'image/png';
+            return `data:${mimeType};base64,${imageData}`;
+          }
+        }
+      }
+      
+      // If no image data was found, return a placeholder
       const placeholderImage =
         'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
       return `data:image/png;base64,${placeholderImage}`;
