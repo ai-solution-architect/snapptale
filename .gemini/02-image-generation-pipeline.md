@@ -214,8 +214,8 @@
 - [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 13: Implement Chapter Image Generation with Google AI
 
@@ -280,9 +280,9 @@
 - [x] Baby Step 10: Update API Endpoint to Use New Pipeline
 - [x] Baby Step 10.5: Revert API Endpoint to Properly Integrate Story Generation
 - [x] Baby Step 11: Implement Image Description with Google AI
+- [x] Baby Step 12: Implement Personalized Image Generation with Google AI
 
 ### In Progress Baby Steps:
-- [ ] Baby Step 12: Implement Personalized Image Generation with Google AI
 - [ ] Baby Step 13: Implement Chapter Image Generation with Google AI
 - [ ] Baby Step 14: Integrate Story Generation with Image Pipeline
 - [ ] Baby Step 15: Update API Endpoint to Use Integrated Pipeline
