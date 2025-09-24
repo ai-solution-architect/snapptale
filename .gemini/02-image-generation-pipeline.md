@@ -126,16 +126,16 @@
 ### Goal: Implement the sequential logic for the image processing pipeline
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls the image processing functions in sequence in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
-- [ ] Run the test and verify it fails because our current implementation doesn't call the functions
+- [x] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls the image processing functions in sequence in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [x] Run the test and verify it fails because our current implementation doesn't call the functions
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call the image processing functions sequentially
-- [ ] Run the test and verify it passes
+- [x] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call the image processing functions sequentially
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 9: Add Parallel Processing to Image Pipeline
 
@@ -227,9 +227,9 @@
 - [x] Baby Step 5: Update Chapter Image Generation Function Format
 - [x] Baby Step 6: Create Basic Image Processing Pipeline Function
 - [x] Baby Step 7: Add Return Structure Validation for Pipeline
+- [x] Baby Step 8: Implement Sequential Image Processing Pipeline Logic
 
 ### In Progress Baby Steps:
-- [ ] Baby Step 8: Implement Sequential Image Processing Pipeline Logic
 - [ ] Baby Step 9: Add Parallel Processing to Image Pipeline
 - [ ] Baby Step 10: Update API Endpoint to Use New Pipeline
 - [ ] Baby Step 11: Implement Image Description with Google AI
