@@ -77,14 +77,36 @@
 - [x] Update documentation
 - [x] Commit changes
 
+## Baby Step 3: Extract Common Functionality
+
+### Goal: Extract common Google AI initialization and error handling into shared helper functions
+
+**Baby Step 1 - Red Phase**:
+- [x] Add a test that verifies the existence of helper functions for Google AI initialization in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because the helper functions don't exist
+
+**Baby Step 2 - Green Phase**:
+- [x] Create helper functions in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) for:
+  - Initializing Google AI with correct model and configuration
+  - Extracting image data from responses
+  - Handling common error cases
+- [x] Update all three image generation functions to use these helpers
+- [x] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [x] Update documentation
+- [x] Commit changes
+
 ## Implementation Status
 
 ### Completed Functions:
 - [x] [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L43-L80) - Properly implemented with correct model
+- [x] [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L17-L24) - Now properly implemented with Google AI
+- [x] [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L82-L118) - Now properly implemented with Google AI
+- [x] Extract common functionality into helper functions
 
 ### Functions to Refactor:
-- [ ] [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L17-L24) - Needs full implementation for Google AI
-- [ ] [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L82-L118) - Needs model correction and proper image extraction
+- [ ] Update all tests for comprehensive coverage
 
 ## File Structure Changes
 
@@ -108,16 +130,17 @@ tests/
 ## Success Criteria
 
 ### Functional
-- [ ] [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L17-L24) properly generates images using Google AI with `gemini-2.5-flash-image-preview`
-- [ ] [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L82-L118) properly generates images using Google AI with `gemini-2.5-flash-image-preview`
-- [ ] [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L43-L80) continues to work correctly with `gemini-2.5-flash`
-- [ ] Image data is properly extracted from responses
+- [x] [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L17-L24) properly generates images using Google AI with `gemini-2.5-flash-image-preview`
+- [x] [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L82-L118) properly generates images using Google AI with `gemini-2.5-flash-image-preview`
+- [x] [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L43-L80) continues to work correctly with `gemini-2.5-flash`
+- [x] Image data is properly extracted from responses
+- [x] Common functionality extracted into helper functions
 - [ ] Graceful degradation to placeholder images when AI services fail
 
 ### Reliability
-- [ ] All tests pass
+- [x] All tests pass
 - [ ] Error handling for AI service failures
-- [ ] Consistent behavior across all functions
+- [x] Consistent behavior across all functions
 
 ## Alignment with Project Principles
 

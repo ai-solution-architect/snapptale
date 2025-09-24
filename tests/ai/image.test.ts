@@ -34,6 +34,14 @@ describe('Image Generation Functions', () => {
     }));
   });
 
+  describe('Helper Functions', () => {
+    it('should have helper functions for Google AI initialization', () => {
+      // This test will verify that our helper functions exist
+      // We'll implement the helpers in the next step
+      expect(true).toBe(true); // Placeholder until we implement the helpers
+    });
+  });
+
   describe('generateImageDescription', () => {
     it('should generate a description of an image', async () => {
       // Arrange

@@ -18,6 +18,64 @@ async function fileToBase64(file: File): Promise<string> {
   return buffer.toString('base64');
 }
 
+/**
+ * Helper function to initialize Google AI with the appropriate model and configuration.
+ * @param model The model name to use
+ * @param isImageGeneration Whether this is for image generation (requires responseModalities)
+ * @returns The initialized GenerativeModel
+ */
+function initializeGoogleAI(model: string, isImageGeneration: boolean = false) {
+  if (!process.env.GOOGLE_API_KEY) {
+    throw new Error('Missing GOOGLE_API_KEY');
+  }
+  
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+  
+  if (isImageGeneration) {
+    return genAI.getGenerativeModel({ 
+      model: model,
+      generationConfig: {
+        responseModalities: ["TEXT", "IMAGE"]
+      }
+    });
+  } else {
+    return genAI.getGenerativeModel({ model: model });
+  }
+}
+
+/**
+ * Helper function to extract image data from Google AI response.
+ * @param result The response from Google AI
+ * @returns Base64 encoded image data URL or null if no image found
+ */
+function extractImageDataFromResponse(result: any): string | null {
+  try {
+    if (result.response.candidates && result.response.candidates[0].content.parts) {
+      for (const part of result.response.candidates[0].content.parts) {
+        if (part.inlineData) {
+          const imageData = part.inlineData.data;
+          const mimeType = part.inlineData.mimeType || 'image/png';
+          return `data:${mimeType};base64,${imageData}`;
+        }
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error('Error extracting image data from response:', error);
+    return null;
+  }
+}
+
+/**
+ * Helper function to handle errors and return a placeholder image.
+ * @returns A base64 encoded placeholder image
+ */
+function getPlaceholderImage(): string {
+  const placeholderImage =
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+  return `data:image/png;base64,${placeholderImage}`;
+}
+
 // Stub for image generation abstraction (to be implemented in future cycles)
 export async function generateImageForChapter(
   illustration_description: string
@@ -25,19 +83,9 @@ export async function generateImageForChapter(
   const provider = process.env.AI_PROVIDER || 'ollama';
   
   if (provider === 'google') {
-    if (!process.env.GOOGLE_API_KEY) {
-      throw new Error('Missing GOOGLE_API_KEY');
-    }
-    
     try {
       // Initialize Google AI with the correct model for image generation
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash-image-preview',
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"]
-        }
-      });
+      const model = initializeGoogleAI('gemini-2.5-flash-image-preview', true);
       
       // Generate content with the prompt
       const result = await model.generateContent([
@@ -45,32 +93,21 @@ export async function generateImageForChapter(
       ]);
       
       // Extract image data from the response
-      if (result.response.candidates && result.response.candidates[0].content.parts) {
-        for (const part of result.response.candidates[0].content.parts) {
-          if (part.inlineData) {
-            const imageData = part.inlineData.data;
-            const mimeType = part.inlineData.mimeType || 'image/png';
-            return `data:${mimeType};base64,${imageData}`;
-          }
-        }
+      const imageData = extractImageDataFromResponse(result);
+      if (imageData) {
+        return imageData;
       }
       
       // If no image data was found, return a placeholder
-      const placeholderImage =
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-      return `data:image/png;base64,${placeholderImage}`;
+      return getPlaceholderImage();
     } catch (error) {
       // If there's an error with the AI service, return a placeholder image
       console.error('Error generating chapter image with Google AI:', error);
-      const placeholderImage =
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-      return `data:image/png;base64,${placeholderImage}`;
+      return getPlaceholderImage();
     }
   } else {
     // TODO: Implement actual image generation logic for other providers
-    const placeholderImage =
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    return `data:image/png;base64,${placeholderImage}`;
+    return getPlaceholderImage();
   }
 }
 
@@ -83,17 +120,12 @@ export async function generateImageDescription(imageFile: File): Promise<string>
   const provider = process.env.AI_PROVIDER || 'ollama';
   
   if (provider === 'google') {
-    if (!process.env.GOOGLE_API_KEY) {
-      throw new Error('Missing GOOGLE_API_KEY');
-    }
-    
     try {
       // Convert file to base64
       const base64Image = await fileToBase64(imageFile);
       
-      // Initialize Google AI
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+      // Initialize Google AI with the correct model for text generation
+      const model = initializeGoogleAI('gemini-2.5-flash', false);
       
       // Create the image part for the request
       const imagePart = {
@@ -130,19 +162,9 @@ export async function generatePersonalizedImage(prompt: string): Promise<string>
   const provider = process.env.AI_PROVIDER || 'ollama';
   
   if (provider === 'google') {
-    if (!process.env.GOOGLE_API_KEY) {
-      throw new Error('Missing GOOGLE_API_KEY');
-    }
-    
     try {
       // Initialize Google AI with the correct model for image generation
-      const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-      const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash-image-preview',
-        generationConfig: {
-          responseModalities: ["TEXT", "IMAGE"]
-        }
-      });
+      const model = initializeGoogleAI('gemini-2.5-flash-image-preview', true);
       
       // Generate content with the prompt
       const result = await model.generateContent([
@@ -150,31 +172,20 @@ export async function generatePersonalizedImage(prompt: string): Promise<string>
       ]);
       
       // Extract image data from the response
-      if (result.response.candidates && result.response.candidates[0].content.parts) {
-        for (const part of result.response.candidates[0].content.parts) {
-          if (part.inlineData) {
-            const imageData = part.inlineData.data;
-            const mimeType = part.inlineData.mimeType || 'image/png';
-            return `data:${mimeType};base64,${imageData}`;
-          }
-        }
+      const imageData = extractImageDataFromResponse(result);
+      if (imageData) {
+        return imageData;
       }
       
       // If no image data was found, return a placeholder
-      const placeholderImage =
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-      return `data:image/png;base64,${placeholderImage}`;
+      return getPlaceholderImage();
     } catch (error) {
       // If there's an error with the AI service, return a placeholder image
       console.error('Error generating personalized image with Google AI:', error);
-      const placeholderImage =
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-      return `data:image/png;base64,${placeholderImage}`;
+      return getPlaceholderImage();
     }
   } else {
     // TODO: Implement actual personalized image generation logic for other providers
-    const placeholderImage =
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-    return `data:image/png;base64,${placeholderImage}`;
+    return getPlaceholderImage();
   }
 }
