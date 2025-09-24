@@ -130,3 +130,53 @@ To ensure strict adherence to baby steps and prevent deviations:
 4. **Mitigation Check**: At the start of each cycle, reference this section and confirm alignment with the user (e.g., "Confirming we're following baby steps as per GEMINI.md").
 
 If a deviation occurs, revisit and update this section collaboratively.
+
+### Example of Proper Baby Steps
+
+Here's an example of how to properly break down a feature implementation using baby steps:
+
+**Feature**: Add a function to calculate the sum of two numbers
+
+**Baby Step 1 - Red Phase**:
+1. Write a failing test for the sum function with inputs 2 and 3 expecting result 5
+2. Run the test and verify it fails (because the function doesn't exist)
+
+**Baby Step 2 - Green Phase**:
+1. Implement the minimal code to make the test pass (e.g., `function sum(a, b) { return 5; }`)
+2. Run the test and verify it passes
+
+**Baby Step 3 - Refactor/Enhance**:
+1. Write another test with different inputs (e.g., 1 and 4 expecting 5)
+2. Run the test and verify it fails (because our implementation is hardcoded)
+3. Improve the implementation (e.g., `function sum(a, b) { return a + b; }`)
+4. Run all tests and verify they pass
+
+**Baby Step 4 - Document and Commit**:
+1. Update documentation if needed
+2. Create a clear commit message
+
+**Key Principles**:
+- Start with the minimal test that fails because the function doesn't exist, not because of complex setup or mocks
+- Implement the minimal code to make the first test pass, even if it's hardcoded
+- Only add complexity (like mocks, multiple test cases, etc.) when needed to expose limitations in the current implementation
+- Each step should focus on one small change and provide immediate feedback
+
+This approach ensures:
+- Each step is small and focused
+- We get immediate feedback at each stage
+- We can catch issues early
+- The process is clear and repeatable
+
+### Guide Creation Principles for Beginners
+
+When creating implementation guides (`.gemini/*.md` files) for beginners and junior developers:
+1. **Actionable Steps**: All steps should be written in imperative tense (e.g., "Implement the function" not "Implemented the function")
+2. **Clear and Specific**: Avoid generic terms like "enhance"; instead, specify exactly what needs to be done
+3. **Logical Order**: Steps should be in the order they need to be implemented
+4. **Beginner-Friendly**: Assume no prior knowledge; explain concepts clearly
+5. **Self-Contained**: The guide should be followable without AI assistance
+6. **Minimal Content**: Only include steps that are necessary to achieve the goal
+7. **Consistent Tense**: Use present tense for steps to be followed, with checkboxes to indicate completion status
+8. **Future Steps**: Clearly identify upcoming steps as future work, not as completed past actions
+
+Following these principles ensures that implementation guides are practical, educational, and accessible to developers of all skill levels.
