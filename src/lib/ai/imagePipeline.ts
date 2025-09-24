@@ -13,18 +13,28 @@ import { generateImageDescription, generatePersonalizedImage, generateImageForCh
  * @returns A promise that resolves with the story and personalized image
  */
 export async function processImagePipeline(childName: string, imageFile: File) {
-  // Step 1: Generate image description
-  const imageDescription = await generateImageDescription(imageFile);
+  // Step 1: Start generating image description (needed for both personalized image and chapter images)
+  const imageDescriptionPromise = generateImageDescription(imageFile);
   
-  // Step 2: Generate personalized image based on the description
-  const personalizedImage = await generatePersonalizedImage(imageDescription);
+  // Step 2: Start generating personalized image in parallel with image description
+  const personalizedImagePromise = imageDescriptionPromise.then(description => 
+    generatePersonalizedImage(description)
+  );
   
-  // Step 3: Generate chapter images (3 chapters)
-  const chapterImages = [];
+  // Step 3: Wait for image description to generate chapter images
+  const imageDescription = await imageDescriptionPromise;
+  
+  // Step 4: Generate chapter images in parallel
+  const chapterImagePromises = [];
   for (let i = 0; i < 3; i++) {
-    const chapterImage = await generateImageForChapter(`Chapter ${i + 1} illustration`);
-    chapterImages.push(chapterImage);
+    chapterImagePromises.push(generateImageForChapter(`Chapter ${i + 1} illustration`));
   }
+  
+  // Step 5: Wait for all chapter images to be generated
+  const chapterImages = await Promise.all(chapterImagePromises);
+  
+  // Step 6: Wait for personalized image to be generated
+  const personalizedImage = await personalizedImagePromise;
   
   // Return the expected structure
   return {

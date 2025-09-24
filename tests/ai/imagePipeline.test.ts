@@ -88,4 +88,54 @@ describe('Image Processing Pipeline', () => {
     expect(generateImageForChapter).toHaveBeenNthCalledWith(2, 'Chapter 2 illustration');
     expect(generateImageForChapter).toHaveBeenNthCalledWith(3, 'Chapter 3 illustration');
   });
+
+  it('should process independent tasks in parallel', async () => {
+    // Arrange
+    const childName = 'Test Child';
+    const photoContent = 'fake-photo-content';
+    const mockFile = {
+      name: 'test-photo.jpg',
+      type: 'image/jpeg',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+    } as File;
+
+    // Mock functions with delays to simulate real processing time
+    const { generateImageDescription, generatePersonalizedImage, generateImageForChapter } = 
+      await import('@/lib/ai/image');
+    
+    (generateImageDescription as jest.Mock).mockImplementation(async () => {
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 10));
+      return 'A description of the image';
+    });
+    
+    (generatePersonalizedImage as jest.Mock).mockImplementation(async () => {
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 10));
+      return 'data:image/png;base64,placeholder1';
+    });
+    
+    (generateImageForChapter as jest.Mock).mockImplementation(async () => {
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 10));
+      return 'data:image/png;base64,placeholder2';
+    });
+
+    // Act & Assert
+    // This test should verify that the pipeline processes tasks in parallel
+    // We'll measure the time it takes to complete and ensure it's less than
+    // the sum of all individual task times if they were processed sequentially
+    const startTime = Date.now();
+    await processImagePipeline(childName, mockFile);
+    const endTime = Date.now();
+    
+    // If tasks were processed sequentially, it would take at least 50ms (5 tasks * 10ms each)
+    // If processed in parallel, it should take less time
+    const totalTime = endTime - startTime;
+    
+    // With parallel processing, we expect the time to be closer to the longest individual task
+    // rather than the sum of all tasks
+    expect(totalTime).toBeLessThan(40); // Less than 40ms if processed in parallel
+  });
 });
