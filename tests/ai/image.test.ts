@@ -5,9 +5,35 @@
  */
 
 import { TextEncoder } from 'util';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { generateImageDescription, generatePersonalizedImage, generateImageForChapter } from '@/lib/ai/image';
 
+// Mock the GoogleGenerativeAI
+const mockGenerateContent = jest.fn();
+const mockGetGenerativeModel = jest.fn().mockReturnValue({
+  generateContent: mockGenerateContent,
+});
+const MockedGoogleGenerativeAI = GoogleGenerativeAI as jest.Mock;
+
+jest.mock('@google/generative-ai', () => {
+  return {
+    GoogleGenerativeAI: jest.fn(),
+  };
+});
+
 describe('Image Generation Functions', () => {
+  beforeEach(() => {
+    // Clear all mock calls before each test
+    MockedGoogleGenerativeAI.mockClear();
+    mockGetGenerativeModel.mockClear();
+    mockGenerateContent.mockClear();
+    
+    // Set up the mock implementation
+    MockedGoogleGenerativeAI.mockImplementation(() => ({
+      getGenerativeModel: mockGetGenerativeModel,
+    }));
+  });
+
   describe('generateImageDescription', () => {
     it('should generate a description of an image', async () => {
       // Arrange
@@ -18,12 +44,61 @@ describe('Image Generation Functions', () => {
           Promise.resolve(new TextEncoder().encode(photoContent).buffer),
       } as File;
 
+      // Mock the Google AI response
+      mockGenerateContent.mockResolvedValue({
+        response: {
+          text: () => 'A description of the image',
+        },
+      });
+
       // Act
       const result = await generateImageDescription(mockFile);
 
       // Assert
       expect(result).toBeDefined();
       expect(typeof result).toBe('string');
+    });
+
+    it('should call Google AI when configured', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const photoContent = 'fake-photo-content';
+      const mockFile = {
+        type: 'image/jpeg',
+        arrayBuffer: () =>
+          Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+      } as File;
+
+      // Mock the Google AI response
+      mockGenerateContent.mockResolvedValue({
+        response: {
+          text: () => 'A description of the image',
+        },
+      });
+
+      // Act
+      await generateImageDescription(mockFile);
+
+      // Assert
+      // Verify that the GoogleGenerativeAI constructor was called with our API key
+      expect(MockedGoogleGenerativeAI).toHaveBeenCalledWith('fake-key');
+      
+      // Verify that getGenerativeModel was called with the correct model
+      expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.5-flash' });
+      
+      // Verify that generateContent was called with the correct prompt and image data
+      const expectedImagePart = {
+        inlineData: {
+          data: Buffer.from(photoContent).toString('base64'),
+          mimeType: 'image/jpeg',
+        },
+      };
+      expect(mockGenerateContent).toHaveBeenCalledWith([
+        'Describe this image focusing on identifying the main character. Provide a detailed description that could be used to generate a personalized image of the character. Remember that the description need to also describe the scenario in detail, considering that the story generated need to be about the main character in the scenario identified.',
+        expectedImagePart
+      ]);
     });
   });
 
@@ -40,6 +115,29 @@ describe('Image Generation Functions', () => {
       expect(typeof result).toBe('string');
       // Expect a base64 data URL
       expect(result).toMatch(/^data:image\/(png|jpeg);base64,/);
+    });
+
+    it('should call Google AI when configured', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const prompt = 'A magical forest with glowing mushrooms';
+
+      // Act
+      await generatePersonalizedImage(prompt);
+
+      // Assert
+      // Verify that the GoogleGenerativeAI constructor was called with our API key
+      expect(MockedGoogleGenerativeAI).toHaveBeenCalledWith('fake-key');
+      
+      // Verify that getGenerativeModel was called with the correct model
+      expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.5-flash' });
+      
+      // Verify that generateContent was called with the correct prompt
+      expect(mockGenerateContent).toHaveBeenCalledWith([
+        'Generate a personalized image based on this description: A magical forest with glowing mushrooms. The image should be suitable for a children\'s storybook.',
+      ]);
     });
   });
 
