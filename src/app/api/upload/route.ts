@@ -46,8 +46,10 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        // Use our new image processing pipeline instead of the old generateStory function
-        const storyResponse = await processImagePipeline(name, file);
+        // All the complex logic for AI interaction is now handled by our AI service.
+        // This API route's only job is to handle the request and response.
+        // This makes the code much cleaner and easier to understand.
+        const storyResponse = await generateStory(name, file);
 
         return NextResponse.json(storyResponse);
 

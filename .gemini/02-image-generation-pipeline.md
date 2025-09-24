@@ -169,6 +169,22 @@
 - [x] Update documentation
 - [x] Commit changes
 
+## Baby Step 10.5: Revert API Endpoint to Properly Integrate Story Generation
+
+### Goal: Revert the API endpoint to properly call generateStory and plan proper integration
+
+**Baby Step 1 - Red Phase**:
+- [x] Add a test that verifies the upload API endpoint calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
+- [x] Run the test and verify it passes (our current implementation already calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185))
+
+**Baby Step 2 - Green Phase**:
+- [x] Revert the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to call [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) instead of [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
+- [x] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [x] Update documentation
+- [x] Commit changes
+
 ## Baby Step 11: Implement Image Description with Google AI
 
 ### Goal: Implement the image description function using Google AI
@@ -217,6 +233,38 @@
 - [ ] Update documentation
 - [ ] Commit changes
 
+## Baby Step 14: Integrate Story Generation with Image Pipeline
+
+### Goal: Properly integrate story generation with the image processing pipeline
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) to generate actual story content in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [ ] Run the test and verify it fails because our current implementation generates hardcoded story content
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) for actual story generation
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 15: Update API Endpoint to Use Integrated Pipeline
+
+### Goal: Update the upload API endpoint to use the properly integrated image processing pipeline
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies the upload API endpoint calls the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
+- [ ] Run the test and verify it fails because the upload API endpoint still calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) directly
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
 ## Current Implementation Status
 
 ### Completed Baby Steps:
@@ -230,11 +278,14 @@
 - [x] Baby Step 8: Implement Sequential Image Processing Pipeline Logic
 - [x] Baby Step 9: Add Parallel Processing to Image Pipeline
 - [x] Baby Step 10: Update API Endpoint to Use New Pipeline
+- [x] Baby Step 10.5: Revert API Endpoint to Properly Integrate Story Generation
 
 ### In Progress Baby Steps:
 - [ ] Baby Step 11: Implement Image Description with Google AI
 - [ ] Baby Step 12: Implement Personalized Image Generation with Google AI
 - [ ] Baby Step 13: Implement Chapter Image Generation with Google AI
+- [ ] Baby Step 14: Integrate Story Generation with Image Pipeline
+- [ ] Baby Step 15: Update API Endpoint to Use Integrated Pipeline
 
 ## File Structure Changes
 
