@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 // We import our new, decoupled AI service.
 import { generateStory } from '@/lib/ai';
+import { processImagePipeline } from '@/lib/ai/imagePipeline';
 
 // This check is for the production environment. For local development,
 // we will rely on the AI_PROVIDER environment variable in our AI service.
@@ -45,10 +46,8 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        // All the complex logic for AI interaction is now handled by our AI service.
-        // This API route's only job is to handle the request and response.
-        // This makes the code much cleaner and easier to understand.
-        const storyResponse = await generateStory(name, file);
+        // Use our new image processing pipeline instead of the old generateStory function
+        const storyResponse = await processImagePipeline(name, file);
 
         return NextResponse.json(storyResponse);
 

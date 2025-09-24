@@ -158,16 +158,16 @@
 ### Goal: Update the upload API endpoint to use the new image processing pipeline
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies the upload API endpoint calls [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
-- [ ] Run the test and verify it fails because the upload API endpoint doesn't call the new pipeline
+- [x] Add a test that verifies the upload API endpoint calls [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
+- [x] Run the test and verify it fails because the upload API endpoint doesn't call the new pipeline
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the new [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
-- [ ] Run the test and verify it passes
+- [x] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the new [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 11: Implement Image Description with Google AI
 
@@ -229,9 +229,9 @@
 - [x] Baby Step 7: Add Return Structure Validation for Pipeline
 - [x] Baby Step 8: Implement Sequential Image Processing Pipeline Logic
 - [x] Baby Step 9: Add Parallel Processing to Image Pipeline
+- [x] Baby Step 10: Update API Endpoint to Use New Pipeline
 
 ### In Progress Baby Steps:
-- [ ] Baby Step 10: Update API Endpoint to Use New Pipeline
 - [ ] Baby Step 11: Implement Image Description with Google AI
 - [ ] Baby Step 12: Implement Personalized Image Generation with Google AI
 - [ ] Baby Step 13: Implement Chapter Image Generation with Google AI
@@ -289,8 +289,8 @@ graph TD
 
 - [x] **Unit Tests**: Test each function in isolation with mocks
 - [x] **Pipeline Test**: Test for the planned pipeline exists
+- [x] **API Tests**: Test the complete flow through the API endpoint
 - [ ] **Integration Tests**: Test the complete pipeline with mocked AI services
-- [ ] **API Tests**: Test the complete flow through the API endpoint
 - [ ] **Error Tests**: Test error conditions and edge cases
 - [ ] **Performance Tests**: Test parallel processing performance
 

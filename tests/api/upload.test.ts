@@ -22,6 +22,23 @@ jest.mock('@/lib/ai', () => ({
   }),
 }));
 
+// Mock the image pipeline
+jest.mock('@/lib/ai/imagePipeline', () => ({
+  processImagePipeline: jest.fn().mockResolvedValue({
+    story: [
+      {
+        chapter: 1,
+        title: 'Test Chapter',
+        text: 'Test story text',
+        illustration_description: 'Test illustration',
+        imageData: 'test-image-data',
+        mimeType: 'image/png',
+      },
+    ],
+    personalizedImage: 'personalized-image-data'
+  }),
+}));
+
 // Mock NextResponse
 const mockJson = jest.fn();
 const NextResponse = {
@@ -80,6 +97,7 @@ describe('/api/upload', () => {
           mimeType: 'image/png',
         },
       ],
+      personalizedImage: 'personalized-image-data'
     });
   });
 
@@ -117,5 +135,41 @@ describe('/api/upload', () => {
       },
       { status: 400 }
     );
+  });
+
+  it('should call the processImagePipeline function', async () => {
+    // Import the mocked pipeline function
+    const { processImagePipeline } = await import('@/lib/ai/imagePipeline');
+    
+    // Create a mock formData object
+    const mockFormData = {
+      get: jest.fn((key) => {
+        if (key === 'name') return 'Test Child';
+        if (key === 'photo') {
+          const photoContent = 'test content';
+          return {
+            name: 'test.png',
+            type: 'image/png',
+            size: photoContent.length,
+            arrayBuffer: () =>
+              Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+          } as File;
+        }
+        return null;
+      }),
+    };
+
+    // Create a mock request object
+    const mockRequest = {
+      formData: jest.fn().mockResolvedValue(mockFormData),
+    };
+
+    await POST(mockRequest);
+
+    // Verify that processImagePipeline was called with the correct parameters
+    expect(processImagePipeline).toHaveBeenCalledWith('Test Child', expect.objectContaining({
+      name: 'test.png',
+      type: 'image/png'
+    }));
   });
 });
