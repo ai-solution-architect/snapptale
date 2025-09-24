@@ -17,109 +17,205 @@
 ### Goal: Create a function that can be called to generate image descriptions
 
 **Baby Step 1 - Red Phase**:
-1. Add a simple test that calls [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) with a parameter in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-2. Run the test and verify it fails because the [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function doesn't exist
+- [x] Add a simple test that calls [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) with a parameter in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because the [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function doesn't exist
 
 **Baby Step 2 - Green Phase**:
-1. Implement the minimal [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) that returns a hardcoded string
-2. Run the test and verify it passes
+- [x] Implement the minimal [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) that returns a hardcoded string
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 2: Add Return Type Validation for Image Description
 
 ### Goal: Ensure the image description function returns the correct data type
 
 **Baby Step 1 - Red Phase**:
-1. Add a test that verifies [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) returns a string in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-2. Run the test and verify it passes (our current implementation already returns a string)
+- [x] Add a test that verifies [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) returns a string in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it passes (our current implementation already returns a string)
 
 **Baby Step 2 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 3: Create Basic Personalized Image Generation Function
 
 ### Goal: Create a function that can generate personalized images
 
 **Baby Step 1 - Red Phase**:
-1. Add a simple test that calls [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) with a parameter in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-2. Run the test and verify it fails because the [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function doesn't exist
+- [x] Add a simple test that calls [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) with a parameter in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because the [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function doesn't exist
 
 **Baby Step 2 - Green Phase**:
-1. Implement the minimal [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) that returns a hardcoded string
-2. Run the test and verify it passes
+- [x] Implement the minimal [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) that returns a hardcoded string
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 4: Add Return Format Validation for Personalized Image
 
 ### Goal: Ensure the personalized image function returns a base64 data URL
 
 **Baby Step 1 - Red Phase**:
-1. Add a test that verifies [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) returns a base64 data URL format in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-2. Run the test and verify it fails because our current implementation returns a plain string, not a base64 data URL
+- [x] Add a test that verifies [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) returns a base64 data URL format in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because our current implementation returns a plain string, not a base64 data URL
 
 **Baby Step 2 - Green Phase**:
-1. Update the [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to return a base64 data URL format
-2. Run the test and verify it passes
+- [x] Update the [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to return a base64 data URL format
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 5: Update Chapter Image Generation Function Format
 
 ### Goal: Ensure [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) returns images in the correct format
 
 **Baby Step 1 - Red Phase**:
-1. Add a test that verifies [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) returns a base64 data URL format in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-2. Run the test and verify it fails because our current implementation doesn't return the correct format
+- [x] Add a test that verifies [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) returns a base64 data URL format in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because our current implementation doesn't return the correct format
 
 **Baby Step 2 - Green Phase**:
-1. Update the [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to return a base64 data URL
-2. Run the test and verify it passes
+- [x] Update the [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to return a base64 data URL
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 6: Create Basic Image Processing Pipeline Function
 
 ### Goal: Create the basic image processing pipeline function
 
 **Baby Step 1 - Red Phase**:
-1. Add a simple test that calls [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) with basic parameters in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
-2. Run the test and verify it fails because the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function doesn't exist
+- [x] Add a simple test that calls [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) with basic parameters in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [x] Run the test and verify it fails because the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function doesn't exist
 
 **Baby Step 2 - Green Phase**:
-1. Create [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts)
-2. Implement the minimal [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function that returns a basic structure
-3. Run the test and verify it passes
+- [x] Create [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts)
+- [x] Implement the minimal [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function that returns a basic structure
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 7: Add Return Structure Validation for Pipeline
 
 ### Goal: Ensure the pipeline function returns the expected structure
 
 **Baby Step 1 - Red Phase**:
-1. Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) returns a structure with story and images in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
-2. Run the test and verify it fails because our current implementation doesn't return the expected structure
+- [x] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) returns a structure with story and images in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [x] Run the test and verify it fails because our current implementation doesn't return the expected structure
 
 **Baby Step 2 - Green Phase**:
-1. Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to return the expected structure
-2. Run the test and verify it passes
+- [x] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to return the expected structure
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-1. Update documentation
-2. Commit changes
+- [x] Update documentation
+- [x] Commit changes
+
+## Baby Step 8: Implement Sequential Image Processing Pipeline Logic
+
+### Goal: Implement the sequential logic for the image processing pipeline
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls the image processing functions in sequence in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [ ] Run the test and verify it fails because our current implementation doesn't call the functions
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call the image processing functions sequentially
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 9: Add Parallel Processing to Image Pipeline
+
+### Goal: Implement parallel processing for independent image generation tasks
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) processes independent tasks in parallel in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [ ] Run the test and verify it fails because our current implementation processes tasks sequentially
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to process independent tasks in parallel
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 10: Update API Endpoint to Use New Pipeline
+
+### Goal: Update the upload API endpoint to use the new image processing pipeline
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies the upload API endpoint calls [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
+- [ ] Run the test and verify it fails because the upload API endpoint doesn't call the new pipeline
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the new [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 11: Implement Image Description with Google AI
+
+### Goal: Implement the image description function using Google AI
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [ ] Run the test and verify it fails because our current implementation doesn't call Google AI
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L34-L42) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 12: Implement Personalized Image Generation with Google AI
+
+### Goal: Implement the personalized image generation function using Google AI
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [ ] Run the test and verify it fails because our current implementation doesn't call Google AI
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [generatePersonalizedImage](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L44-L53) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
+
+## Baby Step 13: Implement Chapter Image Generation with Google AI
+
+### Goal: Implement the chapter image generation function using Google AI
+
+**Baby Step 1 - Red Phase**:
+- [ ] Add a test that verifies [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [ ] Run the test and verify it fails because our current implementation doesn't call Google AI
+
+**Baby Step 2 - Green Phase**:
+- [ ] Update the [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
+- [ ] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [ ] Update documentation
+- [ ] Commit changes
 
 ## Current Implementation Status
 
@@ -148,7 +244,7 @@ src/
     ai/
       index.ts          # Existing story generation
       image.ts          # Enhanced image generation functions
-      imagePipeline.ts  # New pipeline orchestration (in progress)
+      imagePipeline.ts  # New pipeline orchestration (created)
       prompts.ts        # Existing prompts (may need updates)
   app/
     api/
