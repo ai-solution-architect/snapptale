@@ -60,9 +60,9 @@ describe('/api/upload', () => {
     jest.clearAllMocks();
   });
 
-  it('should call the generateStory service with form data', async () => {
-    // Import the mocked generateStory function
-    const { generateStory } = await import('@/lib/ai');
+  it('should call the processImagePipeline service with form data', async () => {
+    // Import the mocked processImagePipeline function
+    const { processImagePipeline } = await import('@/lib/ai/imagePipeline');
     
     // Create a mock formData object
     const mockFormData = {
@@ -89,8 +89,8 @@ describe('/api/upload', () => {
 
     await POST(mockRequest);
 
-    // Verify that generateStory was called with the correct parameters
-    expect(generateStory).toHaveBeenCalledWith('Test Child', expect.objectContaining({
+    // Verify that processImagePipeline was called with the correct parameters
+    expect(processImagePipeline).toHaveBeenCalledWith('Test Child', expect.objectContaining({
       name: 'test.png',
       type: 'image/png'
     }));
@@ -106,6 +106,7 @@ describe('/api/upload', () => {
           mimeType: 'image/png',
         },
       ],
+      personalizedImage: 'personalized-image-data'
     });
   });
 
@@ -143,14 +144,5 @@ describe('/api/upload', () => {
       },
       { status: 400 }
     );
-  });
-
-  it('should call the processImagePipeline function', async () => {
-    // Import the mocked pipeline function
-    const { processImagePipeline } = await import('@/lib/ai/imagePipeline');
-    
-    // This test should fail because we're not calling processImagePipeline yet
-    // We'll update this test when we properly integrate the pipeline
-    expect(processImagePipeline).not.toHaveBeenCalled();
   });
 });

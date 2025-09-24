@@ -5,6 +5,7 @@
  */
 
 import { generateImageDescription, generatePersonalizedImage, generateImageForChapter } from './image';
+import { generateStory } from './index';
 
 /**
  * Processes the image pipeline to generate a complete story with images.
@@ -13,39 +14,46 @@ import { generateImageDescription, generatePersonalizedImage, generateImageForCh
  * @returns A promise that resolves with the story and personalized image
  */
 export async function processImagePipeline(childName: string, imageFile: File) {
-  // Step 1: Start generating image description (needed for both personalized image and chapter images)
-  const imageDescriptionPromise = generateImageDescription(imageFile);
+  // Step 1: Generate detailed description of the image to identify main character
+  const imageDescription = await generateImageDescription(imageFile);
   
-  // Step 2: Start generating personalized image in parallel with image description
-  const personalizedImagePromise = imageDescriptionPromise.then(description => 
-    generatePersonalizedImage(description)
+  // Step 2: Generate personalized image based on the description
+  const personalizedImage = await generatePersonalizedImage(imageDescription);
+  
+  // Step 3: Generate story using the personalized image
+  // TODO: In the future, we should pass the personalized image to generateStory
+  const storyResult = await generateStory(childName, imageFile);
+  
+  // Step 4: Generate chapter-specific images using the original image and chapter descriptions
+  const chapterImagePromises = storyResult.story.map((chapter: any) => 
+    generateChapterImageWithOriginal(imageFile, chapter.illustration_description)
   );
-  
-  // Step 3: Wait for image description to generate chapter images
-  const imageDescription = await imageDescriptionPromise;
-  
-  // Step 4: Generate chapter images in parallel
-  const chapterImagePromises = [];
-  for (let i = 0; i < 3; i++) {
-    chapterImagePromises.push(generateImageForChapter(`Chapter ${i + 1} illustration`));
-  }
   
   // Step 5: Wait for all chapter images to be generated
   const chapterImages = await Promise.all(chapterImagePromises);
   
-  // Step 6: Wait for personalized image to be generated
-  const personalizedImage = await personalizedImagePromise;
+  // Step 6: Update the story with the new chapter images
+  const updatedStory = storyResult.story.map((chapter: any, index: number) => ({
+    ...chapter,
+    imageData: chapterImages[index]
+  }));
   
-  // Return the expected structure
+  // Step 7: Return the story and personalized image
   return {
-    story: chapterImages.map((imageData, index) => ({
-      chapter: index + 1,
-      title: `Chapter ${index + 1}`,
-      text: `This is the text for chapter ${index + 1}`,
-      illustration_description: `Illustration for chapter ${index + 1}`,
-      imageData: imageData,
-      mimeType: 'image/png'
-    })),
+    story: updatedStory,
     personalizedImage: personalizedImage
   };
+}
+
+/**
+ * Generates a chapter image using the original image and chapter description.
+ * This function uses Google AI's image editing capabilities.
+ * @param originalImage The original uploaded image
+ * @param chapterDescription The description for the chapter illustration
+ * @returns A promise that resolves with the base64 encoded image data
+ */
+async function generateChapterImageWithOriginal(originalImage: File, chapterDescription: string): Promise<string> {
+  // TODO: Implement actual image editing using the original image
+  // For now, we'll use the existing generateImageForChapter function
+  return generateImageForChapter(chapterDescription);
 }

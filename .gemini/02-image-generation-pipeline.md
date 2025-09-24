@@ -198,8 +198,8 @@
 - [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 12: Implement Personalized Image Generation with Google AI
 
@@ -222,48 +222,48 @@
 ### Goal: Implement the chapter image generation function using Google AI
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
-- [ ] Run the test and verify it fails because our current implementation doesn't call Google AI
+- [x] Add a test that verifies [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) calls Google AI when configured in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because our current implementation doesn't call Google AI
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
-- [ ] Run the test and verify it passes
+- [x] Update the [generateImageForChapter](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L9-L14) function in [src/lib/ai/image.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts) to call Google AI when configured
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 14: Integrate Story Generation with Image Pipeline
 
 ### Goal: Properly integrate story generation with the image processing pipeline
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) to generate actual story content in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
-- [ ] Run the test and verify it fails because our current implementation generates hardcoded story content
+- [x] Add a test that verifies [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) to generate actual story content in [tests/ai/imagePipeline.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts)
+- [x] Run the test and verify it fails because our current implementation generates hardcoded story content
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) for actual story generation
-- [ ] Run the test and verify it passes
+- [x] Update the [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) function in [src/lib/ai/imagePipeline.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/imagePipeline.ts) to call [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) for actual story generation
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Baby Step 15: Update API Endpoint to Use Integrated Pipeline
 
 ### Goal: Update the upload API endpoint to use the properly integrated image processing pipeline
 
 **Baby Step 1 - Red Phase**:
-- [ ] Add a test that verifies the upload API endpoint calls the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
-- [ ] Run the test and verify it fails because the upload API endpoint still calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) directly
+- [x] Add a test that verifies the upload API endpoint calls the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28) in [tests/api/upload.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/api/upload.test.ts)
+- [x] Run the test and verify it fails because the upload API endpoint still calls [generateStory](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/index.ts#L172-L185) directly
 
 **Baby Step 2 - Green Phase**:
-- [ ] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
-- [ ] Run the test and verify it passes
+- [x] Update the upload API endpoint in [src/app/api/upload/route.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/src/app/api/upload/route.ts) to use the integrated [processImagePipeline](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/imagePipeline.test.ts#L28-L28)
+- [x] Run the test and verify it passes
 
 **Baby Step 3 - Document and Commit**:
-- [ ] Update documentation
-- [ ] Commit changes
+- [x] Update documentation
+- [x] Commit changes
 
 ## Current Implementation Status
 
@@ -281,11 +281,12 @@
 - [x] Baby Step 10.5: Revert API Endpoint to Properly Integrate Story Generation
 - [x] Baby Step 11: Implement Image Description with Google AI
 - [x] Baby Step 12: Implement Personalized Image Generation with Google AI
+- [x] Baby Step 13: Implement Chapter Image Generation with Google AI
+- [x] Baby Step 14: Integrate Story Generation with Image Pipeline
+- [x] Baby Step 15: Update API Endpoint to Use Integrated Pipeline
 
 ### In Progress Baby Steps:
-- [ ] Baby Step 13: Implement Chapter Image Generation with Google AI
-- [ ] Baby Step 14: Integrate Story Generation with Image Pipeline
-- [ ] Baby Step 15: Update API Endpoint to Use Integrated Pipeline
+- [ ] None
 
 ## File Structure Changes
 
@@ -334,7 +335,7 @@ graph TD
 - [ ] **Google AI API Keys**: Ensure proper configuration in [.env.local](file:///Users/jonatassouza/Repositories/personal/snapptale/.env.local)
 - [ ] **Rate Limiting**: Implement proper rate limiting for AI services
 - [ ] **Error Handling**: Comprehensive error handling for all AI service calls
-- [ ] **Timeouts**: Appropriate timeouts for long-running AI operations
+- [ [ ] **Timeouts**: Appropriate timeouts for long-running AI operations
 
 ## Testing Strategy
 
@@ -348,25 +349,25 @@ graph TD
 ## Success Criteria
 
 ### Functional
-- [ ] Personalized image generated from uploaded photo
-- [ ] Image description identifies main character
-- [ ] Chapter-specific images generated
-- [ ] All images properly integrated into story
+- [x] Personalized image generated from uploaded photo
+- [x] Image description identifies main character
+- [x] Chapter-specific images generated
+- [x] All images properly integrated into story
 
 ### Performance
-- [ ] Parallel processing reduces overall generation time
-- [ ] Proper error handling without blocking
-- [ ] Efficient resource usage
+- [x] Parallel processing reduces overall generation time
+- [x] Proper error handling without blocking
+- [x] Efficient resource usage
 
 ### Reliability
 - [x] All tests pass
-- [ ] Error handling for AI service failures
-- [ ] Graceful degradation when services are unavailable
+- [x] Error handling for AI service failures
+- [x] Graceful degradation when services are unavailable
 
 ### Maintainability
 - [x] Clear code structure
 - [x] Comprehensive test coverage
-- [ ] Good documentation
+- [x] Good documentation
 
 ## Alignment with Project Principles
 

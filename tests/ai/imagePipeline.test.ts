@@ -14,6 +14,38 @@ jest.mock('@/lib/ai/image', () => ({
   generateImageForChapter: jest.fn().mockResolvedValue('data:image/png;base64,placeholder2')
 }));
 
+// Mock the story generation function
+jest.mock('@/lib/ai/index', () => ({
+  generateStory: jest.fn().mockResolvedValue({
+    story: [
+      {
+        chapter: 1,
+        title: 'Chapter 1',
+        text: 'This is the text for chapter 1',
+        illustration_description: 'Illustration for chapter 1',
+        imageData: 'data:image/png;base64,chapter1',
+        mimeType: 'image/png'
+      },
+      {
+        chapter: 2,
+        title: 'Chapter 2',
+        text: 'This is the text for chapter 2',
+        illustration_description: 'Illustration for chapter 2',
+        imageData: 'data:image/png;base64,chapter2',
+        mimeType: 'image/png'
+      },
+      {
+        chapter: 3,
+        title: 'Chapter 3',
+        text: 'This is the text for chapter 3',
+        illustration_description: 'Illustration for chapter 3',
+        imageData: 'data:image/png;base64,chapter3',
+        mimeType: 'image/png'
+      }
+    ]
+  })
+}));
+
 describe('Image Processing Pipeline', () => {
   beforeEach(() => {
     // Clear all mocks before each test
@@ -60,7 +92,7 @@ describe('Image Processing Pipeline', () => {
     expect(typeof result.personalizedImage).toBe('string');
   });
 
-  it('should call the image processing functions in sequence', async () => {
+  it('should call the image processing functions in the correct sequence', async () => {
     // Arrange
     const childName = 'Test Child';
     const photoContent = 'fake-photo-content';
@@ -84,9 +116,9 @@ describe('Image Processing Pipeline', () => {
     // Check that generateImageForChapter was called exactly 3 times
     expect(generateImageForChapter).toHaveBeenCalledTimes(3);
     // Check the specific calls
-    expect(generateImageForChapter).toHaveBeenNthCalledWith(1, 'Chapter 1 illustration');
-    expect(generateImageForChapter).toHaveBeenNthCalledWith(2, 'Chapter 2 illustration');
-    expect(generateImageForChapter).toHaveBeenNthCalledWith(3, 'Chapter 3 illustration');
+    expect(generateImageForChapter).toHaveBeenNthCalledWith(1, 'Illustration for chapter 1');
+    expect(generateImageForChapter).toHaveBeenNthCalledWith(2, 'Illustration for chapter 2');
+    expect(generateImageForChapter).toHaveBeenNthCalledWith(3, 'Illustration for chapter 3');
   });
 
   it('should process independent tasks in parallel', async () => {
@@ -137,5 +169,26 @@ describe('Image Processing Pipeline', () => {
     // With parallel processing, we expect the time to be closer to the longest individual task
     // rather than the sum of all tasks
     expect(totalTime).toBeLessThan(40); // Less than 40ms if processed in parallel
+  });
+
+  it('should call generateStory to generate actual story content', async () => {
+    // Arrange
+    const childName = 'Test Child';
+    const photoContent = 'fake-photo-content';
+    const mockFile = {
+      name: 'test-photo.jpg',
+      type: 'image/jpeg',
+      arrayBuffer: () =>
+        Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+    } as File;
+
+    // Import the mocked generateStory function
+    const { generateStory } = await import('@/lib/ai/index');
+
+    // Act
+    await processImagePipeline(childName, mockFile);
+
+    // Assert
+    expect(generateStory).toHaveBeenCalledWith(childName, mockFile);
   });
 });

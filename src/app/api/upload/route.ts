@@ -46,12 +46,10 @@ export async function POST(req: NextRequest) {
             }, { status: 400 });
         }
 
-        // All the complex logic for AI interaction is now handled by our AI service.
-        // This API route's only job is to handle the request and response.
-        // This makes the code much cleaner and easier to understand.
-        const storyResponse = await generateStory(name, file);
+        // Use our integrated image processing pipeline
+        const pipelineResult = await processImagePipeline(name, file);
 
-        return NextResponse.json(storyResponse);
+        return NextResponse.json(pipelineResult);
 
     } catch (error) {
         // We log the specific error to the console for debugging.

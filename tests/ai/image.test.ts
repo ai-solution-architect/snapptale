@@ -108,6 +108,28 @@ describe('Image Generation Functions', () => {
         expectedImagePart
       ]);
     });
+
+    it('should return placeholder description when Google AI fails', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const photoContent = 'fake-photo-content';
+      const mockFile = {
+        type: 'image/jpeg',
+        arrayBuffer: () =>
+          Promise.resolve(new TextEncoder().encode(photoContent).buffer),
+      } as File;
+
+      // Mock the Google AI to throw an error
+      mockGenerateContent.mockRejectedValue(new Error('Google AI error'));
+
+      // Act
+      const result = await generateImageDescription(mockFile);
+
+      // Assert
+      expect(result).toBe('A placeholder description of the image');
+    });
   });
 
   describe('generatePersonalizedImage', () => {
@@ -171,6 +193,25 @@ describe('Image Generation Functions', () => {
       // Verify that the result is a proper base64 data URL
       expect(result).toMatch(/^data:image\/png;base64,/);
     });
+
+    it('should return placeholder image when Google AI fails', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const prompt = 'A magical forest with glowing mushrooms';
+
+      // Mock the Google AI to throw an error
+      mockGenerateContent.mockRejectedValue(new Error('Google AI error'));
+
+      // Act
+      const result = await generatePersonalizedImage(prompt);
+
+      // Assert
+      expect(result).toMatch(/^data:image\/png;base64,/);
+      // Should be the placeholder image
+      expect(result).toContain('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+    });
   });
 
   describe('generateImageForChapter', () => {
@@ -233,6 +274,25 @@ describe('Image Generation Functions', () => {
       
       // Verify that the result is a proper base64 data URL
       expect(result).toMatch(/^data:image\/png;base64,/);
+    });
+
+    it('should return placeholder image when Google AI fails', async () => {
+      // Arrange
+      process.env.AI_PROVIDER = 'google';
+      process.env.GOOGLE_API_KEY = 'fake-key';
+      
+      const illustrationDescription = 'A brave knight fighting a dragon in a castle';
+
+      // Mock the Google AI to throw an error
+      mockGenerateContent.mockRejectedValue(new Error('Google AI error'));
+
+      // Act
+      const result = await generateImageForChapter(illustrationDescription);
+
+      // Assert
+      expect(result).toMatch(/^data:image\/png;base64,/);
+      // Should be the placeholder image
+      expect(result).toContain('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
     });
   });
 });

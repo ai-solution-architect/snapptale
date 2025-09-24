@@ -97,6 +97,38 @@
 - [x] Update documentation
 - [x] Commit changes
 
+## Baby Step 4: Add Comprehensive Error Handling Tests
+
+### Goal: Add tests to verify error handling and graceful degradation
+
+**Baby Step 1 - Red Phase**:
+- [x] Add tests to verify that functions return placeholder images when Google AI fails in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because we haven't implemented the error handling test
+
+**Baby Step 2 - Green Phase**:
+- [x] Implement error handling tests for all three functions
+- [x] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [x] Update documentation
+- [x] Commit changes
+
+## Baby Step 5: Add Image Extraction Verification Tests
+
+### Goal: Add tests to verify proper image data extraction from Google AI responses
+
+**Baby Step 1 - Red Phase**:
+- [x] Add tests to verify image data extraction in [tests/ai/image.test.ts](file:///Users/jonatassouza/Repositories/personal/snapptale/tests/ai/image.test.ts)
+- [x] Run the test and verify it fails because we haven't implemented the extraction verification test
+
+**Baby Step 2 - Green Phase**:
+- [x] Implement image extraction verification tests
+- [x] Run the test and verify it passes
+
+**Baby Step 3 - Document and Commit**:
+- [x] Update documentation
+- [x] Commit changes
+
 ## Implementation Status
 
 ### Completed Functions:
@@ -106,7 +138,9 @@
 - [x] Extract common functionality into helper functions
 
 ### Functions to Refactor:
-- [ ] Update all tests for comprehensive coverage
+- [x] Update all tests for comprehensive coverage
+- [x] Add comprehensive error handling tests
+- [x] Add image extraction verification tests
 
 ## File Structure Changes
 
@@ -123,9 +157,9 @@ tests/
 ## Testing Strategy
 
 - [x] **Unit Tests**: Test each function in isolation with mocks
-- [ ] **Image Extraction Tests**: Verify proper extraction of image data from responses
-- [ ] **Model Verification Tests**: Verify correct model names are used
-- [ ] **Error Handling Tests**: Test error conditions and fallback behavior
+- [x] **Image Extraction Tests**: Verify proper extraction of image data from responses
+- [x] **Model Verification Tests**: Verify correct model names are used
+- [x] **Error Handling Tests**: Test error conditions and fallback behavior
 
 ## Success Criteria
 
@@ -135,11 +169,11 @@ tests/
 - [x] [generateImageDescription](file:///Users/jonatassouza/Repositories/personal/snapptale/src/lib/ai/image.ts#L43-L80) continues to work correctly with `gemini-2.5-flash`
 - [x] Image data is properly extracted from responses
 - [x] Common functionality extracted into helper functions
-- [ ] Graceful degradation to placeholder images when AI services fail
+- [x] Graceful degradation to placeholder images when AI services fail
 
 ### Reliability
 - [x] All tests pass
-- [ ] Error handling for AI service failures
+- [x] Error handling for AI service failures
 - [x] Consistent behavior across all functions
 
 ## Alignment with Project Principles
