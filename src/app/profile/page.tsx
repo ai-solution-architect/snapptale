@@ -18,11 +18,11 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-background-light">
       <Header title="Profile" />
       <main className="flex-grow overflow-y-auto pb-24">
         <div className="px-4 pb-8 pt-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
             Account Settings
           </h2>
           
@@ -32,10 +32,10 @@ export default function ProfilePage() {
                 AJ
               </div>
               <div>
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">
+                <h3 className="font-bold text-lg text-slate-900">
                   {name}
                 </h3>
-                <p className="text-slate-500 dark:text-slate-400">
+                <p className="text-slate-500">
                   Free Account
                 </p>
               </div>
@@ -74,12 +74,12 @@ export default function ProfilePage() {
             ) : (
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Name</p>
-                  <p className="text-slate-900 dark:text-white">{name}</p>
+                  <p className="text-sm text-slate-500">Name</p>
+                  <p className="text-slate-900">{name}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Email</p>
-                  <p className="text-slate-900 dark:text-white">{email}</p>
+                  <p className="text-sm text-slate-500">Email</p>
+                  <p className="text-slate-900">{email}</p>
                 </div>
                 <Button 
                   variant="secondary" 
@@ -93,33 +93,33 @@ export default function ProfilePage() {
           </Card>
           
           <Card className="p-6">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-4">
+            <h3 className="font-bold text-lg text-slate-900 mb-4">
               App Settings
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-slate-900 dark:text-white">Dark Mode</p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="font-medium text-slate-900">Dark Mode</p>
+                  <p className="text-sm text-slate-500">
                     Enable dark theme
                   </p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </div>
               
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-slate-900 dark:text-white">Notifications</p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="font-medium text-slate-900">Notifications</p>
+                  <p className="text-sm text-slate-500">
                     Receive story updates
                   </p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                 </label>
               </div>
             </div>

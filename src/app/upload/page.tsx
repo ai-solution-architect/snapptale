@@ -104,16 +104,16 @@ export default function UploadPage() {
   }, [story]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-background-light">
       <Header title="Upload Photo" showBackButton={true} />
       <main className="flex-grow overflow-y-auto pb-24">
         <div className="px-4 pb-8 pt-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
             Your Story, Your Adventure
           </h2>
           
           <div className="mb-6">
-            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700/50 flex items-center justify-center">
+            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 flex items-center justify-center">
               {preview ? (
                 <>
                   <div 
@@ -131,8 +131,8 @@ export default function UploadPage() {
                 </>
               ) : (
                 <label className="flex flex-col items-center justify-center cursor-pointer w-full h-full">
-                  <Icon name="photo_camera" size="lg" className="text-gray-500 dark:text-gray-400" />
-                  <span className="mt-2 text-sm font-semibold text-gray-500 dark:text-gray-400">Upload Photo</span>
+                  <Icon name="photo_camera" size="lg" className="text-gray-500" />
+                  <span className="mt-2 text-sm font-semibold text-gray-500">Upload Photo</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -178,8 +178,8 @@ export default function UploadPage() {
         )}
 
         {story.length > 0 && (
-          <div ref={storyRef} className="bg-background-light dark:bg-background-dark p-4 rounded-lg w-full">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 text-center">
+          <div ref={storyRef} className="bg-background-light p-4 rounded-lg w-full">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 text-center">
               Your Snaptale Story
             </h2>
             <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 

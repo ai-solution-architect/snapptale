@@ -8,11 +8,11 @@ import Button from '@/components/ui/Button';
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-background-light">
       <Header />
       <main className="flex-grow overflow-y-auto pb-24">
         <div className="px-4 pb-8 pt-4">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">
             Your Story, Your Adventure
           </h2>
           <div className="flex justify-center mb-8">
@@ -24,7 +24,7 @@ export default function HomePage() {
               className="w-48 md:w-64 h-auto" 
             />
           </div>
-          <p className="text-center text-gray-700 dark:text-gray-300 mb-8">
+          <p className="text-center text-gray-700 mb-8">
             Upload a photo to start your personalized storybook journey.
           </p>
           <Link href='/upload' className="block">

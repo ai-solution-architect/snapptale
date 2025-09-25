@@ -17,7 +17,7 @@ const StoryChapter: React.FC<StoryChapterProps> = ({
   return (
     <Card className="mb-6 overflow-hidden">
       <div className="p-6">
-        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+        <h3 className="text-xl font-bold text-slate-900 mb-2">
           Chapter {chapterNumber}: {title}
         </h3>
         {imageUrl && (
@@ -27,7 +27,7 @@ const StoryChapter: React.FC<StoryChapterProps> = ({
             className="w-full rounded-lg aspect-[4/3] object-cover mb-4"
           />
         )}
-        <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300">
+        <p className="text-base leading-relaxed text-slate-700">
           {content}
         </p>
       </div>

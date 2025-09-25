@@ -11,12 +11,6 @@
   --background-dark: #101c22;
 }
 
-/* Dark mode variables */
-.dark {
-  --background: var(--background-dark);
-  --foreground: var(--background-light);
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

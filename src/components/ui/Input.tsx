@@ -14,12 +14,12 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+        <label className="block text-sm font-medium text-slate-700 mb-1">
           {label}
         </label>
       )}
       <input
-        className={`w-full rounded-xl border h-12 px-4 bg-background-light dark:bg-background-dark text-slate-900 dark:text-white border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-primary focus:border-transparent ${error ? 'border-red-500' : ''} ${className}`}
+        className={`w-full rounded-xl border h-12 px-4 bg-background-light text-slate-900 border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent ${error ? 'border-red-500' : ''} ${className}`}
         {...props}
       />
       {error && (
