@@ -25,7 +25,7 @@ module.exports = {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
         nunito: ['Nunito', 'sans-serif'],
-        display: ['Plus Jakarta Sans', 'sans-serif'], // New font family
+        display: ['var(--font-plus-jakarta-sans)', 'sans-serif'], // New font family
       },
       borderRadius: {
         // New borderRadius extensions

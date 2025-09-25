@@ -2,12 +2,6 @@
 @import "@fontsource/poppins";
 @import "@fontsource/nunito";
 
-/* Add Plus Jakarta Sans font */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
-
-/* Add Material Symbols font */
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
-
 :root {
   --background: var(--snaptale-app-background);
   --foreground: #1D3557;
@@ -31,7 +25,7 @@
   --color-background-dark: var(--background-dark);
   --font-sans: 'Poppins', sans-serif;
   --font-mono: 'Nunito', sans-serif;
-  --font-display: 'Plus Jakarta Sans', sans-serif; /* Add new font */
+  --font-display: var(--font-plus-jakarta-sans);
 }
 
 body {
