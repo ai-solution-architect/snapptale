@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Snaptale - Account</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13a4ec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col justify-between overflow-x-hidden">
+<div class="flex-grow">
+<header class="flex items-center p-4 pb-2 justify-between">
+<button class="text-black dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full bg-white/80 dark:bg-white/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-black dark:text-white text-lg font-bold leading-tight flex-1 text-center pr-10">Account</h1>
+</header>
+<main class="p-4">
+<div class="flex w-full flex-col items-center gap-6 mb-8">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD0Yfc5MRCfS36cMKTFXAKVNQ0BPZNFwfT-0rzVIawvWCW4AMq8Db-qrHKZj6NrMaeay8-57gzTZ3PvguEGRDvBJkVtOoFDoH7790ayyYTL-hU4FoEN74LX49pjnth2newPX9DQwv6v5B3YAdTNGfL-6p-rUCGEq0emhBp0WTJoIpuU3WYHPKH1a5DYAehYNjzcwb0kb8POA4a5bsCimZAXpGMVYPWEunPnTWmzn4Flb8aEojUsCL0Fw2X5c_1kSURgf9fhBqG7_FY");'></div>
+<button class="absolute bottom-0 right-0 flex items-center justify-center w-9 h-9 rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+</div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-black dark:text-white text-2xl font-bold leading-tight">Sophia Carter</p>
+<p class="text-primary text-base font-medium leading-normal">Premium Member</p>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<h2 class="text-black/60 dark:text-white/60 text-sm font-bold tracking-wider px-4 pb-2">ACCOUNT</h2>
+<div class="bg-white dark:bg-background-dark/50 rounded-lg">
+<a class="flex items-center gap-4 px-4 py-3 border-b border-background-light dark:border-white/10" href="#">
+<p class="text-black dark:text-white text-base font-medium flex-1 truncate">Edit Profile</p>
+<span class="material-symbols-outlined text-black/40 dark:text-white/40">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3" href="#">
+<p class="text-black dark:text-white text-base font-medium flex-1 truncate">Subscription</p>
+<span class="material-symbols-outlined text-black/40 dark:text-white/40">chevron_right</span>
+</a>
+</div>
+</div>
+<div>
+<h2 class="text-black/60 dark:text-white/60 text-sm font-bold tracking-wider px-4 pb-2">SETTINGS</h2>
+<div class="bg-white dark:bg-background-dark/50 rounded-lg">
+<a class="flex items-center gap-4 px-4 py-3 border-b border-background-light dark:border-white/10" href="#">
+<p class="text-black dark:text-white text-base font-medium flex-1 truncate">Notifications</p>
+<span class="material-symbols-outlined text-black/40 dark:text-white/40">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 border-b border-background-light dark:border-white/10" href="#">
+<p class="text-black dark:text-white text-base font-medium flex-1 truncate">Privacy Policy</p>
+<span class="material-symbols-outlined text-black/40 dark:text-white/40">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3" href="#">
+<p class="text-black dark:text-white text-base font-medium flex-1 truncate">Terms of Service</p>
+<span class="material-symbols-outlined text-black/40 dark:text-white/40">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<button class="flex w-full items-center justify-center rounded-lg h-12 px-4 bg-primary/10 dark:bg-primary/20 text-primary text-base font-bold">
+<span>Log Out</span>
+</button>
+</div>
+</main>
+</div>
+<footer class="sticky bottom-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-lg border-t border-black/5 dark:border-white/10">
+<nav class="flex justify-around py-2">
+<a class="flex flex-col items-center justify-end gap-1 text-black/50 dark:text-white/50" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium">Home</p>
+</a>
+<a class="flex flex-col items-center justify-end gap-1 text-black/50 dark:text-white/50" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-xs font-medium">My Tales</p>
+</a>
+<a class="flex flex-col items-center justify-end gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">person</span>
+<p class="text-xs font-bold">Profile</p>
+</a>
+</nav>
+<div class="h-5 bg-transparent"></div>
+</footer>
+</div>
+
+</body></html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Snaptale - My Tales</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13a4ec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col min-h-screen">
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex items-center p-4">
+<button class="p-2 text-gray-700 dark:text-gray-300">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h1 class="flex-1 text-xl font-bold text-center text-gray-900 dark:text-white">My Tales</h1>
+<div class="w-10"></div> 
+</div>
+</header>
+<main class="flex-1 px-4 pt-4 pb-24 space-y-6">
+<div class="flex flex-col gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+<div class="flex items-start gap-4">
+<img alt="The Magical Treehouse Adventure" class="w-20 h-20 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZp0sVo_c8QUvIgTuR2I4uJ9ggPy7sZNs3Rpbt5FZr-N3zA9BdeHyIJxPFxHUwh9oknQ-kQSm0dSwO2noeJLc7ZCg1WOXgLGB1saEpLL7tI-VUJlHhHylIXhfSvOk41tLXCE5krQ0rOBD39DgQ30b6vAPSCFMn0IE5_61hdm0bYW3ispmyLHv_pHIqbD2ZTzz2sZLlkqw8XNHuzb4OXMSpFxHrMlCWKFml7w9rYJa-jdm8IJ7MM9-iXMAYVQ0nfVUCZgQgRY_XIOg"/>
+<div class="flex-1">
+<h2 class="font-bold text-gray-900 dark:text-white">The Magical Treehouse Adventure</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Created on 05/12/2024</p>
+</div>
+</div>
+<div class="flex gap-2 mt-2">
+<button class="flex-1 py-2 text-sm font-semibold text-center text-white rounded-lg bg-primary">View Story</button>
+<button class="p-2 text-gray-600 bg-gray-100 rounded-lg dark:bg-gray-700 dark:text-gray-300">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+<div class="flex items-start gap-4">
+<img alt="The Mystery of the Missing Toy" class="w-20 h-20 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjEgDYYpIQu_yG7GgeCVc5y-PVPCxj6phqJRK4Io9692PvWNuXM_g7vyP3zSyId-gPeS4jBr0hl9LxT4XpQv6LOKJSIprVFJx6nazVuMa96_2q4GHkc2xQFAzu3L9J7Ecczz8xOsSwr2XYY4qVt3ainhA72XL17hBCcUz2BqCESMgpdsfSVkg928KUyTuEY47nZtVGtpa4O78aIIJW8D5P2nvj8xiXHBxFo8Lp-v4AyEsw5DeZRg4qzaJE6ts0h_1OLBc3uiVB8dw"/>
+<div class="flex-1">
+<h2 class="font-bold text-gray-900 dark:text-white">The Mystery of the Missing Toy</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Created on 04/28/2024</p>
+</div>
+</div>
+<div class="flex gap-2 mt-2">
+<button class="flex-1 py-2 text-sm font-semibold text-center text-white rounded-lg bg-primary">View Story</button>
+<button class="p-2 text-gray-600 bg-gray-100 rounded-lg dark:bg-gray-700 dark:text-gray-300">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm">
+<div class="flex items-start gap-4">
+<img alt="The Day the Animals Talked" class="w-20 h-20 object-cover rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaVrd261Gkm1BqMoAANm1gEg7jeu_fMEaGyBcL2Fy1F-jc4YPi0XYTwN0K3xDkec48x2qhcuymtvPABTh8IMNs7OqSDdCEU0SAJ242mTSdH8tFgcl-bRKcgWBKIiFV6XPwuDg2anMxf-hIJI5Qk3h925UaQsUrdquC1-66rULzjJXGyf2g1ITkA_YDZ96qljjrXOZ9XnjoILgqLHaX4pZjpjX2qlg8xmF68Sk4niygJ1ymqN4GYYgJyKWi7VPJn1jE1rVLgdAlep0"/>
+<div class="flex-1">
+<h2 class="font-bold text-gray-900 dark:text-white">The Day the Animals Talked</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Created on 04/15/2024</p>
+</div>
+</div>
+<div class="flex gap-2 mt-2">
+<button class="flex-1 py-2 text-sm font-semibold text-center text-white rounded-lg bg-primary">View Story</button>
+<button class="p-2 text-gray-600 bg-gray-100 rounded-lg dark:bg-gray-700 dark:text-gray-300">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800">
+<div class="flex justify-around px-4 pt-2 pb-4">
+<a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-xs font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined">import_contacts</span>
+<span class="text-xs font-medium">My Tales</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-gray-500 dark:text-gray-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+
+</body></html>

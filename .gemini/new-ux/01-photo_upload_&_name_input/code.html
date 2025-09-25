@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Snaptale</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13a4ec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .font-display {
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col h-screen justify-between">
+<main class="flex-grow overflow-y-auto">
+<header class="p-4 flex items-center justify-between">
+<button class="text-gray-800 dark:text-white">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
+</svg>
+</button>
+<div class="flex-1 flex justify-center">
+<div class="w-24 h-8 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+<span class="text-xs font-semibold text-gray-500 dark:text-gray-400">Logo</span>
+</div>
+</div>
+<div class="w-6"></div>
+</header>
+<div class="px-4 pb-8 pt-4">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">Your Story, Your Adventure</h2>
+<div class="mb-6">
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700/50 flex items-center justify-center">
+<div class="absolute inset-0 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDp6gtJQonAxIIgbITf2bG4bSVLENNr9EP_mlXJufaMxpowkDhOq3T_0waRLd3PfNT4zccQ_BCFpaVFoGf8ibYVFRAG6OXoSr47IOCFiE9igU-zkMVxpaX0mejygEMgVRloD_HNDzvuqRQbouqwBuSdqxB2NambTXIPKNNGfDYx2JcsFBIVxK9YVpFI9INVo83HbnzfNIg5V7Cw0lBkXEDWJBOPBmNlLqu5Rg62OU_WK9YA2iIZHAGP5-sKIJX7Hhe8Ij6xa9N5tuM");'></div>
+<div class="absolute inset-0 bg-black/10"></div>
+<button class="relative z-10 flex flex-col items-center justify-center text-white bg-black/30 backdrop-blur-sm p-4 rounded-xl">
+<svg fill="currentColor" height="32" viewBox="0 0 256 256" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M208,56H180.28L166.65,35.56A16,16,0,0,0,152.28,24H103.72a16,16,0,0,0-14.37,11.56L75.72,56H48a24,24,0,0,0-24,24V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm16,136a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V80A16,16,0,0,1,48,64H80a8,8,0,0,0,0-16L93.72,32.44A8,8,0,0,1,100.89,32h54.22a8,8,0,0,1,7.17.44L176,48a8,8,0,0,0,0,16h32a16,16,0,0,1,16,16ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"></path>
+</svg>
+<span class="mt-2 text-sm font-semibold">Change Photo</span>
+</button>
+</div>
+</div>
+<div class="mb-6">
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="child-name">Child's Name</label>
+<input class="form-input w-full rounded-lg border-0 bg-gray-200 dark:bg-gray-800 focus:ring-2 focus:ring-primary h-14 px-4 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400" id="child-name" placeholder="Enter name here" type="text"/>
+</div>
+<button class="w-full bg-primary text-white font-bold h-14 rounded-xl flex items-center justify-center text-base hover:bg-primary/90 transition-colors">
+          Generate Story
+        </button>
+</div>
+</main>
+<footer class="border-t border-gray-200 dark:border-gray-800 bg-background-light dark:bg-background-dark/80 backdrop-blur-sm">
+<nav class="flex justify-around p-2">
+<a class="flex flex-col items-center gap-1 p-2 rounded-lg text-primary" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z"></path>
+</svg>
+<span class="text-xs font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h64a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z"></path>
+</svg>
+<span class="text-xs font-medium">My Tales</span>
+</a>
+<a class="flex flex-col items-center gap-1 p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+</svg>
+<span class="text-xs font-medium">Profile</span>
+</a>
+</nav>
+<div class="h-safe-area-bottom"></div>
+</footer>
+</div>
+
+</body></html>
