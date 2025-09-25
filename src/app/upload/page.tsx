@@ -4,6 +4,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useFilePreview } from '@/hooks/useFilePreview';
 import Image from 'next/image';
 import StorybookPreview from '@/components/StorybookPreview';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Icon from '@/components/ui/Icon';
 import { usePdfExporter } from '@/hooks/usePdfExporter';
 
 interface StoryChapter {
@@ -99,71 +104,89 @@ export default function UploadPage() {
   }, [story]);
 
   return (
-    <div className="min-h-screen bg-snaptale-app-background flex flex-col items-center justify-center p-4">
-      <Image src="/Snaptale-Logo.png" alt="Snapptale Logo" width={200} height={50} className="w-32 md:w-48 h-auto mb-8" />
-
-      <form onSubmit={handleSubmit} className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-md mb-8">
-        <div className="mb-4">
-          <label htmlFor="photo-upload" className="block text-snaptale-shadow text-sm md:text-base font-bold mb-2 font-nunito">
-            Upload Photo:
-          </label>
-          <input
-            type="file"
-            id="photo-upload"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-sm md:text-base text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
-          />
-          {preview && (
-            <div className="mt-4 relative w-32 h-32 flex justify-center">
-              {preview && <Image src={preview} alt="Preview" fill className="rounded object-cover" />} 
-              <button
-                type="button"
-                onClick={handleClearPreview} 
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
-              >
-                X
-              </button>
+    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+      <Header title="Upload Photo" showBackButton={true} />
+      <main className="flex-grow overflow-y-auto pb-24">
+        <div className="px-4 pb-8 pt-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-6">
+            Your Story, Your Adventure
+          </h2>
+          
+          <div className="mb-6">
+            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700/50 flex items-center justify-center">
+              {preview ? (
+                <>
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center" 
+                    style={{ backgroundImage: `url(${preview})` }}
+                  ></div>
+                  <div className="absolute inset-0 bg-black/10"></div>
+                  <button 
+                    className="relative z-10 flex flex-col items-center justify-center text-white bg-black/30 backdrop-blur-sm p-4 rounded-xl"
+                    onClick={handleClearPreview}
+                  >
+                    <Icon name="photo_camera" size="lg" />
+                    <span className="mt-2 text-sm font-semibold">Change Photo</span>
+                  </button>
+                </>
+              ) : (
+                <label className="flex flex-col items-center justify-center cursor-pointer w-full h-full">
+                  <Icon name="photo_camera" size="lg" className="text-gray-500 dark:text-gray-400" />
+                  <span className="mt-2 text-sm font-semibold text-gray-500 dark:text-gray-400">Upload Photo</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
             </div>
-          )}
+          </div>
+
+          <div className="mb-6">
+            <Input
+              label="Child's Name"
+              value={name}
+              onChange={handleNameChange}
+              placeholder="Enter name here"
+            />
+          </div>
+
+          <Button
+            onClick={handleSubmit}
+            disabled={isLoading || !file || !name}
+            variant="primary"
+            className="w-full"
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center space-x-2">
+                <Icon name="auto_awesome" className="animate-spin" />
+                <span>Generating Story...</span>
+              </span>
+            ) : (
+              'Generate Story'
+            )}
+          </Button>
         </div>
 
-        <div className="mb-6">
-          <label htmlFor="child-name" className="block text-snaptale-shadow text-sm md:text-base font-bold mb-2 font-nunito">
-            Child's Name:
-          </label>
-          <input
-            type="text"
-            id="child-name"
-            value={name}
-            onChange={handleNameChange}
-            placeholder="Enter child's name"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-sm md:text-base text-snaptale-shadow leading-tight focus:outline-none focus:shadow-outline font-nunito"
-          />
-        </div>
+        {(error || pdfExportError) && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full max-w-md mb-4 mx-4" role="alert">
+            <strong className="font-bold">Error:</strong>
+            <span className="block sm:inline"> {error || pdfExportError}</span>
+          </div>
+        )}
 
-        <button
-          type="submit"
-          className="bg-snaptale-highlight hover:bg-snaptale-shadow text-snaptale-shadow font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full font-poppins"
-          disabled={isLoading || !file || !name}
-        >
-          {isLoading ? 'Generating Story...' : 'Generate Story'}
-        </button>
-      </form>
-
-      {(error || pdfExportError) && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full max-w-md mb-4" role="alert">
-          <strong className="font-bold">Error:</strong>
-          <span className="block sm:inline"> {error || pdfExportError}</span>
-        </div>
-      )}
-
-      {story.length > 0 && (
-        <div ref={storyRef} className="bg-snaptale-background p-4 sm:p-8 rounded-lg shadow-md w-full max-w-2xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-snaptale-highlight mb-4 font-poppins">Your Snapptale Story</h2>
-          <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
-        </div>
-      )}
+        {story.length > 0 && (
+          <div ref={storyRef} className="bg-background-light dark:bg-background-dark p-4 rounded-lg w-full">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4 text-center">
+              Your Snaptale Story
+            </h2>
+            <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
+          </div>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 }

@@ -1,4 +1,7 @@
 import React from 'react';
+import Button from '@/components/ui/Button';
+import Icon from '@/components/ui/Icon';
+import StoryChapter from '@/components/story/StoryChapter';
 
 interface StoryChapter {
   chapter: number;
@@ -34,23 +37,29 @@ const StorybookPreview: React.FC<StorybookPreviewProps> = ({ story, onExport, is
   return (
     <div>
       {story.map((chapter) => (
-        <div key={chapter.chapter} className="mb-8">
-          <h2 className="text-xl font-bold text-snaptale-highlight mb-2">Chapter {chapter.chapter}: {chapter.title}</h2>
-          {chapter.imageData && (
-            <img
-              src={chapter.imageData.startsWith('data:') ? chapter.imageData : `data:${chapter.mimeType || 'image/png'};base64,${chapter.imageData}`}
-              alt={`Illustration for Chapter ${chapter.chapter}`}
-              style={{ maxWidth: '100%', height: 'auto' }}
-              className="mb-4"
-            />
-          )}
-          <p className="text-snaptale-shadow">{formatText(chapter.text)}</p>
-        </div>
+        <StoryChapter
+          key={chapter.chapter}
+          chapterNumber={chapter.chapter}
+          title={chapter.title}
+          content={formatText(chapter.text) as string}
+          imageUrl={chapter.imageData ? (chapter.imageData.startsWith('data:') ? chapter.imageData : `data:${chapter.mimeType || 'image/png'};base64,${chapter.imageData}`) : undefined}
+        />
       ))}
-      <hr className="my-4 border-gray-300" /> {/* Added line */}
-      <button onClick={onExport} disabled={isExporting} className="font-bold">
-        {isExporting ? 'Preparing PDF...' : 'Download your Tale'}
-      </button>
+      <div className="px-6 pt-10 pb-4">
+        <Button onClick={onExport} disabled={isExporting} variant="primary">
+          {isExporting ? (
+            <span className="flex items-center justify-center space-x-2">
+              <Icon name="auto_awesome" className="animate-spin" />
+              <span>Preparing PDF...</span>
+            </span>
+          ) : (
+            <span className="flex items-center justify-center space-x-2">
+              <Icon name="download" />
+              <span>Download PDF</span>
+            </span>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };

@@ -90,7 +90,7 @@ describe('StorybookPreview', () => {
   it('should render the download button', () => {
     render(<StorybookPreview story={mockStory} onExport={mockOnExport} isExporting={false} />);
     
-    const button = screen.getByText('Download your Tale');
+    const button = screen.getByText('Download PDF');
     expect(button).toBeInTheDocument();
     expect(button).not.toBeDisabled();
   });
@@ -98,7 +98,7 @@ describe('StorybookPreview', () => {
   it('should disable the download button when exporting', () => {
     render(<StorybookPreview story={mockStory} onExport={mockOnExport} isExporting={true} />);
     
-    const button = screen.getByText('Preparing PDF...');
+    const button = screen.getByRole('button', { name: /Preparing PDF/i });
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
   });
