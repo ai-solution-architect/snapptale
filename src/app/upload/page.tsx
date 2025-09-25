@@ -75,6 +75,7 @@ export default function UploadPage() {
       }
 
       const data = await response.json();
+      console.log('Received data from API:', JSON.stringify(data, null, 2)); // Debug log
       setStory(data.story);
     }
     catch (err) {
@@ -162,8 +163,7 @@ export default function UploadPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-snaptale-highlight mb-4 font-poppins">Your Snapptale Story</h2>
           <StorybookPreview story={story} onExport={handleExportPdf} isExporting={isPdfExporting} /> 
         </div>
-      )
-}
+      )}
     </div>
   );
 }

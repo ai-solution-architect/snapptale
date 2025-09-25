@@ -10,6 +10,21 @@ interface StoryChapter {
   mimeType?: string;
 }
 
+// Helper function to get image dimensions from a base64 string
+const getImageDimensions = (base64: string): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({ width: img.width, height: img.height });
+    };
+    img.onerror = (err) => {
+      reject(err);
+    };
+    img.src = base64;
+  });
+};
+
+
 export const usePdfExporter = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,26 +44,59 @@ export const usePdfExporter = () => {
         pdf.setFontSize(16);
         pdf.text(chapter.title, margin, 20);
 
-        if (chapter.imageData && chapter.mimeType) {
-          const parts = chapter.imageData.split(',');
-          if (parts.length === 2) {
-            const base64Image = parts[1]; // Get base64 part
-            const imageFormat = chapter.mimeType.split('/')[1].toUpperCase(); // Get format (PNG, JPEG)
+        let imageBlockHeight = 0;
+        if (chapter.imageData) {
+          // Extract base64 data and format from the imageData
+          let base64Image = '';
+          let imageFormat = 'PNG';
+          let fullBase64 = '';
+          
+          if (chapter.imageData.startsWith('data:')) {
+            // imageData already includes the data URL prefix
+            const parts = chapter.imageData.split(',');
+            if (parts.length === 2) {
+              fullBase64 = chapter.imageData;
+              base64Image = parts[1];
+              const mimeType = parts[0].split(':')[1].split(';')[0];
+              imageFormat = mimeType.split('/')[1].toUpperCase();
+            }
+          } else {
+            // imageData is just base64, use mimeType or default to PNG
+            base64Image = chapter.imageData;
+            const mimeType = chapter.mimeType || 'image/png';
+            imageFormat = mimeType.split('/')[1].toUpperCase();
+            fullBase64 = `data:${mimeType};base64,${base64Image}`;
+          }
 
-            // Calculate image dimensions to fit contentWidth
-            // For simplicity, let's assume a fixed height for now or calculate aspect ratio if original dimensions are available
-            const imgWidth = contentWidth; // Use full content width
-            const imgHeight = (pdf.internal.pageSize.getHeight() / 3); // Example: 1/3rd of page height
+          if (base64Image) {
+            try {
+              const { width: originalWidth, height: originalHeight } = await getImageDimensions(fullBase64);
+              const aspectRatio = originalWidth / originalHeight;
+              
+              const maxImageHeight = (pdf.internal.pageSize.getHeight() - margin * 2) * 0.4;
+              let imgWidth = contentWidth;
+              let imgHeight = imgWidth / aspectRatio;
 
-            pdf.addImage(base64Image, imageFormat, margin, 30, imgWidth, imgHeight);
+              if (imgHeight > maxImageHeight) {
+                imgHeight = maxImageHeight;
+                imgWidth = imgHeight * aspectRatio;
+              }
+
+              const xOffset = margin + (contentWidth - imgWidth) / 2;
+              pdf.addImage(base64Image, imageFormat, xOffset, 30, imgWidth, imgHeight);
+              imageBlockHeight = imgHeight;
+            } catch (e) {
+                console.error("Error loading image for PDF:", e);
+            }
           } else {
             console.warn('Invalid imageData format for chapter:', chapter.chapter);
           }
         }
 
+        const textY = 30 + imageBlockHeight + 10; // 10mm margin below image
         pdf.setFontSize(12);
         const splitText = pdf.splitTextToSize(chapter.text, contentWidth);
-        pdf.text(splitText, margin, 150); // Position text below image
+        pdf.text(splitText, margin, textY);
 
         if (story.indexOf(chapter) < story.length - 1) {
           pdf.addPage();

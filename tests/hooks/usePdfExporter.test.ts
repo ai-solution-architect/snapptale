@@ -21,6 +21,32 @@ jest.mock('jspdf', () => {
   return jest.fn(() => mockPdf);
 });
 
+// Refined Mock for window.Image
+class MockImage {
+  onload: () => void = () => {};
+  onerror: (err: any) => void = () => {};
+  src: string = '';
+  width: number = 100;
+  height: number = 100;
+
+  constructor() {
+    // Use a timeout to simulate async loading but resolve quickly
+    setTimeout(() => this.onload(), 0);
+    return this;
+  }
+}
+
+beforeAll(() => {
+  // @ts-ignore
+  global.Image = MockImage;
+});
+
+afterAll(() => {
+  // @ts-ignore
+  delete global.Image;
+});
+
+
 describe('usePdfExporter', () => {
   beforeEach(() => {
     // Clear all instances and calls to constructor and all methods:
@@ -38,17 +64,18 @@ describe('usePdfExporter', () => {
   it('should set isExporting to true during the export process', async () => {
     const { result } = renderHook(() => usePdfExporter());
 
+    let exportPromise;
     act(() => {
-      result.current.exportPdf([{ chapter: 1, title: 't', text: 't' }]);
+      exportPromise = result.current.exportPdf([{ chapter: 1, title: 't', text: 't' }]);
     });
 
-    await waitFor(() => {
-      expect(result.current.isExporting).toBe(true);
+    await waitFor(() => expect(result.current.isExporting).toBe(true));
+
+    await act(async () => {
+      await exportPromise;
     });
 
-    await waitFor(() => {
-      expect(result.current.isExporting).toBe(false);
-    });
+    await waitFor(() => expect(result.current.isExporting).toBe(false));
   });
 
   it('should call jspdf with the correct text content', async () => {
@@ -112,7 +139,7 @@ describe('usePdfExporter', () => {
     const { result } = renderHook(() => usePdfExporter());
 
     await act(async () => {
-      await result.current.exportPdf([{ title: 't' }], 'TestName');
+      await result.current.exportPdf([{ chapter: 1, title: 't', text: 't' }], 'TestName');
     });
 
     expect(jsPDF().save).toHaveBeenCalledWith('snapptale-TestName.pdf');

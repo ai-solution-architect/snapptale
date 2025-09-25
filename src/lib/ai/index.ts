@@ -14,8 +14,8 @@ export interface StoryChapter {
   title: string; // The title of the chapter
   text: string;
   illustration_description: string; // Added to hold the prompt for the image
-  imageData: string;
-  mimeType: string;
+  imageData?: string;
+  mimeType?: string;
 }
 
 /**
@@ -43,7 +43,8 @@ async function fileToBase64(file: File): Promise<string> {
   const resizedFile = await resizeImage(file, 1024);
   const arrayBuffer = await resizedFile.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  return buffer.toString('base64');
+  const base64 = buffer.toString('base64');
+  return base64;
 }
 
 /**
@@ -57,9 +58,10 @@ async function isModelAvailable(modelName: string): Promise<boolean> {
     if (!response.ok) return false;
     
     const data = await response.json();
-    return data.models.some((model: any) => model.name === modelName);
+    const isAvailable = data.models.some((model: any) => model.name === modelName);
+    return isAvailable;
   } catch (error) {
-    console.error('Error checking model availability:', error);
+    console.error('[AI SERVICE ERROR] Error checking model availability:', error);
     return false;
   }
 }
@@ -69,11 +71,13 @@ async function isModelAvailable(modelName: string): Promise<boolean> {
  * This function contains the core logic for interacting with the Ollama API.
  * @param childName The name of the child for the story.
  * @param childPhoto The image to base the story on.
+ * @param generateImages Whether to generate images for each chapter (default: true)
  * @returns A promise that resolves with the generated story.
  */
 async function generateStoryWithOllama(
   childName: string,
-  childPhoto: File
+  childPhoto: File,
+  generateImages: boolean = true
 ): Promise<{ story: StoryChapter[] }> {
   const imageBase64 = await fileToBase64(childPhoto);
 
@@ -132,20 +136,26 @@ async function generateStoryWithOllama(
     const data = await response.json();
     const storyData = JSON.parse(data.response);
 
-    const storyWithImages = await Promise.all(
-      storyData.story.map(async (chapter: any) => {
-        const imageData = await generateImageForChapter(
-          chapter.illustration_description
-        );
-        return {
-          ...chapter,
-          imageData,
-          mimeType: 'image/png',
-        };
-      })
-    );
-
-    return { story: storyWithImages };
+    if (generateImages) {
+      const storyWithImages = await Promise.all(
+        storyData.story.map(async (chapter: any) => {
+          const imageData = await generateImageForChapter(
+            chapter.illustration_description
+          );
+          
+          return {
+            ...chapter,
+            imageData,
+            mimeType: 'image/png',
+          };
+        })
+      );
+      
+      return { story: storyWithImages };
+    } else {
+      // Return story without images
+      return { story: storyData.story };
+    }
   } catch (error) {
     clearTimeout(timeoutId);
     if (error instanceof Error && error.name === 'AbortError') {
@@ -158,18 +168,19 @@ async function generateStoryWithOllama(
 // Main function that acts as a router to the correct AI provider.
 export async function generateStory(
   childName: string,
-  childPhoto: File
+  childPhoto: File,
+  generateImages: boolean = true
 ): Promise<{ story: StoryChapter[] }> {
   const provider = process.env.AI_PROVIDER || 'ollama';
 
   switch (provider) {
     case 'ollama':
-      return generateStoryWithOllama(childName, childPhoto);
+      return generateStoryWithOllama(childName, childPhoto, generateImages);
     case 'google':
       if (!process.env.GOOGLE_API_KEY) {
         throw new Error('Missing GOOGLE_API_KEY');
       }
-      return generateStoryWithGoogle(childName, childPhoto);
+      return generateStoryWithGoogle(childName, childPhoto, generateImages);
     default:
       throw new Error("Unknown AI provider: " + provider);
   }
@@ -177,7 +188,8 @@ export async function generateStory(
 
 async function generateStoryWithGoogle(
   childName: string,
-  childPhoto: File
+  childPhoto: File,
+  generateImages: boolean = true
 ): Promise<{ story: StoryChapter[] }> {
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
@@ -196,28 +208,66 @@ async function generateStoryWithGoogle(
   let responseText = result.response.text();
 
   // Clean the response to ensure it is valid JSON
-  const jsonRegex = /```json\n([\s\S]*?)\n```/;
+  // Handle different markdown code block formats
+  const jsonRegex = /```(?:json)?\s*([\s\S]*?)\s*```/;
   const match = responseText.match(jsonRegex);
   if (match && match[1]) {
     responseText = match[1];
   }
 
-  const storyData = JSON.parse(responseText);
+  // Additional cleaning to remove any remaining markdown or extra characters
+  responseText = responseText.trim();
+  
+  // Try to parse the JSON, and if it fails, try to extract JSON from the response
+  let storyData;
+  try {
+    storyData = JSON.parse(responseText);
+  } catch (parseError) {
+    // If parsing fails, try to find JSON-like content in the response
+    const jsonLikeMatch = responseText.match(/\{[\s\S]*\}/);
+    if (jsonLikeMatch) {
+      try {
+        storyData = JSON.parse(jsonLikeMatch[0]);
+      } catch (secondParseError) {
+        console.error('[AI SERVICE ERROR] Failed to parse extracted JSON-like content:', secondParseError);
+        throw new Error(`Failed to parse JSON response: ${parseError.message}. Original response: ${responseText}`);
+      }
+    } else {
+      console.error('[AI SERVICE ERROR] No JSON-like content found in response');
+      throw new Error(`Failed to parse JSON response: ${parseError.message}. Original response: ${responseText}`);
+    }
+  }
 
-  // Asynchronously generate an image for each chapter
-  const storyWithImages = await Promise.all(
-    storyData.story.map(async (chapter: any) => {
-      const imageData = await generateImageForChapter(
-        chapter.illustration_description
-      );
-      return {
-        ...chapter,
-        imageData,
-        mimeType: 'image/png', // Assuming PNG for now, can be improved later
-      };
-    })
-  );
+  // Validate that the story data has the expected structure
+  if (!storyData.story || !Array.isArray(storyData.story)) {
+    throw new Error('Invalid story data format: missing or invalid "story" array');
+  }
 
-  return { story: storyWithImages };
+  if (generateImages) {
+    // Asynchronously generate an image for each chapter
+    const storyWithImages = await Promise.all(
+      storyData.story.map(async (chapter: any, index: number) => {
+        // Validate that each chapter has the required fields
+        if (!chapter.chapter || !chapter.title || !chapter.text || !chapter.illustration_description) {
+          console.error('[AI SERVICE ERROR] Invalid chapter data', { chapter, index });
+          throw new Error(`Invalid chapter data at index ${index}: missing required fields`);
+        }
+        
+        const imageData = await generateImageForChapter(
+          chapter.illustration_description
+        );
+        
+        return {
+          ...chapter,
+          imageData,
+          mimeType: 'image/png', // Assuming PNG for now, can be improved later
+        };
+      })
+    );
+
+    return { story: storyWithImages };
+  } else {
+    // Return story without images
+    return { story: storyData.story };
+  }
 }
-

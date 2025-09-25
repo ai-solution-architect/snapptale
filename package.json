@@ -12,7 +12,8 @@
     "validate-docker": "node scripts/validate-docker-compose.mjs",
     "test-ollama": "node scripts/test-ollama-connection.mjs",
     "check-docker": "node scripts/check-docker-status.mjs",
-    "verify-ollama": "node scripts/verify-ollama-setup.mjs"
+    "verify-ollama": "node scripts/verify-ollama-setup.mjs",
+    "debug-image": "NODE_ENV=development node scripts/debug-image.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",

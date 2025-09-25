@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
         // We are keeping this simple mock for basic connectivity testing if needed.
         // Ensure this is false during actual AI service testing.
         if (process.env.MOCK_API_UPLOAD === 'true') {
-            console.log('MOCK_API_UPLOAD is true. Returning mock data.');
             await new Promise(resolve => setTimeout(resolve, 1000));
             return NextResponse.json({
                 imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
@@ -29,10 +28,6 @@ export async function POST(req: NextRequest) {
         const formData = await req.formData();
         const file = formData.get('photo') as File;
         const name = formData.get('name') as string;
-
-        console.log('API Route: Received name:', name);
-        console.log('API Route: Received file type:', file?.type);
-        console.log('API Route: Received file size:', file?.size);
           
         if (!file || !name) {
             return NextResponse.json({ error: 'Missing file or name.' }, { status: 400 });
@@ -53,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         // We log the specific error to the console for debugging.
-        console.error('Upload API Error:', error);
+        console.error('[API ROUTE ERROR] Upload API Error:', error);
 
         // We return a generic error message to the user for security reasons.
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';

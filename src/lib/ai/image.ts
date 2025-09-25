@@ -5,19 +5,7 @@
  */
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-/**
- * Converts a File object to a Base64 encoded string.
- * This is a common requirement for sending image data in API requests.
- * @param file The file to convert.
- * @returns A promise that resolves with the base64 string.
- */
-async function fileToBase64(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  return buffer.toString('base64');
-}
-
+import { STORYBOOK_IMAGE_PROMPT } from '@/lib/ai/prompts';
 /**
  * Helper function to initialize Google AI with the appropriate model and configuration.
  * @param model The model name to use
@@ -50,15 +38,25 @@ function initializeGoogleAI(model: string, isImageGeneration: boolean = false) {
  */
 function extractImageDataFromResponse(result: any): string | null {
   try {
-    if (result.response.candidates && result.response.candidates[0].content.parts) {
-      for (const part of result.response.candidates[0].content.parts) {
-        if (part.inlineData) {
-          const imageData = part.inlineData.data;
-          const mimeType = part.inlineData.mimeType || 'image/png';
-          return `data:${mimeType};base64,${imageData}`;
+    if (result.response) {
+      if (result.response.candidates && result.response.candidates.length > 0) {
+        const candidate = result.response.candidates[0];
+        
+        if (candidate.content && candidate.content.parts) {
+          for (let i = 0; i < candidate.content.parts.length; i++) {
+            const part = candidate.content.parts[i];
+            
+            if (part.inlineData) {
+              const imageData = part.inlineData.data;
+              const mimeType = part.inlineData.mimeType || 'image/png';
+              
+              return `data:${mimeType};base64,${imageData}`;
+            }
+          }
         }
       }
     }
+    
     return null;
   } catch (error) {
     console.error('Error extracting image data from response:', error);
@@ -89,7 +87,7 @@ export async function generateImageForChapter(
       
       // Generate content with the prompt
       const result = await model.generateContent([
-        `Generate an image for a children's storybook based on this description: ${illustration_description}`
+        `Generate an image for a children's storybook based on this description: ${illustration_description}. Matching the following guide: ` + STORYBOOK_IMAGE_PROMPT
       ]);
       
       // Extract image data from the response
@@ -122,7 +120,9 @@ export async function generateImageDescription(imageFile: File): Promise<string>
   if (provider === 'google') {
     try {
       // Convert file to base64
-      const base64Image = await fileToBase64(imageFile);
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const base64Image = buffer.toString('base64');
       
       // Initialize Google AI with the correct model for text generation
       const model = initializeGoogleAI('gemini-2.5-flash', false);
@@ -137,11 +137,12 @@ export async function generateImageDescription(imageFile: File): Promise<string>
       
       // Generate content with the image
       const result = await model.generateContent([
-        'Describe this image focusing on identifying the main character. Provide a detailed description that could be used to generate a personalized image of the character. Remember that the description need to also describe the scenario in detail, considering that the story generated need to be about the main character in the scenario identified.',
+        'Describe this image focusing on identifying the main character. Provide a detailed description that could be used to generate a personalized image of the character. Remember that the description need to also describe the scenario in detail, considering that the story generated need to be about the main character in the scenario identified. Using the following pattern: ' + STORYBOOK_IMAGE_PROMPT,
         imagePart
       ]);
       
-      return result.response.text();
+      const description = result.response.text();
+      return description;
     } catch (error) {
       // If there's an error with the AI service, return a placeholder description
       console.error('Error generating image description with Google AI:', error);
@@ -168,7 +169,7 @@ export async function generatePersonalizedImage(prompt: string): Promise<string>
       
       // Generate content with the prompt
       const result = await model.generateContent([
-        `Generate a personalized image based on this description: ${prompt}. The image should be suitable for a children's storybook.`
+        `Generate a personalized image based on this description: ${prompt}. The image should be suitable for a children's storybook. Matching the following guide: ` + STORYBOOK_IMAGE_PROMPT
       ]);
       
       // Extract image data from the response

@@ -23,15 +23,15 @@ describe('AI Service Abstraction Layer', () => {
   let fetchSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    // Clear mocks before each test
     mockedGenerateImageForChapter.mockClear();
-    MockedGoogleGenerativeAI.mockClear();
+    delete process.env.AI_PROVIDER;
+    delete process.env.OLLAMA_MODEL;
 
     fetchSpy = jest.spyOn(global, 'fetch').mockImplementation((url) => {
       if (url === 'http://localhost:11434/api/tags') {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ models: [{ name: 'llava' }] }),
+          json: () => Promise.resolve({ models: [{ name: 'llava' }, { name: 'gemma:3b' }] }),
         } as Response);
       }
       if (url === 'http://localhost:11434/api/generate') {
@@ -39,14 +39,15 @@ describe('AI Service Abstraction Layer', () => {
           ok: true,
           json: () =>
             Promise.resolve({
-              response: JSON.stringify({
+              response: JSON.stringify({ 
                 story: [
                   {
                     chapter: 1,
-                    text: 'A mock story.',
-                    illustration_description: 'A mock description.',
-                  },
-                ],
+                    title: 'Test Chapter',
+                    text: 'Test text',
+                    illustration_description: 'Test description',
+                  }
+                ] 
               }),
             }),
         } as Response);
@@ -101,6 +102,9 @@ describe('AI Service Abstraction Layer', () => {
     // Ensure AI_PROVIDER is not set
     delete process.env.AI_PROVIDER;
     
+    // Mock the image generation function to return a valid image data
+    mockedGenerateImageForChapter.mockResolvedValue('data:image/png;base64,test-image-data');
+    
     const childName = 'Alex';
     const photoContent = 'photo content';
     const childPhoto = {
@@ -109,6 +113,35 @@ describe('AI Service Abstraction Layer', () => {
       arrayBuffer: () =>
         Promise.resolve(new TextEncoder().encode(photoContent).buffer),
     } as File;
+    
+    // Mock the fetch function to avoid actual API calls
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation((url) => {
+      if (url === 'http://localhost:11434/api/tags') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ models: [{ name: 'llava' }] }),
+        } as Response);
+      }
+      if (url === 'http://localhost:11434/api/generate') {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              response: JSON.stringify({ 
+                story: [
+                  {
+                    chapter: 1,
+                    title: 'Test Chapter',
+                    text: 'Test text',
+                    illustration_description: 'Test description',
+                  }
+                ] 
+              }),
+            }),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unhandled fetch mock URL: ${url}`));
+    });
     
     // This should not throw an error and should use ollama as default
     await expect(ai.generateStory(childName, childPhoto)).resolves.toBeDefined();
@@ -119,6 +152,9 @@ describe('AI Service Abstraction Layer', () => {
     } else {
       delete process.env.AI_PROVIDER;
     }
+    
+    // Restore the fetch function
+    fetchSpy.mockRestore();
   });
 });
 
@@ -216,16 +252,19 @@ describe('generateStory with Google AI', () => {
             story: [
               {
                 chapter: 1,
+                title: 'Chapter 1',
                 text: 'Chapter 1 text',
                 illustration_description: 'Desc 1',
               },
               {
                 chapter: 2,
+                title: 'Chapter 2',
                 text: 'Chapter 2 text',
                 illustration_description: 'Desc 2',
               },
               {
                 chapter: 3,
+                title: 'Chapter 3',
                 text: 'Chapter 3 text',
                 illustration_description: 'Desc 3',
               },
@@ -283,18 +322,19 @@ describe('generateStory with Google AI', () => {
   });
 
   it('should correctly parse JSON from a response wrapped in markdown', async () => {
-    // This test simulates the AI returning a JSON object wrapped in a markdown code block.
-    const markdownJsonResponse = '```json\n' +
+    // This test simulates the AI returning a JSON object wrapped in a code block.
+    const markdownJsonResponse = '``json\n' +
       JSON.stringify({
         story: [
           {
             chapter: 1,
+            title: 'Chapter 1 Title',
             text: 'A story from a markdown response.',
             illustration_description: 'A markdown description.',
           },
         ],
       }) +
-      '\n```';
+      '\n``';
 
     // Override the mock for this specific test
     mockGenerateContent.mockResolvedValue({
@@ -340,11 +380,13 @@ describe('Image Generation Abstraction', () => {
                 story: [
                   {
                     chapter: 1,
+                    title: 'Ollama Chapter 1',
                     text: 'Ollama Chapter 1',
                     illustration_description: 'Ollama Desc 1',
                   },
                   {
                     chapter: 2,
+                    title: 'Ollama Chapter 2',
                     text: 'Ollama Chapter 2',
                     illustration_description: 'Ollama Desc 2',
                   },
@@ -375,16 +417,19 @@ describe('Image Generation Abstraction', () => {
             story: [
               {
                 chapter: 1,
+                title: 'Chapter 1',
                 text: 'Chapter 1 text',
                 illustration_description: 'Desc 1',
               },
               {
                 chapter: 2,
+                title: 'Chapter 2',
                 text: 'Chapter 2 text',
                 illustration_description: 'Desc 2',
               },
               {
                 chapter: 3,
+                title: 'Chapter 3',
                 text: 'Chapter 3 text',
                 illustration_description: 'Desc 3',
               },
